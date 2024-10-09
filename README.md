@@ -4,3 +4,6 @@
 
 Soft Dependencies:
 - Luckperms
+
+My Discord: ( For Questions Mainly )
+- Nosidian
