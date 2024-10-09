@@ -1,0 +1,35 @@
+#---------------------------------#
+# Custom Entities - /civentities   #
+#---------------------------------#
+entities:
+  Example:
+    entityType: ZOMBIE
+    customName: Example
+    bodyparts:
+      head:
+        type: AIR
+        skull: NONE
+        trimType: NONE
+        trimMaterial: NONE
+      chest:
+        type: AIR
+        trimType: NONE
+        trimMaterial: NONE
+      legs:
+        type: AIR
+        trimType: NONE
+        trimMaterial: NONE
+      feet:
+        type: AIR
+        trimType: NONE
+        trimMaterial: NONE
+      mainhand:
+        type: AIR
+        trimType: NONE
+        trimMaterial: NONE
+        metadata: NONE
+      offhand:
+        type: AIR
+        trimType: NONE
+        trimMaterial: NONE
+        metadata: NONE

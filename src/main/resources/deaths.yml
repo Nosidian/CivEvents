@@ -1,0 +1,11 @@
+#---------------------------------#
+# Deaths System - /civdeaths     #
+#---------------------------------#
+lightning:
+  enabled: false
+explosion:
+  enabled: false
+fireworks:
+  enabled: false
+grave:
+  enabled: false
