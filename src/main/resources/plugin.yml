@@ -1,0 +1,83 @@
+name: CivEvents
+version: '${project.version}'
+main: nos.civevents.CivEvents
+api-version: '1.20'
+authors: [Nosidian]
+description: A Plugin Created By Nosidian
+softdepend: [LuckPerms]
+
+commands:
+  civadmins:
+    permission: civevents.admin
+    permission-message: Permission = civevents.admin
+    aliases: [ca, civa, cadmin]
+  gms:
+    permission: civevents.survival
+    permission-message: Permission = civevents.survival
+  gmc:
+    permission: civevents.creative
+    permission-message: Permission = civevents.creative
+  gma:
+    permission: civevents.adventure
+    permission-message: Permission = civevents.adventure
+  gmsp:
+    permission: civevents.spectator
+    permission-message: Permission = civevents.spectator
+  civban:
+    permission: civevents.ban
+    permission-message: Permission = civevents.ban
+    aliases: [cb, civb, cban]
+  antiscythers:
+    permission: civevents.scythers
+    permission-message: Permission = civevents.scythers
+    aliases: [as, scyther, scythers]
+  civdeaths:
+    permission: civevents.death
+    permission-message: Permission = civevents.death
+    aliases: [cd, civd, civdeath]
+  civentities:
+    permission: civevents.entity
+    permission-message: Permission = civevents.entity
+    aliases: [ce, cive, civentity]
+  civflags:
+    permission: civevents.flag
+    permission-message: Permission = civevents.flag
+    aliases: [cf, civf, civflag]
+  civhelp:
+    aliases: [ch, civh, help]
+  civitems:
+    permission: civevents.item
+    permission-message: Permission = civevents.item
+    aliases: [ci, civi, civitem]
+  civlocations:
+    permission: civevents.location
+    permission-message: Permission = civevents.location
+    aliases: [cl, civl, civlocation, hg, hungergame, hungergames]
+  civportals:
+    permission: civevents.portal
+    permission-message: Permission = civevents.portal
+    aliases: [cportal, civportal, portal]
+  civpackages:
+    permission: civevents.package
+    permission-message: Permission = civevents.package
+    aliases: [cp, civp, civpackage]
+  civrecipes:
+    permission: civevents.recipeall
+    permission-message: Permission = civevents.recipeall
+    aliases: [cr, civr, civrecipe]
+  recipes:
+    permission: civevents.recipe
+    permission-message: Permission = civevents.recipe
+    aliases: [recipe, craft, crafts]
+  civteams:
+    permission: civevents.teamall
+    permission-message: Permission = civevents.teamall
+    aliases: [ct, civt, civteam]
+  team:
+    permission: civevents.team
+    permission-message: Permission = civevents.team
+    aliases: [t, teams]
+  civworlds:
+    permission: civevents.world
+    permission-message: Permission = civevents.world
+    aliases: [cw, civw, civworld]

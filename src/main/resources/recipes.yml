@@ -1,0 +1,81 @@
+#---------------------------------#
+# Recipes System - /civrecipe    #
+#---------------------------------#
+Recipes:
+  Example:
+    Result:
+      Material: GRASS_BLOCK
+      Amount: 1
+      DisplayName: '§bExample block'
+      Lore:
+        - '§aThis is an example!'
+        - '§eWith epic lore.'
+      Enchantments:
+        sharpness: 5
+      Unbreakable: false
+      CustomModelData: -1
+    Ingredients:
+      '1':
+        Material: AIR
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '2':
+        Material: SHORT_GRASS
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '3':
+        Material: AIR
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '4':
+        Material: AIR
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '5':
+        Material: DIRT
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '6':
+        Material: AIR
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '7':
+        Material: AIR
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '8':
+        Material: AIR
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+      '9':
+        Material: AIR
+        DisplayName: ""
+        Lore: []
+        Enchantments: {}
+        Unbreakable: false
+        CustomModelData: -1
+    Slot: 9
