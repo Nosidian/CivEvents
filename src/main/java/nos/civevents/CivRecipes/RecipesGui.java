@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -32,8 +33,9 @@ public class RecipesGui implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory clickedInventory = event.getClickedInventory();
-        if (clickedInventory != null && clickedInventory.getType() == InventoryType.CHEST) {
-            if (event.getView().getTitle().startsWith("§x§0§0§0§0§0§0§lR§x§0§0§0§0§0§0§lE§x§0§0§0§0§0§0§lC§x§0§0§0§0§0§0§lI§x§0§0§0§0§0§0§lP§x§0§0§0§0§0§0§lE§x§0§0§0§0§0§0§lS")) {
+        if (clickedInventory != null) {
+            String inventoryTitle = event.getView().getTitle();
+            if (inventoryTitle.startsWith("§x§0§0§0§0§0§0§lR§x§0§0§0§0§0§0§lE§x§0§0§0§0§0§0§lC§x§0§0§0§0§0§0§lI§x§0§0§0§0§0§0§lP§x§0§0§0§0§0§0§lE§x§0§0§0§0§0§0§lS")) {
                 event.setCancelled(true);
                 if (event.getClick().isKeyboardClick() && event.getHotbarButton() != -1) {
                     return;
@@ -42,7 +44,7 @@ public class RecipesGui implements Listener {
                 ItemStack clickedItem = event.getCurrentItem();
                 if (clickedItem != null && clickedItem.getType() != Material.AIR) {
                     ItemMeta itemMeta = clickedItem.getItemMeta();
-                    if (itemMeta != null && itemMeta.hasDisplayName() && "§c§lＣＬＯＳＥ".equals(itemMeta.getDisplayName())) {
+                    if (itemMeta != null && "§c§lＣＬＯＳＥ".equals(itemMeta.getDisplayName())) {
                         event.getWhoClicked().closeInventory();
                         return;
                     }
@@ -56,6 +58,12 @@ public class RecipesGui implements Listener {
                             return;
                         }
                     }
+                }
+            }
+            if (inventoryTitle.startsWith(VIEW_GUI_TITLE)) {
+                event.setCancelled(true);
+                if (event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getClick().isKeyboardClick()) {
+                    event.setCancelled(true);
                 }
             }
         }
