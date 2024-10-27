@@ -19,14 +19,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings("all")
-public class VikingSpear implements Listener {
+public class ObsidianSpear implements Listener {
     private final HashMap<UUID, Long> bleedingEntities = new HashMap<>();
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
     private static final double BLEED_DAMAGE = 0.5;
     private static final int BLEED_DURATION = 20;
     private static final int COOLDOWN = 60;
     private final CivEvents plugin;
-    public VikingSpear(CivEvents plugin) {
+    public ObsidianSpear(CivEvents plugin) {
         this.plugin = plugin;
         startCooldownTask();
         startBleedEffectTask();
@@ -37,7 +37,7 @@ public class VikingSpear implements Listener {
         Entity clickedEntity = event.getRightClicked();
         if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD &&
                 player.getInventory().getItemInMainHand().hasItemMeta() &&
-                "§5§lＶＩＫＩＮＧ ＳＰＥＡＲ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
+                "§5§lＳＰＥＡＲ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
             UUID playerId = player.getUniqueId();
             long currentTime = System.currentTimeMillis();
             if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
@@ -91,12 +91,12 @@ public class VikingSpear implements Listener {
                 UUID playerId = player.getUniqueId();
                 if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD &&
                         player.getInventory().getItemInMainHand().hasItemMeta() &&
-                        "§5§lＶＩＫＩＮＧ ＳＰＥＡＲ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
+                        "§5§lＳＰＥＡＲ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
                     if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
                         long timeLeft = (cooldowns.get(playerId) - currentTime) / 1000;
-                        sendActionBar(player, "§5§lVikingSpear §f- §c" + timeLeft + "§cs");
+                        sendActionBar(player, "§5§lSpear §f- §c" + timeLeft + "§cs");
                     } else {
-                        sendActionBar(player, "§5§lVikingSpear §f- §aReady");
+                        sendActionBar(player, "§5§lSpear §f- §aReady");
                     }
                 }
             }

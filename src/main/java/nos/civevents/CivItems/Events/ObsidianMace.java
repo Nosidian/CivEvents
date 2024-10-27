@@ -18,12 +18,12 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 @SuppressWarnings("all")
-public class BattleAxe implements Listener {
+public class ObsidianMace implements Listener {
     private final Map<UUID, Long> cooldowns = new HashMap<>();
     private static final int COOLDOWN = 60;
     private final int launchHeight = 1;
     private final CivEvents plugin;
-    public BattleAxe(CivEvents plugin) {
+    public ObsidianMace(CivEvents plugin) {
         this.plugin = plugin;
         startCooldownTask();
     }
@@ -31,7 +31,7 @@ public class BattleAxe implements Listener {
     public void onPlayerRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
-        String customAxeName = "§c§lＢＡＴＴＬＥ ＡＸＥ";
+        String customAxeName = "§6§lＧＯＬＤＭＡＣＥ";
         if (item.getType() == Material.DIAMOND_SWORD &&
                 item.getItemMeta() != null &&
                 item.getItemMeta().hasDisplayName() &&
@@ -145,12 +145,12 @@ public class BattleAxe implements Listener {
                 UUID playerId = player.getUniqueId();
                 if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD &&
                         player.getInventory().getItemInMainHand().hasItemMeta() &&
-                        "§c§lＢＡＴＴＬＥ ＡＸＥ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
+                        "§6§lＧＯＬＤＭＡＣＥ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
                     if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
                         long timeLeft = (cooldowns.get(playerId) - currentTime) / 1000;
-                        sendActionBar(player, "§c§lBattleAxe §f- §c" + timeLeft + "§cs");
+                        sendActionBar(player, "§c§lGoldMace §f- §c" + timeLeft + "§cs");
                     } else {
-                        sendActionBar(player, "§c§lBattleAxe §f- §aReady");
+                        sendActionBar(player, "§c§lGoldMace §f- §aReady");
                     }
                 }
             }

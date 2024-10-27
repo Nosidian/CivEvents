@@ -20,13 +20,13 @@ import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings("all")
-public class Katana implements Listener {
+public class ObsidianScythe implements Listener {
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
     private static final int FALL_DAMAGE_PROTECTION_TIME = 10;
     private static final double DASH_DISTANCE = 10;
     private static final int COOLDOWN = 60;
     private final CivEvents plugin;
-    public Katana(CivEvents plugin) {
+    public ObsidianScythe(CivEvents plugin) {
         this.plugin = plugin;
         startCooldownTask();
     }
@@ -36,7 +36,7 @@ public class Katana implements Listener {
                 event.getItem() != null &&
                 event.getItem().getType() == Material.DIAMOND_SWORD &&
                 event.getItem().hasItemMeta() &&
-                "§d§lＫＡＴＡＮＡ".equals(Objects.requireNonNull(event.getItem().getItemMeta()).getDisplayName())) {
+                "§d§lＳＣＹＴＨＥ".equals(Objects.requireNonNull(event.getItem().getItemMeta()).getDisplayName())) {
             Player player = event.getPlayer();
             UUID playerId = player.getUniqueId();
             long currentTime = System.currentTimeMillis();
@@ -77,12 +77,12 @@ public class Katana implements Listener {
                 UUID playerId = player.getUniqueId();
                 if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD &&
                         player.getInventory().getItemInMainHand().hasItemMeta() &&
-                        "§d§lＫＡＴＡＮＡ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
+                        "§d§lＳＣＹＴＨＥ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
                     if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
                         long timeLeft = (cooldowns.get(playerId) - currentTime) / 1000;
-                        sendActionBar(player, "§d§lKatana §f- §c" + timeLeft + "§cs");
+                        sendActionBar(player, "§d§lScythe §f- §c" + timeLeft + "§cs");
                     } else {
-                        sendActionBar(player, "§d§lKatana §f- §aReady");
+                        sendActionBar(player, "§d§lScythe §f- §aReady");
                     }
                 }
             }
