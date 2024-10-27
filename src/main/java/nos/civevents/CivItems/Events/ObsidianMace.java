@@ -148,9 +148,9 @@ public class ObsidianMace implements Listener {
                         "§6§lＧＯＬＤＭＡＣＥ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
                     if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
                         long timeLeft = (cooldowns.get(playerId) - currentTime) / 1000;
-                        sendActionBar(player, "§c§lGoldMace §f- §c" + timeLeft + "§cs");
+                        sendActionBar(player, "§6§lGoldMace §f- §c" + timeLeft + "§cs");
                     } else {
-                        sendActionBar(player, "§c§lGoldMace §f- §aReady");
+                        sendActionBar(player, "§6§lGoldMace §f- §aReady");
                     }
                 }
             }
