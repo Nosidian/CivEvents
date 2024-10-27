@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
@@ -26,6 +27,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
     private static final String PERMISSION = "civevents.team";
     private Map<String, String> teamNumbers = new HashMap<>();
     private Map<String, String> teamColors = new HashMap<>();
+    private static final int MAX_TEAM_SIZE = 4;
     private final CivEvents plugin;
     public TeamCommands(CivEvents plugin) {
         this.plugin = plugin;
@@ -73,6 +75,13 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             }
             case "leave" -> leaveTeam(player);
             case "info" -> showTeamInfo(player);
+            case "clearall" -> {
+                if (!player.hasPermission("civevents.clearteams")) {
+                    player.sendMessage("§f§lCivEvents §f| §cYou do not have permission to use this command");
+                    return false;
+                }
+                clearAllTeams(player);
+            }
             default -> {
                 player.sendMessage("§f§lCivEvents §f| §cUnknown command");
                 return false;
@@ -85,7 +94,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         List<String> suggestions = new ArrayList<>();
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
-            Collections.addAll(suggestions, "create", "invite", "join", "disband", "kick", "leave", "info");
+            Collections.addAll(suggestions, "create", "invite", "join", "disband", "kick", "leave", "info", "clearall");
         } else if (args.length == 2) {
             String action = args[0].toLowerCase();
             if (action.equals("invite") || action.equals("kick")) {
@@ -160,32 +169,28 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         player.sendMessage("§f§lCivEvents §f| §aPlayer " + playerName + " has been invited to your team");
         target.sendMessage("§f§lCivEvents §f| §aYou have been invited to team " + team.getDisplayName());
     }
-    private void joinTeam(Player player, String teamName) {
-        String teamID = teamNumbers.get(teamName.toLowerCase());
-        if (teamID == null) {
-            player.sendMessage("§f§lCivEvents §f| §cTeam not found");
-            return;
-        }
-        Team team = player.getScoreboard().getTeam(teamID);
+    public void joinTeam(Player player, String teamID) {
+        Scoreboard scoreboard = player.getScoreboard();
+        Team team = scoreboard.getTeam(teamID);
         if (team == null) {
-            player.sendMessage("§f§lCivEvents §f| §cTeam not found");
+            player.sendMessage("§f§lCivEvents §f| §cTeam not found (" + teamID + ")");
             return;
         }
-        if (team.hasEntry(player.getName())) {
-            player.sendMessage("§f§lCivEvents §f| §cYou are already in this team");
+        if (team.getEntries().size() >= MAX_TEAM_SIZE) {
+            player.sendMessage("§f§lCivEvents §f| §cThis team already has the maximum of 4 players");
             return;
         }
         Set<String> invites = pendingInvites.get(player.getName());
-        if (invites == null || !invites.contains(team.getDisplayName())) {
+        if (invites == null || !invites.contains(teamID)) {
             player.sendMessage("§f§lCivEvents §f| §cYou do not have an invite for this team");
             return;
         }
-        invites.remove(team.getDisplayName());
+        invites.remove(teamID);
         if (invites.isEmpty()) {
             pendingInvites.remove(player.getName());
         }
         team.addEntry(player.getName());
-        player.sendMessage("§f§lCivEvents §f| §aYou have joined the team " + team.getDisplayName());
+        player.sendMessage("§f§lCivEvents §f| §aYou have joined the team: " + team.getName());
         updatePlayerPrefix(player, teamID);
     }
     private void disbandTeam(Player player) {
@@ -363,5 +368,12 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             removePlayerFromTeam(player);
             removePlayerPrefix(player);
         }
+    }
+    public void clearAllTeams(Player player) {
+        Scoreboard scoreboard = player.getScoreboard();
+        for (Team team : scoreboard.getTeams()) {
+            team.unregister();
+        }
+        player.sendMessage("§f§lCivEvents §f| §aAll teams have been cleared");
     }
 }

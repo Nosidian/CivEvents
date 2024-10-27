@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.DecoratedPot;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -187,6 +188,12 @@ public class WorldBackrooms extends ChunkGenerator implements Listener {
                     if (potInventory.isEmpty()) {
                         event.getPlayer().sendMessage("§f§lCivEvents §f| §cMust wait for the loot to generate");
                         event.setCancelled(true);
+                        return;
+                    }
+                    Random random = new Random();
+                    if (random.nextInt(100) < 5) {
+                        Location loc = event.getBlock().getLocation();
+                        world.spawnEntity(loc, EntityType.WARDEN);
                     }
                 }
             }
