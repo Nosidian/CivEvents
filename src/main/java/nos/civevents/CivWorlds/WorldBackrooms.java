@@ -1,24 +1,12 @@
 package nos.civevents.CivWorlds;
 
 import nos.civevents.CivEvents;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.DecoratedPot;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
 
 import java.util.HashSet;
@@ -114,95 +102,5 @@ public class WorldBackrooms extends ChunkGenerator implements Listener {
                 }
             }
         }
-    }
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        int chunkX = player.getLocation().getChunk().getX();
-        int chunkZ = player.getLocation().getChunk().getZ();
-        checkDecoratedPotsInChunk(player.getWorld(), chunkX, chunkZ);
-    }
-    private void checkDecoratedPotsInChunk(World world, int chunkX, int chunkZ) {
-        for (int x = chunkX * 16; x < chunkX * 16 + 16; x++) {
-            for (int z = chunkZ * 16; z < chunkZ * 16 + 16; z++) {
-                for (int y = 0; y < world.getMaxHeight(); y++) {
-                    Block block = world.getBlockAt(x, y, z);
-                    if (block.getType() == Material.DECORATED_POT) {
-                        Location potLocation = block.getLocation();
-                        if (!processedPots.contains(potLocation)) {
-                            schedulePotInventorySetting(world, x, y, z);
-                            processedPots.add(potLocation);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    private void schedulePotInventorySetting(World world, int x, int y, int z) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Block block = world.getBlockAt(x, y, z);
-            if (block.getType() == Material.DECORATED_POT) {
-                BlockState state = block.getState();
-                if (state instanceof DecoratedPot) {
-                    DecoratedPot pot = (DecoratedPot) state;
-                    Inventory potInventory = pot.getInventory();
-                    potInventory.addItem(getRandomLoot());
-                }
-            }
-        }, 1L);
-    }
-    private ItemStack getRandomLoot() {
-        Material[] lootItems = new Material[]{
-                Material.DIAMOND,
-                Material.EMERALD,
-                Material.GOLD_INGOT,
-                Material.IRON_INGOT,
-                Material.COAL,
-                Material.REDSTONE,
-                Material.LAPIS_LAZULI,
-                Material.QUARTZ,
-                Material.COOKED_BEEF,
-                Material.PORKCHOP,
-                Material.BREAD,
-                Material.CARROT,
-                Material.POTATO,
-                Material.SWEET_BERRIES,
-                Material.WATER_BUCKET,
-                Material.STRING,
-                Material.BONE,
-                Material.DIRT,
-                Material.BOOK,
-                Material.LEGACY_BOOK_AND_QUILL
-        };
-        return new ItemStack(lootItems[random.nextInt(lootItems.length)], 1);
-    }
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        World world = event.getBlock().getWorld();
-        if (isBackroomsWorld(world)) {
-            if (event.getBlock().getType() == Material.DECORATED_POT) {
-                BlockState blockState = event.getBlock().getState();
-                if (blockState instanceof DecoratedPot) {
-                    DecoratedPot pot = (DecoratedPot) blockState;
-                    Inventory potInventory = pot.getInventory();
-                    if (potInventory.isEmpty()) {
-                        event.getPlayer().sendMessage("§f§lCivEvents §f| §cMust wait for the loot to generate");
-                        event.setCancelled(true);
-                        return;
-                    }
-                    Random random = new Random();
-                    if (random.nextInt(100) < 5) {
-                        Location loc = event.getBlock().getLocation();
-                        world.spawnEntity(loc, EntityType.WARDEN);
-                    }
-                }
-            }
-        }
-    }
-    private boolean isBackroomsWorld(World world) {
-        ConfigurationSection worldsSection = worldConfig.getConfig().getConfigurationSection("worlds");
-        if (worldsSection == null) return false;
-        String worldType = worldsSection.getString(world.getName() + ".type");
-        return "backrooms".equalsIgnoreCase(worldType);
     }
 }
