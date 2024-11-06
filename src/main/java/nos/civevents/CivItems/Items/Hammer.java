@@ -7,7 +7,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -155,5 +157,31 @@ public class Hammer implements Listener {
     }
     public void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+    }
+    @EventHandler
+    public void onPlayerUse(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack offhandItem = player.getInventory().getItemInOffHand();
+        if (event.getAction() == Action.LEFT_CLICK_AIR && offhandItem.getType() == Material.COPPER_INGOT && player.isSneaking()) {
+            event.setCancelled(true);
+            ItemStack heldItem = player.getInventory().getItemInMainHand();
+            if (heldItem.getType() != Material.AIR) {
+                Material itemType = heldItem.getType();
+                int totalAmount = getTotalAmount(player.getInventory(), itemType);
+                if (totalAmount > 0) {
+                    heldItem.setAmount(Math.min(totalAmount * 2, heldItem.getMaxStackSize()));
+                    player.updateInventory();
+                }
+            }
+        }
+    }
+    private int getTotalAmount(Inventory inventory, Material material) {
+        int totalAmount = 0;
+        for (ItemStack stack : inventory.getContents()) {
+            if (stack != null && stack.getType() == material) {
+                totalAmount += stack.getAmount();
+            }
+        }
+        return totalAmount;
     }
 }
