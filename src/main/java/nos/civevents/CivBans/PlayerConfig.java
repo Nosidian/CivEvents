@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("all")
@@ -30,15 +31,29 @@ public class PlayerConfig implements Listener {
         addPlayerToLogs(playerName, playerIP);
     }
     private void addPlayerToLogs(String playerName, String playerIP) {
-        Set<String> nameKeys = logsConfig.getConfigurationSection("player_names") != null
-                ? logsConfig.getConfigurationSection("player_names").getKeys(false)
+        Set<String> playerEntries = logsConfig.getConfigurationSection("player_logs") != null
+                ? logsConfig.getConfigurationSection("player_logs").getKeys(false)
                 : Set.of();
-        boolean isPlayerRegistered = logsConfig.getConfigurationSection("player_names").getValues(false).containsValue(playerName);
-        boolean isIPRegistered = logsConfig.getConfigurationSection("player_ips").getValues(false).containsValue(playerIP);
-        if (!isPlayerRegistered && !isIPRegistered) {
-            int newIndex = nameKeys.size() + 1;
-            logsConfig.set("player_names." + newIndex, playerName);
-            logsConfig.set("player_ips." + newIndex, playerIP);
+        boolean playerExists = false;
+        String playerIndex = null;
+        for (String key : playerEntries) {
+            if (logsConfig.getString("player_logs." + key + ".username").equalsIgnoreCase(playerName)) {
+                playerExists = true;
+                playerIndex = key;
+                break;
+            }
+        }
+        if (playerExists) {
+            List<String> ipList = logsConfig.getStringList("player_logs." + playerIndex + ".ips");
+            if (!ipList.contains(playerIP)) {
+                ipList.add(playerIP);
+                logsConfig.set("player_logs." + playerIndex + ".ips", ipList);
+                saveConfig();
+            }
+        } else {
+            int newIndex = playerEntries.size() + 1;
+            logsConfig.set("player_logs." + newIndex + ".username", playerName);
+            logsConfig.set("player_logs." + newIndex + ".ips", List.of(playerIP));
             saveConfig();
         }
     }
