@@ -26,6 +26,7 @@ nos\civevents\CivPackages\TierThree$1.class
 nos\civevents\CivItems\Items\GhostStaff.class
 nos\civevents\CivRecipes\RecipesCreate.class
 nos\civevents\CivItems\Events\ObsidianMace$2.class
+nos\civevents\CivBans\PlayerConfig.class
 nos\civevents\CivEvents.class
 nos\civevents\CivTeams\CivilizationCommands.class
 nos\civevents\CivItems\Events\ObsidianMace.class

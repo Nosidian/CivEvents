@@ -122,6 +122,7 @@ public final class CivEvents extends JavaPlugin {
         Objects.requireNonNull(getCommand("antiscythers")).setTabCompleter(new ScytherCommands(this, scytherConfig));
         getServer().getPluginManager().registerEvents(new ScytherCommands(this, scytherConfig), this);
         getServer().getPluginManager().registerEvents(new ScytherConfig(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerConfig(this), this);
 
         // CivDeaths
         Objects.requireNonNull(getCommand("civdeaths")).setExecutor(new DeathCommands(this, deathConfig));
