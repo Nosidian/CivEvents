@@ -33,7 +33,9 @@ public class PlayerConfig implements Listener {
         Set<String> nameKeys = logsConfig.getConfigurationSection("player_names") != null
                 ? logsConfig.getConfigurationSection("player_names").getKeys(false)
                 : Set.of();
-        if (!nameKeys.contains(playerName)) {
+        boolean isPlayerRegistered = logsConfig.getConfigurationSection("player_names").getValues(false).containsValue(playerName);
+        boolean isIPRegistered = logsConfig.getConfigurationSection("player_ips").getValues(false).containsValue(playerIP);
+        if (!isPlayerRegistered && !isIPRegistered) {
             int newIndex = nameKeys.size() + 1;
             logsConfig.set("player_names." + newIndex, playerName);
             logsConfig.set("player_ips." + newIndex, playerIP);
