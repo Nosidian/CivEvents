@@ -3,10 +3,7 @@ package nos.civevents;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import nos.civevents.CivAdmins.*;
-import nos.civevents.CivBans.BanCommands;
-import nos.civevents.CivBans.BanConfig;
-import nos.civevents.CivBans.ScytherCommands;
-import nos.civevents.CivBans.ScytherConfig;
+import nos.civevents.CivBans.*;
 import nos.civevents.CivDeaths.DeathCommands;
 import nos.civevents.CivDeaths.DeathConfig;
 import nos.civevents.CivDeaths.Deaths.ExplosionDeath;
@@ -53,6 +50,7 @@ import java.util.Objects;
 public final class CivEvents extends JavaPlugin {
     private BanConfig banConfig;
     private ScytherConfig scytherConfig;
+    private PlayerConfig playerConfig;
     private DeathConfig deathConfig;
     private EntityConfig entityConfig;
     private FlagConfig flagConfig;
@@ -67,6 +65,8 @@ public final class CivEvents extends JavaPlugin {
         System.out.println("CivEvents: Enabled");
         banConfig = new BanConfig(this);
         banConfig.loadConfig();
+        playerConfig = new PlayerConfig(this);
+        playerConfig.loadConfig();
         scytherConfig = new ScytherConfig(this);
         scytherConfig.loadConfig();
         deathConfig = new DeathConfig(this);
@@ -189,6 +189,7 @@ public final class CivEvents extends JavaPlugin {
         getServer().getScheduler().runTaskLater(this, () -> {
             banConfig.reloadConfig();
             scytherConfig.reloadConfig();
+            playerConfig.reloadConfig();
             deathConfig.reloadConfig();
             entityConfig.reloadConfig();
             flagConfig.reloadConfig();
@@ -204,6 +205,7 @@ public final class CivEvents extends JavaPlugin {
         System.out.println("CivEvents: Disabled");
         banConfig.saveConfig();
         scytherConfig.saveConfig();
+        playerConfig.saveConfig();
         deathConfig.saveConfig();
         entityConfig.saveConfig();
         flagConfig.saveConfig();
