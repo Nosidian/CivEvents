@@ -77,6 +77,8 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
             creator.generator(new WorldVoid());
         } else if (worldType.equalsIgnoreCase("backrooms")) {
             creator.generator(new WorldBackrooms(plugin, worldConfig));
+        } else if (worldType.equalsIgnoreCase("event")) {
+            creator.generator(new WorldEvent(plugin, worldConfig));
         } else {
             creator.type(WorldType.valueOf(worldType.toUpperCase()));
             creator.generator((ChunkGenerator) null);
@@ -108,6 +110,9 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
                         player.teleport(teleportLocation);
                     } else if ("backrooms".equalsIgnoreCase(worldType)) {
                         Location teleportLocation = new Location(world, 0.5, 3, 0.5);
+                        player.teleport(teleportLocation);
+                    } else if ("events".equalsIgnoreCase(worldType)) {
+                        Location teleportLocation = new Location(world, 0.5, 70, 0.5);
                         player.teleport(teleportLocation);
                     } else {
                         player.teleport(world.getSpawnLocation());
@@ -191,7 +196,7 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
                 }
                 return worldNames;
             } else if (args.length == 3 && args[0].equalsIgnoreCase("create")) {
-                return List.of("normal", "custom", "void", "backrooms");
+                return List.of("normal", "custom", "void", "backrooms", "event");
             } else if (args.length == 3 && args[0].equalsIgnoreCase("edit")) {
                 return List.of("chunks");
             }

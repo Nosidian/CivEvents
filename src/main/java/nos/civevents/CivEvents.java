@@ -60,6 +60,7 @@ public final class CivEvents extends JavaPlugin {
     private WorldConfig worldConfig;
     private LuckPerms luckPerms;
     public static CivEvents instance;
+    private WorldCommands worldCommands;
     @Override
     public void onEnable() {
         System.out.println("CivEvents: Enabled");

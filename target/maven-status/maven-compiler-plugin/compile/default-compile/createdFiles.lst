@@ -41,6 +41,7 @@ nos\civevents\CivItems\Events\ObsidianSpear$1.class
 nos\civevents\CivPackages\TierTwo$1.class
 nos\civevents\CivItems\Items\Hammer.class
 nos\civevents\CivItems\Items\Hammer$3$1.class
+nos\civevents\CivWorlds\WorldEvent.class
 nos\civevents\CivRecipes\RecipeCommands.class
 nos\civevents\CivRecipes\RecipeConfig.class
 nos\civevents\CivDeaths\DeathConfig.class
