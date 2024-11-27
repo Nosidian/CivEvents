@@ -16,9 +16,9 @@ import nos.civevents.CivFlags.FlagCommands;
 import nos.civevents.CivFlags.FlagConfig;
 import nos.civevents.CivHelp.HelpCommands;
 import nos.civevents.CivHelp.HelpOptions;
-import nos.civevents.CivItems.Events.ObsidianMace;
-import nos.civevents.CivItems.Events.ObsidianScythe;
-import nos.civevents.CivItems.Events.ObsidianSpear;
+import nos.civevents.CivItems.Events.Mace;
+import nos.civevents.CivItems.Events.Scythe;
+import nos.civevents.CivItems.Events.Spear;
 import nos.civevents.CivItems.ItemCommands;
 import nos.civevents.CivItems.Items.*;
 import nos.civevents.CivLocations.LocationCommands;
@@ -156,9 +156,9 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Dagger(this), this);
         getServer().getPluginManager().registerEvents(new Scythe(this), this);
         getServer().getPluginManager().registerEvents(new Mace(this), this);
-        getServer().getPluginManager().registerEvents(new ObsidianSpear(this), this);
-        getServer().getPluginManager().registerEvents(new ObsidianMace(this), this);
-        getServer().getPluginManager().registerEvents(new ObsidianScythe(this), this);
+        getServer().getPluginManager().registerEvents(new Spear(this), this);
+        getServer().getPluginManager().registerEvents(new Mace(this), this);
+        getServer().getPluginManager().registerEvents(new Scythe(this), this);
 
         // CivLocations
         Objects.requireNonNull(getCommand("civlocations")).setExecutor(new LocationCommands(this, locationConfig));

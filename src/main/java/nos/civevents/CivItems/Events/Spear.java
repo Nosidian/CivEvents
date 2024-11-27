@@ -19,14 +19,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings("all")
-public class ObsidianSpear implements Listener {
+public class Spear implements Listener {
     private final HashMap<UUID, Long> bleedingEntities = new HashMap<>();
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
     private static final double BLEED_DAMAGE = 0.5;
     private static final int BLEED_DURATION = 20;
     private static final int COOLDOWN = 60;
     private final CivEvents plugin;
-    public ObsidianSpear(CivEvents plugin) {
+    public Spear(CivEvents plugin) {
         this.plugin = plugin;
         startCooldownTask();
         startBleedEffectTask();

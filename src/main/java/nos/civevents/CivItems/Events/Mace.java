@@ -18,12 +18,12 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 @SuppressWarnings("all")
-public class ObsidianMace implements Listener {
+public class Mace implements Listener {
     private final Map<UUID, Long> cooldowns = new HashMap<>();
     private static final int COOLDOWN = 60;
     private final int launchHeight = 1;
     private final CivEvents plugin;
-    public ObsidianMace(CivEvents plugin) {
+    public Mace(CivEvents plugin) {
         this.plugin = plugin;
         startCooldownTask();
     }

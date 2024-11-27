@@ -1,9 +1,10 @@
-package nos.civevents.CivItems.Items;
+package nos.civevents.CivItems.Events;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import nos.civevents.CivEvents;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +36,7 @@ public class Scythe implements Listener {
                 event.getItem() != null &&
                 event.getItem().getType() == Material.DIAMOND_SWORD &&
                 event.getItem().hasItemMeta() &&
-                "§f§lScythe".equals(Objects.requireNonNull(event.getItem().getItemMeta()).getDisplayName())) {
+                "§d§lＳＣＹＴＨＥ".equals(Objects.requireNonNull(event.getItem().getItemMeta()).getDisplayName())) {
             Player player = event.getPlayer();
             UUID playerId = player.getUniqueId();
             long currentTime = System.currentTimeMillis();
@@ -51,6 +52,18 @@ public class Scythe implements Listener {
         player.setVelocity(direction.multiply(DASH_DISTANCE / 2).setY(0.5));
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, FALL_DAMAGE_PROTECTION_TIME * 20, 4, true, false));
         new BukkitRunnable() {
+            int ticks = 0;
+            @Override
+            public void run() {
+                if (ticks < 60) {
+                    player.getWorld().spawnParticle(Particle.SPELL_WITCH, player.getLocation(), 5, 0.2, 0.2, 0.2, 0.05);
+                    ticks++;
+                } else {
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 2L);
+        new BukkitRunnable() {
             @Override
             public void run() {
                 player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
@@ -64,12 +77,12 @@ public class Scythe implements Listener {
                 UUID playerId = player.getUniqueId();
                 if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD &&
                         player.getInventory().getItemInMainHand().hasItemMeta() &&
-                        "§f§lScythe".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
+                        "§d§lＳＣＹＴＨＥ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
                     if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
                         long timeLeft = (cooldowns.get(playerId) - currentTime) / 1000;
-                        sendActionBar(player, "§f§lScythe §f- §c" + timeLeft + "§cs");
+                        sendActionBar(player, "§d§lScythe §f- §c" + timeLeft + "§cs");
                     } else {
-                        sendActionBar(player, "§f§lScythe §f- §aReady");
+                        sendActionBar(player, "§d§lScythe §f- §aReady");
                     }
                 }
             }
