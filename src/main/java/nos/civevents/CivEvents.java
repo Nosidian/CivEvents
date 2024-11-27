@@ -151,14 +151,9 @@ public final class CivEvents extends JavaPlugin {
         Objects.requireNonNull(getCommand("civitems")).setExecutor(new ItemCommands(this));
         Objects.requireNonNull(getCommand("civitems")).setTabCompleter(new ItemCommands(this));
         getServer().getPluginManager().registerEvents(new GhostStaff(this), this);
-        //getServer().getPluginManager().registerEvents(new Hammer(this), this);
         getServer().getPluginManager().registerEvents(new Spear(this), this);
-        getServer().getPluginManager().registerEvents(new Dagger(this), this);
         getServer().getPluginManager().registerEvents(new Scythe(this), this);
         getServer().getPluginManager().registerEvents(new Mace(this), this);
-        getServer().getPluginManager().registerEvents(new Spear(this), this);
-        getServer().getPluginManager().registerEvents(new Mace(this), this);
-        getServer().getPluginManager().registerEvents(new Scythe(this), this);
 
         // CivLocations
         Objects.requireNonNull(getCommand("civlocations")).setExecutor(new LocationCommands(this, locationConfig));
