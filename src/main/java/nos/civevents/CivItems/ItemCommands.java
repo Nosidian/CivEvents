@@ -28,39 +28,23 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         if (args.length > 0) {
             if (args[0].equalsIgnoreCase("ghost-staff")) {
                 giveGhostStaff(sender, args);
-                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 4");
-                return true;
-            } else if (args[0].equalsIgnoreCase("hammer")) {
-                giveHammer(sender, args);
-                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 5");
-                return true;
-            } else if (args[0].equalsIgnoreCase("spear")) {
-                giveSpear(sender, args);
-                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 6");
-                return true;
-            } else if (args[0].equalsIgnoreCase("dagger")) {
-                giveDagger(sender, args);
-                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 7");
-                return true;
-            } else if (args[0].equalsIgnoreCase("scythe")) {
-                giveScythe(sender, args);
-                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 8");
-                return true;
-            } else if (args[0].equalsIgnoreCase("mace")) {
-                giveMace(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 9");
                 return true;
-            } else if (args[0].equalsIgnoreCase("event-spear")) {
+            } else if (args[0].equalsIgnoreCase("spear")) {
                 giveEventSpear(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 1");
                 return true;
-            } else if (args[0].equalsIgnoreCase("event-scythe")) {
+            } else if (args[0].equalsIgnoreCase("scythe")) {
                 giveEventScythe(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 2");
                 return true;
-            } else if (args[0].equalsIgnoreCase("event-goldmace")) {
+            } else if (args[0].equalsIgnoreCase("goldmace")) {
                 giveEventGoldMace(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 3");
+                return true;
+            } else if (args[0].equalsIgnoreCase("herosword")) {
+                giveEventHeroSword(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 4");
                 return true;
             }
             sender.sendMessage("§f§lCivEvents §f| §cInvalid item name");
@@ -74,14 +58,10 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("ghost-staff");
-            completions.add("hammer");
             completions.add("spear");
-            completions.add("dagger");
             completions.add("scythe");
-            completions.add("mace");
-            completions.add("event-spear");
-            completions.add("event-scythe");
-            completions.add("event-goldmace");
+            completions.add("goldmace");
+            completions.add("herosword");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
@@ -102,71 +82,6 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems ghost-staff <player>");
         }
     }
-    private void giveHammer(CommandSender sender, String[] args) {
-        if (args.length == 2) {
-            Player targetPlayer = Bukkit.getPlayer(args[1]);
-            if (targetPlayer != null) {
-                targetPlayer.getInventory().addItem(createHammer());
-                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Hammer to " + targetPlayer.getName());
-            } else {
-                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
-            }
-        } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems hammer <player>");
-        }
-    }
-    private void giveSpear(CommandSender sender, String[] args) {
-        if (args.length == 2) {
-            Player targetPlayer = Bukkit.getPlayer(args[1]);
-            if (targetPlayer != null) {
-                targetPlayer.getInventory().addItem(createSpear());
-                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Spear to " + targetPlayer.getName());
-            } else {
-                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
-            }
-        } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems spear <player>");
-        }
-    }
-    private void giveDagger(CommandSender sender, String[] args) {
-        if (args.length == 2) {
-            Player targetPlayer = Bukkit.getPlayer(args[1]);
-            if (targetPlayer != null) {
-                targetPlayer.getInventory().addItem(createDagger());
-                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Dagger to " + targetPlayer.getName());
-            } else {
-                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
-            }
-        } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems dagger <player>");
-        }
-    }
-    private void giveScythe(CommandSender sender, String[] args) {
-        if (args.length == 2) {
-            Player targetPlayer = Bukkit.getPlayer(args[1]);
-            if (targetPlayer != null) {
-                targetPlayer.getInventory().addItem(createScythe());
-                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Scythe to " + targetPlayer.getName());
-            } else {
-                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
-            }
-        } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems scythe <player>");
-        }
-    }
-    private void giveMace(CommandSender sender, String[] args) {
-        if (args.length == 2) {
-            Player targetPlayer = Bukkit.getPlayer(args[1]);
-            if (targetPlayer != null) {
-                targetPlayer.getInventory().addItem(createMace());
-                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Mace to " + targetPlayer.getName());
-            } else {
-                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
-            }
-        } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems mace <player>");
-        }
-    }
     private void giveEventSpear(CommandSender sender, String[] args) {
         if (args.length == 2) {
             Player targetPlayer = Bukkit.getPlayer(args[1]);
@@ -177,7 +92,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
             }
         } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems event-spear <player>");
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems spear <player>");
         }
     }
     private void giveEventScythe(CommandSender sender, String[] args) {
@@ -190,7 +105,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
             }
         } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems event-scythe <player>");
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems scythe <player>");
         }
     }
     private void giveEventGoldMace(CommandSender sender, String[] args) {
@@ -203,7 +118,20 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
             }
         } else {
-            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems event-goldmace <player>");
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems goldmace <player>");
+        }
+    }
+    private void giveEventHeroSword(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createEventHeroSword());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Hero's Sword to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems herosword <player>");
         }
     }
     public static ItemStack createGhostStaff() {
@@ -219,100 +147,10 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                     "§dStarts Ghost Combo",
                     "§d=-=-=-=-=-=-=-=-="
             ));
-            meta.setCustomModelData(4);
+            meta.setCustomModelData(9);
             ghostStaff.setItemMeta(meta);
         }
         return ghostStaff;
-    }
-    public static ItemStack createHammer() {
-        ItemStack smashHammer = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = smashHammer.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§f§lHammer");
-            meta.addEnchant(Enchantment.DURABILITY, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            meta.setLore(Arrays.asList(
-                    "§7§m----------------",
-                    "§7When Right Clicked",
-                    "§7Launch And Smash",
-                    "§7§m----------------"
-            ));
-            meta.setCustomModelData(5);
-            smashHammer.setItemMeta(meta);
-        }
-        return smashHammer;
-    }
-    private ItemStack createSpear() {
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§f§lSpear");
-            meta.addEnchant(Enchantment.DURABILITY, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            List<String> lore = new ArrayList<>();
-            lore.add("§7§m-----------------");
-            lore.add("§7RightClick On Player");
-            lore.add("§7To Give Bleeding");
-            lore.add("§7§m-----------------");
-            meta.setLore(lore);
-            meta.setCustomModelData(6);
-            item.setItemMeta(meta);
-        }
-        return item;
-    }
-    private ItemStack createDagger() {
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§f§lDagger");
-            meta.addEnchant(Enchantment.DURABILITY, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            List<String> lore = new ArrayList<>();
-            lore.add("§7§m------------");
-            lore.add("§7RightClick To");
-            lore.add("§7Summon Wolfs");
-            lore.add("§7§m------------");
-            meta.setLore(lore);
-            meta.setCustomModelData(7);
-            item.setItemMeta(meta);
-        }
-        return item;
-    }
-    private ItemStack createScythe() {
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§f§lScythe");
-            meta.addEnchant(Enchantment.DURABILITY, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            List<String> lore = new ArrayList<>();
-            lore.add("§7§m------------");
-            lore.add("§7RightClick To");
-            lore.add("§7Dash Forward");
-            lore.add("§7§m------------");
-            meta.setLore(lore);
-            meta.setCustomModelData(8);
-            item.setItemMeta(meta);
-        }
-        return item;
-    }
-    private ItemStack createMace() {
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName("§f§lMace");
-            meta.addEnchant(Enchantment.DURABILITY, 1, true);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            List<String> lore = new ArrayList<>();
-            lore.add("§7§m--------------");
-            lore.add("§7RightClick To");
-            lore.add("§7Launch Players");
-            lore.add("§7§m--------------");
-            meta.setLore(lore);
-            meta.setCustomModelData(9);
-            item.setItemMeta(meta);
-        }
-        return item;
     }
     private ItemStack createEventSpear() {
         ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
@@ -367,5 +205,26 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             smashHammer.setItemMeta(meta);
         }
         return smashHammer;
+    }
+    public static ItemStack createEventHeroSword() {
+        ItemStack heroSword = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = heroSword.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§f§lＨＥＲＯ᾽Ｓ ＳＷＯＲＤ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m-----------------",
+                    "§7When You Die While",
+                    "§7Holding This Sword",
+                    "§7You Will Be Revived",
+                    "§7But The Sword Will",
+                    "§7Be Destroyed",
+                    "§7§m-----------------"
+            ));
+            meta.setCustomModelData(4);
+            heroSword.setItemMeta(meta);
+        }
+        return heroSword;
     }
 }
