@@ -26,8 +26,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("all")
 public class Trickster implements Listener {
-    private static final int COOLDOWN = 60;
     private final Map<UUID, Long> cooldowns = new HashMap<>();
+    private static final int COOLDOWN = 300;
     private final CivEvents plugin;
     public Trickster(CivEvents plugin) {
         this.plugin = plugin;

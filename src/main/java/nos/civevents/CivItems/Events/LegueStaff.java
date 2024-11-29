@@ -19,7 +19,7 @@ import java.util.UUID;
 @SuppressWarnings("all")
 public class LegueStaff implements Listener {
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN = 10; //300
+    private static final int COOLDOWN = 300;
     private final Random random = new Random();
     private final CivEvents plugin;
     public LegueStaff(CivEvents plugin) {
