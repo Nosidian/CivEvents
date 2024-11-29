@@ -46,6 +46,26 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 giveEventHeroSword(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 4");
                 return true;
+            } else if (args[0].equalsIgnoreCase("trickster")) {
+                giveEventTricksterSword(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 5");
+                return true;
+            } else if (args[0].equalsIgnoreCase("icestaff")) {
+                giveEventIceStaff(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 6");
+                return true;
+            } else if (args[0].equalsIgnoreCase("silversword")) {
+                giveEventSilverSword(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 7");
+                return true;
+            } else if (args[0].equalsIgnoreCase("dwarfaxe")) {
+                giveEventDwarfAxe(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 8");
+                return true;
+            } else if (args[0].equalsIgnoreCase("leguestaff")) {
+                giveEventLegueStaff(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 9");
+                return true;
             }
             sender.sendMessage("§f§lCivEvents §f| §cInvalid item name");
         } else {
@@ -62,6 +82,11 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             completions.add("scythe");
             completions.add("goldmace");
             completions.add("herosword");
+            completions.add("trickster");
+            completions.add("icestaff");
+            completions.add("silversword");
+            completions.add("dwarfaxe");
+            completions.add("leguestaff");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
@@ -82,7 +107,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems ghost-staff <player>");
         }
     }
-    private void giveEventSpear(CommandSender sender, String[] args) {
+    public static void giveEventSpear(CommandSender sender, String[] args) {
         if (args.length == 2) {
             Player targetPlayer = Bukkit.getPlayer(args[1]);
             if (targetPlayer != null) {
@@ -134,6 +159,71 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems herosword <player>");
         }
     }
+    private void giveEventTricksterSword(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createEventTricksterSword());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Trickster's Sword to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems trickster <player>");
+        }
+    }
+    private void giveEventIceStaff(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createEventIceStaff());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Ice Staff to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems icestaff <player>");
+        }
+    }
+    private void giveEventSilverSword(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createEventSilverSword());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Silver Sword to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems silversword <player>");
+        }
+    }
+    private void giveEventDwarfAxe(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createEventDwarfAxe());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Dwarf Axe to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems dwarfaxe <player>");
+        }
+    }
+    private void giveEventLegueStaff(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createEventLegueStaff());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Legue Staff to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems leguestaff <player>");
+        }
+    }
     public static ItemStack createGhostStaff() {
         ItemStack ghostStaff = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = ghostStaff.getItemMeta();
@@ -152,7 +242,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         }
         return ghostStaff;
     }
-    private ItemStack createEventSpear() {
+    private static ItemStack createEventSpear() {
         ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
@@ -210,7 +300,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
         ItemStack heroSword = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = heroSword.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName("§f§lＨＥＲＯ᾽Ｓ ＳＷＯＲＤ");
+            meta.setDisplayName("§6§lＨＥＲＯ᾽Ｓ ＳＷＯＲＤ");
             meta.addEnchant(Enchantment.DURABILITY, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             meta.setLore(Arrays.asList(
@@ -226,5 +316,103 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             heroSword.setItemMeta(meta);
         }
         return heroSword;
+    }
+    public static ItemStack createEventTricksterSword() {
+        ItemStack tricksterSword = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = tricksterSword.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§c§lＴＲＩＣＫＳＴＥＲ᾽Ｓ ＳＷＯＲＤ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m-------------------------",
+                    "§7When Right Clicked",
+                    "§7You Have 1/4 Chance",
+                    "§71: Switch Your Legendary",
+                    "§72: Tp To Random Player",
+                    "§73: Get Strength For 5 Min",
+                    "§74: Get Wither Allies",
+                    "§7§m-------------------------"
+            ));
+            meta.setCustomModelData(5);
+            tricksterSword.setItemMeta(meta);
+        }
+        return tricksterSword;
+    }
+    public static ItemStack createEventIceStaff() {
+        ItemStack iceStaff = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = iceStaff.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§b§lＩＣＥ ＳＴＡＦＦ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m-------------------",
+                    "§7When Right Clicked",
+                    "§7Shoot Snowball That",
+                    "§7Gives Target Slowness",
+                    "§7§m-------------------"
+            ));
+            meta.setCustomModelData(6);
+            iceStaff.setItemMeta(meta);
+        }
+        return iceStaff;
+    }
+    public static ItemStack createEventSilverSword() {
+        ItemStack silverSword = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = silverSword.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§f§lＳＩＬＶＥＲ ＳＷＯＲＤ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m------------------",
+                    "§7When Target Is Hit",
+                    "§7Break All His Iron",
+                    "§7Armor Every 5 Min",
+                    "§7§m------------------"
+            ));
+            meta.setCustomModelData(7);
+            silverSword.setItemMeta(meta);
+        }
+        return silverSword;
+    }
+    public static ItemStack createEventDwarfAxe() {
+        ItemStack dwarfAxe = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = dwarfAxe.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§8§lＤＷＡＲＦ ＡＸＥ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.setLore(Arrays.asList(
+                    "§7§m-------------",
+                    "§7On Player Kill",
+                    "§7Get A Random",
+                    "§7Enchantment",
+                    "§7§m-------------"
+            ));
+            meta.setCustomModelData(8);
+            dwarfAxe.setItemMeta(meta);
+        }
+        return dwarfAxe;
+    }
+    public static ItemStack createEventLegueStaff() {
+        ItemStack legueStaff = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = legueStaff.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§2§lＬＥＧＵＥ ＳＴＡＦＦ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m----------------",
+                    "§7When Right Clicked",
+                    "§7Your Offhand Item",
+                    "§7Will Either Double",
+                    "§7Or Get Removed",
+                    "§7§m----------------"
+            ));
+            meta.setCustomModelData(9);
+            legueStaff.setItemMeta(meta);
+        }
+        return legueStaff;
     }
 }

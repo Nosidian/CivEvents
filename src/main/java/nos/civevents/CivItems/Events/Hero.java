@@ -30,15 +30,15 @@ public class Hero implements Listener {
         if (event.getEntity() instanceof Player player) {
             ItemStack mainHandItem = player.getInventory().getItemInMainHand();
             if (mainHandItem.getType() == Material.DIAMOND_SWORD && mainHandItem.hasItemMeta() &&
-                    "§f§lＨＥＲＯ᾽Ｓ ＳＷＯＲＤ".equals(Objects.requireNonNull(mainHandItem.getItemMeta()).getDisplayName())) {
+                    "§6§lＨＥＲＯ᾽Ｓ ＳＷＯＲＤ".equals(Objects.requireNonNull(mainHandItem.getItemMeta()).getDisplayName())) {
                 if (player.getHealth() - event.getFinalDamage() <= 0) {
                     event.setCancelled(true);
-                    player.setHealth(2.0);
+                    player.setHealth(4.0);
                     player.getInventory().setItemInMainHand(null);
                     player.getWorld().spawnParticle(Particle.TOTEM, player.getLocation(), 100, 1, 1, 1, 0.2);
                     player.getWorld().playSound(player.getLocation(), Sound.ITEM_TOTEM_USE, 1f, 1f);
                     playTotemAnimation(player);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 5, 1));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 10, 1));
                     player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 45, 1));
                     player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 40, 0));
                 }

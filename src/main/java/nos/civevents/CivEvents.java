@@ -16,10 +16,7 @@ import nos.civevents.CivFlags.FlagCommands;
 import nos.civevents.CivFlags.FlagConfig;
 import nos.civevents.CivHelp.HelpCommands;
 import nos.civevents.CivHelp.HelpOptions;
-import nos.civevents.CivItems.Events.Hero;
-import nos.civevents.CivItems.Events.Mace;
-import nos.civevents.CivItems.Events.Scythe;
-import nos.civevents.CivItems.Events.Spear;
+import nos.civevents.CivItems.Events.*;
 import nos.civevents.CivItems.ItemCommands;
 import nos.civevents.CivItems.Items.*;
 import nos.civevents.CivLocations.LocationCommands;
@@ -156,6 +153,11 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Scythe(this), this);
         getServer().getPluginManager().registerEvents(new Mace(this), this);
         getServer().getPluginManager().registerEvents(new Hero(this), this);
+        getServer().getPluginManager().registerEvents(new Trickster(this), this);
+        getServer().getPluginManager().registerEvents(new IceStaff(this), this);
+        getServer().getPluginManager().registerEvents(new Silver(this), this);
+        getServer().getPluginManager().registerEvents(new DwarfAxe(this), this);
+        getServer().getPluginManager().registerEvents(new LegueStaff(this), this);
 
         // CivLocations
         Objects.requireNonNull(getCommand("civlocations")).setExecutor(new LocationCommands(this, locationConfig));
