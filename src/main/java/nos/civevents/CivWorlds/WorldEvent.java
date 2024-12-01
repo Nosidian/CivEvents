@@ -21,7 +21,6 @@ public class WorldEvent extends ChunkGenerator {
     @Override
     public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
         ChunkData chunkData = createChunkData(world);
-        world.setGameRuleValue("doDecay", "false");
         SimplexOctaveGenerator landNoise = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
         PerlinOctaveGenerator surfaceNoise = new PerlinOctaveGenerator(new Random(world.getSeed() * 3), 4);
         landNoise.setScale(0.005D);
