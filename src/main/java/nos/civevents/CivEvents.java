@@ -158,6 +158,9 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Silver(this), this);
         getServer().getPluginManager().registerEvents(new DwarfAxe(this), this);
         getServer().getPluginManager().registerEvents(new LegueStaff(this), this);
+        getServer().getPluginManager().registerEvents(new MagicWand(this), this);
+        getServer().getPluginManager().registerEvents(new SpellHammer(this), this);
+        getServer().getPluginManager().registerEvents(new MagicBlade(this), this);
 
         // CivLocations
         Objects.requireNonNull(getCommand("civlocations")).setExecutor(new LocationCommands(this, locationConfig));

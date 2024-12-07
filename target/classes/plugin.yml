@@ -4,7 +4,7 @@ main: nos.civevents.CivEvents
 api-version: '1.20'
 authors: [Nosidian]
 description: A Plugin Created By Nosidian
-softdepend: [LuckPerms]
+softdepend: [LuckPerms, ProtocolLib]
 
 commands:
   civadmins:

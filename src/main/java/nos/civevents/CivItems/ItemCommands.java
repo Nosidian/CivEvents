@@ -66,6 +66,18 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 giveEventLegueStaff(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 9");
                 return true;
+            } else if (args[0].equalsIgnoreCase("magicwand")) {
+                giveMagicWand(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 10");
+                return true;
+            } else if (args[0].equalsIgnoreCase("spellhammer")) {
+                giveSpellHammer(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 11");
+                return true;
+            } else if (args[0].equalsIgnoreCase("magicblade")) {
+                giveMagicBlade(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 12");
+                return true;
             }
             sender.sendMessage("§f§lCivEvents §f| §cInvalid item name");
         } else {
@@ -87,6 +99,9 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             completions.add("silversword");
             completions.add("dwarfaxe");
             completions.add("leguestaff");
+            completions.add("magicwand");
+            completions.add("spellhammer");
+            completions.add("magicblade");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
@@ -222,6 +237,45 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             }
         } else {
             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems leguestaff <player>");
+        }
+    }
+    private void giveMagicWand(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createMagicWand());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Magic Wand to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems magicwand <player>");
+        }
+    }
+    private void giveSpellHammer(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createSpellHammer());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Spell Hammer to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems spellhammer <player>");
+        }
+    }
+    private void giveMagicBlade(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createMagicBlade());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Magic Blade to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems magicblade <player>");
         }
     }
     public static ItemStack createGhostStaff() {
@@ -414,5 +468,64 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             legueStaff.setItemMeta(meta);
         }
         return legueStaff;
+    }
+    public static ItemStack createMagicWand() {
+        ItemStack magicWand = new ItemStack(Material.STICK);
+        ItemMeta meta = magicWand.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§5§lＭＡＧＩＣ ＷＡＮＤ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m----------------",
+                    "§7When Right Clicked",
+                    "§7Shoots A Particle",
+                    "§7Line Dealing 2.5",
+                    "§7Hearts Of Damage",
+                    "§7§m----------------"
+            ));
+            meta.setCustomModelData(10);
+            magicWand.setItemMeta(meta);
+        }
+        return magicWand;
+    }
+    public static ItemStack createSpellHammer() {
+        ItemStack spellHammer = new ItemStack(Material.NETHERITE_AXE);
+        ItemMeta meta = spellHammer.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§6§lＳＰＥＬＬ ＨＡＭＭＥＲ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m----------------",
+                    "§7RightClick + Sneak",
+                    "§7To Launch Yourself",
+                    "§7And Knock Players",
+                    "§7On Ground Impact",
+                    "§7§m----------------"
+            ));
+            meta.setCustomModelData(11);
+            spellHammer.setItemMeta(meta);
+        }
+        return spellHammer;
+    }
+    public static ItemStack createMagicBlade() {
+        ItemStack magicBlade = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = magicBlade.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§d§lＭＡＧＩＣ ＢＬＡＤＥ");
+            meta.addEnchant(Enchantment.DURABILITY, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.setLore(Arrays.asList(
+                    "§7§m----------------",
+                    "§7When Right Clicked",
+                    "§7You Gain Speed 3",
+                    "§7For 5 Seconds",
+                    "§7§m----------------"
+            ));
+            meta.setCustomModelData(12);
+            magicBlade.setItemMeta(meta);
+        }
+        return magicBlade;
     }
 }
