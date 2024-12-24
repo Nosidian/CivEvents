@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -107,13 +108,15 @@ public class Spear implements Listener {
             @Override
             public void run() {
                 long currentTime = System.currentTimeMillis();
-                for (UUID entityId : bleedingEntities.keySet()) {
+                Iterator<UUID> iterator = bleedingEntities.keySet().iterator();
+                while (iterator.hasNext()) {
+                    UUID entityId = iterator.next();
                     LivingEntity entity = (LivingEntity) plugin.getServer().getEntity(entityId);
                     if (entity != null && bleedingEntities.get(entityId) > currentTime) {
                         entity.damage(BLEED_DAMAGE);
                         spawnParticleCloud2(entity);
                     } else {
-                        bleedingEntities.remove(entityId);
+                        iterator.remove();
                     }
                 }
             }

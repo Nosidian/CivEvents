@@ -66,6 +66,10 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
                 player.sendMessage("§f§lCivEvents §f| §aRecipe " + recipeName + " GUI opened at slot " + slot);
             }
             case "remove" -> {
+                if (args.length < 2) {
+                    player.sendMessage("§f§lCivEvents §f| §cUsage: /civrecipes remove <name>");
+                    return true;
+                }
                 if (recipeConfig.getConfig().contains("Recipes." + recipeName)) {
                     recipeConfig.getConfig().set("Recipes." + recipeName, null);
                     recipeConfig.saveConfig();
@@ -76,7 +80,13 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
                     player.sendMessage("§f§lCivEvents §f| §cNo recipe found with the name " + recipeName);
                 }
             }
-            case "view" -> RecipesCreate.openViewRecipeGui(player, recipeName);
+            case "view" -> {
+                if (args.length < 2) {
+                    player.sendMessage("§f§lCivEvents §f| §cUsage: /civrecipes view <name>");
+                    return true;
+                }
+                RecipesCreate.openViewRecipeGui(player, recipeName);
+            }
             case "reload" -> {
                 plugin.registerRecipesFromConfig();
                 sender.sendMessage("§f§lCivEvents §f| §aRecipes registered");
@@ -102,6 +112,8 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
             }
         } else if (args.length == 3 && args[0].equalsIgnoreCase("create")) {
             suggestions.add("<slot>");
+            suggestions.add("<first-9>");
+            suggestions.add("<last-44>");
         }
         return suggestions;
     }

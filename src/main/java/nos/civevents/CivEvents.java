@@ -58,7 +58,6 @@ public final class CivEvents extends JavaPlugin {
     private WorldConfig worldConfig;
     private LuckPerms luckPerms;
     public static CivEvents instance;
-    private WorldCommands worldCommands;
     @Override
     public void onEnable() {
         System.out.println("CivEvents: Enabled");
@@ -224,22 +223,22 @@ public final class CivEvents extends JavaPlugin {
     }
     public void registerRecipesFromConfig() {
         if (recipeConfig.getConfig().contains("Recipes")) {
-            for (String recipeName : recipeConfig.getConfig().getConfigurationSection("Recipes").getKeys(false)) {
+            for (String recipeName : Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection("Recipes")).getKeys(false)) {
                 String path = "Recipes." + recipeName;
-                ItemStack result = createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Result"));
+                ItemStack result = createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Result")));
                 ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, recipeName), result);
                 String[] shape = new String[]{"ABC", "DEF", "GHI"};
                 recipe.shape(shape);
                 Map<Character, ItemStack> ingredientMap = Map.of(
-                        'A', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.1")),
-                        'B', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.2")),
-                        'C', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.3")),
-                        'D', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.4")),
-                        'E', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.5")),
-                        'F', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.6")),
-                        'G', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.7")),
-                        'H', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.8")),
-                        'I', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.9"))
+                        'A', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.1"))),
+                        'B', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.2"))),
+                        'C', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.3"))),
+                        'D', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.4"))),
+                        'E', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.5"))),
+                        'F', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.6"))),
+                        'G', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.7"))),
+                        'H', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.8"))),
+                        'I', createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.9")))
                 );
                 for (Map.Entry<Character, ItemStack> entry : ingredientMap.entrySet()) {
                     Material material = entry.getValue().getType();
@@ -265,7 +264,7 @@ public final class CivEvents extends JavaPlugin {
                 meta.setLore(section.getStringList("Lore"));
             }
             if (section.contains("Enchantments")) {
-                for (String enchantmentKey : section.getConfigurationSection("Enchantments").getKeys(false)) {
+                for (String enchantmentKey : Objects.requireNonNull(section.getConfigurationSection("Enchantments")).getKeys(false)) {
                     int level = section.getInt("Enchantments." + enchantmentKey);
                     Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(enchantmentKey));
                     if (enchantment != null) {

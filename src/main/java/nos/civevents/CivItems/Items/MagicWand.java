@@ -55,7 +55,7 @@ public class MagicWand implements Listener {
             for (Entity entity : player.getWorld().getNearbyEntities(point, 1.0, 1.0, 1.0)) {
                 if (entity == player) continue;
                 if (entity instanceof LivingEntity livingEntity) {
-                    livingEntity.damage(5.0, player);
+                    livingEntity.damage(15.0, player);
                     livingEntity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 4, true, false));
                     return;
                 }

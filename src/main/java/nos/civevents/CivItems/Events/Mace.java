@@ -73,6 +73,9 @@ public class Mace implements Listener {
                     for (int y = 0; y <= depth; y++) {
                         Location blockLocation = location.clone().add(x, -y - 1, z);
                         Block block = Objects.requireNonNull(world).getBlockAt(blockLocation);
+                        if (block.getType() == Material.WATER || block.getType() == Material.LAVA) {
+                            continue;
+                        }
                         if (block.getType() != Material.AIR) {
                             Material originalMaterial = block.getType();
                             block.setType(Material.BARRIER);
