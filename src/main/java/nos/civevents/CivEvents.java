@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,8 +47,20 @@ public final class CivEvents extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println("CivEvents: Disabled");
-        getLogger().info("CivEvents: Saved All Configs");
+        plugin = null;
+        banConfig = null;
+        playerConfig = null;
+        scytherConfig = null;
+        deathConfig = null;
+        entityConfig = null;
+        flagConfig = null;
+        locationConfig = null;
+        recipeConfig = null;
+        civilizationConfig = null;
+        worldConfig = null;
+        listenerHandler = null;
+        commandHandler = null;
+        HandlerList.unregisterAll();
     }
     private void loadPlugin() {
         long start = System.currentTimeMillis();
@@ -94,6 +107,8 @@ public final class CivEvents extends JavaPlugin {
             worldConfig.reloadConfig();
             getLogger().info("CivEvents: Reloaded All Configs");
         }, 100L);
+
+        getLogger().info("CivEvents has been enabled in " + (System.currentTimeMillis() - start) / 1000 + " seconds!");
     }
 
     public void registerRecipesFromConfig() {
