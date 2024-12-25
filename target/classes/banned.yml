@@ -1,8 +1,0 @@
-#---------------------------------#
-# Banning System - /civban         #
-#---------------------------------#
-blocked_players:
-  - Example
-
-blocked_ips:
-  - 0.0.0.0
