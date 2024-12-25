@@ -2,37 +2,9 @@ package nos.civevents;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
-import nos.civevents.CivAdmins.*;
-import nos.civevents.CivBans.*;
-import nos.civevents.CivDeaths.DeathCommands;
-import nos.civevents.CivDeaths.DeathConfig;
-import nos.civevents.CivDeaths.Deaths.ExplosionDeath;
-import nos.civevents.CivDeaths.Deaths.FireworksDeath;
-import nos.civevents.CivDeaths.Deaths.GraveDeath;
-import nos.civevents.CivDeaths.Deaths.LightningDeath;
-import nos.civevents.CivEntities.EntityCommands;
-import nos.civevents.CivEntities.EntityConfig;
-import nos.civevents.CivFlags.FlagCommands;
-import nos.civevents.CivFlags.FlagConfig;
-import nos.civevents.CivHelp.HelpCommands;
-import nos.civevents.CivHelp.HelpOptions;
-import nos.civevents.CivItems.Events.ObsidianMace;
-import nos.civevents.CivItems.Events.ObsidianScythe;
-import nos.civevents.CivItems.Events.ObsidianSpear;
-import nos.civevents.CivItems.ItemCommands;
-import nos.civevents.CivItems.Items.*;
-import nos.civevents.CivLocations.LocationCommands;
-import nos.civevents.CivLocations.LocationConfig;
-import nos.civevents.CivLocations.PortalCommands;
-import nos.civevents.CivPackages.*;
-import nos.civevents.CivRecipes.*;
-import nos.civevents.CivTeams.CivilizationCommands;
-import nos.civevents.CivTeams.CivilizationConfig;
-import nos.civevents.CivTeams.TeamCommands;
-import nos.civevents.CivWorlds.WorldBackrooms;
-import nos.civevents.CivWorlds.WorldCommands;
-import nos.civevents.CivWorlds.WorldConfig;
-import nos.civevents.CivWorlds.WorldGenerator;
+import nos.civevents.commands.CommandHandler;
+import nos.civevents.configuration.*;
+import nos.civevents.listener.ListenerHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -44,10 +16,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
-import java.util.Objects;
 
 @SuppressWarnings("all")
 public final class CivEvents extends JavaPlugin {
+    private static CivEvents plugin;
+
+    public static CivEvents getPlugin() {
+        return plugin;
+    }
+
+    private ListenerHandler listenerHandler;
     private BanConfig banConfig;
     private ScytherConfig scytherConfig;
     private PlayerConfig playerConfig;
@@ -59,130 +37,46 @@ public final class CivEvents extends JavaPlugin {
     private CivilizationConfig civilizationConfig;
     private WorldConfig worldConfig;
     private LuckPerms luckPerms;
-    public static CivEvents instance;
+    private CommandHandler commandHandler;
+
     @Override
     public void onEnable() {
-        System.out.println("CivEvents: Enabled");
-        banConfig = new BanConfig(this);
-        banConfig.loadConfig();
-        playerConfig = new PlayerConfig(this);
-        playerConfig.loadConfig();
-        scytherConfig = new ScytherConfig(this);
-        scytherConfig.loadConfig();
-        deathConfig = new DeathConfig(this);
-        deathConfig.loadConfig();
-        entityConfig = new EntityConfig(this);
-        entityConfig.loadConfig();
-        flagConfig = new FlagConfig(this);
-        flagConfig.loadConfig();
-        locationConfig = new LocationConfig(this);
-        locationConfig.loadConfig();
-        recipeConfig = new RecipeConfig(this);
-        recipeConfig.loadConfig();
-        civilizationConfig = new CivilizationConfig(this);
-        civilizationConfig.loadConfig();
-        worldConfig = new WorldConfig(this);
-        worldConfig.loadConfig();
-        instance = this;
-        registerRecipesFromConfig();
+        loadPlugin();
+    }
 
-        if (getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+    @Override
+    public void onDisable() {
+        System.out.println("CivEvents: Disabled");
+        getLogger().info("CivEvents: Saved All Configs");
+    }
+    private void loadPlugin() {
+        long start = System.currentTimeMillis();
+        plugin = this;
+
+        banConfig = new BanConfig();
+        playerConfig = new PlayerConfig();
+        scytherConfig = new ScytherConfig();
+        deathConfig = new DeathConfig();
+        entityConfig = new EntityConfig();
+        flagConfig = new FlagConfig();
+        locationConfig = new LocationConfig();
+        recipeConfig = new RecipeConfig();
+        civilizationConfig = new CivilizationConfig();
+        worldConfig = new WorldConfig();
+
+        // Initialize listener and command handlers
+        listenerHandler = new ListenerHandler(this);
+        commandHandler = new CommandHandler(this);
+
+        if (plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null) {
             luckPerms = LuckPermsProvider.get();
-            // CivTeams
-            Objects.requireNonNull(getCommand("civteams")).setExecutor(new CivilizationCommands(this, civilizationConfig));
-            Objects.requireNonNull(getCommand("civteams")).setTabCompleter(new CivilizationCommands(this, civilizationConfig));
-            Objects.requireNonNull(getCommand("team")).setExecutor(new TeamCommands(this));
-            Objects.requireNonNull(getCommand("team")).setTabCompleter(new TeamCommands(this));
-            getServer().getPluginManager().registerEvents(new TeamCommands(this), this);
-            getLogger().info("CivEvents: Luckperms is connected");
+            plugin.getLogger().info("CivEvents: Luckperms is connected");
         } else {
             luckPerms = null;
-            getLogger().info("CivEvents: Luckperms is missing");
+            plugin.getLogger().info("CivEvents: Luckperms is missing");
         }
 
-        // CivAdmins
-        Objects.requireNonNull(getCommand("civadmins")).setExecutor(new AdminCommands(this, new AdminBomb(this)));
-        Objects.requireNonNull(getCommand("civadmins")).setTabCompleter(new AdminCommands(this, new AdminBomb(this)));
-        Objects.requireNonNull(getCommand("gms")).setExecutor(new AdminSurvival());
-        Objects.requireNonNull(getCommand("gms")).setTabCompleter(new AdminSurvival());
-        Objects.requireNonNull(getCommand("gmc")).setExecutor(new AdminCreative());
-        Objects.requireNonNull(getCommand("gmc")).setTabCompleter(new AdminCreative());
-        Objects.requireNonNull(getCommand("gma")).setExecutor(new AdminAdventure());
-        Objects.requireNonNull(getCommand("gma")).setTabCompleter(new AdminAdventure());
-        Objects.requireNonNull(getCommand("gmsp")).setExecutor(new AdminSpectator());
-        Objects.requireNonNull(getCommand("gmsp")).setTabCompleter(new AdminSpectator());
-        getServer().getPluginManager().registerEvents(new AdminCommands(this, new AdminBomb(this)), this);
-
-        // CivBans
-        Objects.requireNonNull(getCommand("civban")).setExecutor(new BanCommands(this, banConfig));
-        Objects.requireNonNull(getCommand("civban")).setTabCompleter(new BanCommands(this, banConfig));
-        getServer().getPluginManager().registerEvents(new BanCommands(this, banConfig), this);
-        getServer().getPluginManager().registerEvents(new BanConfig(this), this);
-        Objects.requireNonNull(getCommand("antiscythers")).setExecutor(new ScytherCommands(this, scytherConfig));
-        Objects.requireNonNull(getCommand("antiscythers")).setTabCompleter(new ScytherCommands(this, scytherConfig));
-        getServer().getPluginManager().registerEvents(new ScytherCommands(this, scytherConfig), this);
-        getServer().getPluginManager().registerEvents(new ScytherConfig(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerConfig(this), this);
-
-        // CivDeaths
-        Objects.requireNonNull(getCommand("civdeaths")).setExecutor(new DeathCommands(this, deathConfig));
-        Objects.requireNonNull(getCommand("civdeaths")).setTabCompleter(new DeathCommands(this, deathConfig));
-        getServer().getPluginManager().registerEvents(new LightningDeath(this, deathConfig), this);
-        getServer().getPluginManager().registerEvents(new ExplosionDeath(this, deathConfig), this);
-        getServer().getPluginManager().registerEvents(new FireworksDeath(this, deathConfig), this);
-        getServer().getPluginManager().registerEvents(new GraveDeath(this, deathConfig), this);
-
-        // CivEntities
-        Objects.requireNonNull(getCommand("civentities")).setExecutor(new EntityCommands(this, entityConfig));
-        Objects.requireNonNull(getCommand("civentities")).setTabCompleter(new EntityCommands(this, entityConfig));
-        getServer().getPluginManager().registerEvents(new EntityCommands(this, entityConfig), this);
-
-        // CivFlags
-        Objects.requireNonNull(getCommand("civflags")).setExecutor(new FlagCommands(this, flagConfig));
-        Objects.requireNonNull(getCommand("civflags")).setTabCompleter(new FlagCommands(this, flagConfig));
-        getServer().getPluginManager().registerEvents(new FlagCommands(this, flagConfig), this);
-
-        // CivHelp
-        Objects.requireNonNull(getCommand("civhelp")).setExecutor(new HelpCommands(new HelpOptions()));
-        Objects.requireNonNull(getCommand("civhelp")).setTabCompleter(new HelpCommands(new HelpOptions()));
-
-        // CivItems
-        Objects.requireNonNull(getCommand("civitems")).setExecutor(new ItemCommands(this));
-        Objects.requireNonNull(getCommand("civitems")).setTabCompleter(new ItemCommands(this));
-        getServer().getPluginManager().registerEvents(new GhostStaff(this), this);
-        //getServer().getPluginManager().registerEvents(new Hammer(this), this);
-        getServer().getPluginManager().registerEvents(new Spear(this), this);
-        getServer().getPluginManager().registerEvents(new Dagger(this), this);
-        getServer().getPluginManager().registerEvents(new Scythe(this), this);
-        getServer().getPluginManager().registerEvents(new Mace(this), this);
-        getServer().getPluginManager().registerEvents(new ObsidianSpear(this), this);
-        getServer().getPluginManager().registerEvents(new ObsidianMace(this), this);
-        getServer().getPluginManager().registerEvents(new ObsidianScythe(this), this);
-
-        // CivLocations
-        Objects.requireNonNull(getCommand("civlocations")).setExecutor(new LocationCommands(this, locationConfig));
-        Objects.requireNonNull(getCommand("civlocations")).setTabCompleter(new LocationCommands(this, locationConfig));
-        Objects.requireNonNull(getCommand("civportals")).setExecutor(new PortalCommands(this, locationConfig));
-        Objects.requireNonNull(getCommand("civportals")).setTabCompleter(new PortalCommands(this, locationConfig));
-        getServer().getPluginManager().registerEvents(new LocationCommands(this, locationConfig), this);
-        getServer().getPluginManager().registerEvents(new PortalCommands(this, locationConfig), this);
-
-        // CivPackages
-        Objects.requireNonNull(getCommand("civpackages")).setExecutor(new PackageCommands(this, new TierOne(this), new TierTwo(this), new TierThree(this), new TierFour(this), new TierFive(this), new TierPrize(this)));
-        Objects.requireNonNull(getCommand("civpackages")).setTabCompleter(new PackageCommands(this, new TierOne(this) , new TierTwo(this), new TierThree(this), new TierFour(this), new TierFive(this), new TierPrize(this)));
-
-        // CivRecipes
-        Objects.requireNonNull(getCommand("civrecipes")).setExecutor(new OperatorCommands(this, recipeConfig));
-        Objects.requireNonNull(getCommand("civrecipes")).setTabCompleter(new OperatorCommands(this, recipeConfig));
-        Objects.requireNonNull(getCommand("recipes")).setExecutor(new RecipeCommands(this));
-        getServer().getPluginManager().registerEvents(new RecipesCreate(this, recipeConfig), this);
-        getServer().getPluginManager().registerEvents(new RecipesGui(this, recipeConfig), this);
-
-        // CivWorlds
-        Objects.requireNonNull(getCommand("civworlds")).setExecutor(new WorldCommands(this, worldConfig));
-        Objects.requireNonNull(getCommand("civworlds")).setTabCompleter(new WorldCommands(this, worldConfig));
-        getServer().getPluginManager().registerEvents(new WorldGenerator(this, worldConfig), this);
-        getServer().getPluginManager().registerEvents(new WorldBackrooms(this, worldConfig), this);
+        registerRecipesFromConfig();
 
         // Extra
         //getServer().getPluginManager().registerEvents(new Temperature(this), this);
@@ -201,24 +95,7 @@ public final class CivEvents extends JavaPlugin {
             getLogger().info("CivEvents: Reloaded All Configs");
         }, 100L);
     }
-    @Override
-    public void onDisable() {
-        System.out.println("CivEvents: Disabled");
-        banConfig.saveConfig();
-        scytherConfig.saveConfig();
-        playerConfig.saveConfig();
-        deathConfig.saveConfig();
-        entityConfig.saveConfig();
-        flagConfig.saveConfig();
-        locationConfig.saveConfig();
-        recipeConfig.saveConfig();
-        civilizationConfig.saveConfig();
-        worldConfig.saveConfig();
-        getLogger().info("CivEvents: Saved All Configs");
-    }
-    public LuckPerms getLuckPerms() {
-        return luckPerms;
-    }
+
     public void registerRecipesFromConfig() {
         if (recipeConfig.getConfig().contains("Recipes")) {
             for (String recipeName : recipeConfig.getConfig().getConfigurationSection("Recipes").getKeys(false)) {
@@ -277,5 +154,49 @@ public final class CivEvents extends JavaPlugin {
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    public LuckPerms getLuckPerms() {
+        return this.luckPerms;
+    }
+
+    public BanConfig getBanConfig() {
+        return this.banConfig;
+    }
+
+    public CivilizationConfig getCivilizationConfig() {
+        return this.civilizationConfig;
+    }
+
+    public DeathConfig getDeathConfig() {
+        return this.deathConfig;
+    }
+
+    public EntityConfig getEntityConfig() {
+        return this.entityConfig;
+    }
+
+    public FlagConfig getFlagConfig() {
+        return this.flagConfig;
+    }
+
+    public LocationConfig getLocationConfig() {
+        return this.locationConfig;
+    }
+
+    public PlayerConfig getPlayerConfig() {
+        return this.playerConfig;
+    }
+
+    public ScytherConfig getScytherConfig() {
+        return this.scytherConfig;
+    }
+
+    public RecipeConfig getRecipeConfig() {
+        return this.recipeConfig;
+    }
+
+    public WorldConfig getWorldConfig() {
+        return this.worldConfig;
     }
 }
