@@ -106,7 +106,7 @@ public class RecipesGui implements Listener {
                 plugin.getLogger().warning("Recipe section not found for recipe: " + recipeName);
                 continue;
             }
-            Material resultMaterial = Material.matchMaterial(Objects.requireNonNull(recipeSection.getString("Result.Material")));
+            Material resultMaterial = Material.matchMaterial(recipeSection.getString("Result.Material"));
             if (resultMaterial == null) {
                 plugin.getLogger().warning("Invalid result material for recipe: " + recipeName);
                 continue;

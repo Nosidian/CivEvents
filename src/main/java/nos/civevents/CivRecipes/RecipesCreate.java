@@ -130,17 +130,6 @@ public class RecipesCreate implements Listener {
             }
             if (result != null && result.getType() != Material.AIR) {
                 try {
-                    for (int i = 1; i < 10; i++) {
-                        ItemStack item = inv.getItem(i);
-                        if (item != null && item.getType() != Material.AIR) {
-                            String existingRecipeName = getExistingRecipeName(item);
-                            if (existingRecipeName != null) {
-                                Player player = (Player) event.getPlayer();
-                                player.sendMessage("§f§lCivEvents §f| §cThe slot " + i + " already contains a recipe");
-                                return;
-                            }
-                        }
-                    }
                     saveRecipeToConfig(recipeName, result, ingredients);
                     registerRecipe(recipeName, result, ingredients);
                 } catch (Exception e) {
