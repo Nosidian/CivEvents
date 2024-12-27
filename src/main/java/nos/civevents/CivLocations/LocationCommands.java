@@ -94,7 +94,7 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                             addFrozenPlayer(p);
                             index++;
                         }
-                    }.runTaskTimer(plugin, 0L, 10L);
+                    }.runTaskTimer(plugin, 0L, 5L);
                 }
                 case "release" -> {
                     List<String> frozenPlayers = getFrozenPlayers();
