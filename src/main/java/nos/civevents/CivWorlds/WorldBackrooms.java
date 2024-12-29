@@ -94,12 +94,6 @@ public class WorldBackrooms extends ChunkGenerator implements Listener {
                         chunkData.setBlock(x, minY + 3, z, Material.STRIPPED_BAMBOO_BLOCK);
                     }
                 }
-                if (random.nextInt(100) < 0.01) {
-                    int potY = minY;
-                    if (chunkData.getType(x, potY, z) == Material.AIR) {
-                        chunkData.setBlock(x, potY, z, Material.DECORATED_POT);
-                    }
-                }
             }
         }
     }

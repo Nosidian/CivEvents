@@ -49,8 +49,8 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                                 player.sendMessage("§f§lCivEvents §f| §cExplosion size must be greater than 0");
                                 return false;
                             }
-                            if (explosionSize > 200) {
-                                player.sendMessage("§f§lCivEvents §f| §cExplosion size must be 200 or lower");
+                            if (explosionSize > 100) {
+                                player.sendMessage("§f§lCivEvents §f| §cExplosion size must be 100 or lower");
                                 return false;
                             }
                         } catch (NumberFormatException e) {
