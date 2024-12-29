@@ -43,8 +43,6 @@ commands:
     permission: civevents.flag
     permission-message: Permission = civevents.flag
     aliases: [cf, civf, civflag]
-  civhelp:
-    aliases: [ch, civh, help]
   civitems:
     permission: civevents.item
     permission-message: Permission = civevents.item
