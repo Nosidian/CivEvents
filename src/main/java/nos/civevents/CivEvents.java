@@ -14,11 +14,12 @@ import nos.civevents.CivEntities.EntityCommands;
 import nos.civevents.CivEntities.EntityConfig;
 import nos.civevents.CivFlags.FlagCommands;
 import nos.civevents.CivFlags.FlagConfig;
-import nos.civevents.CivHelp.HelpCommands;
-import nos.civevents.CivHelp.HelpOptions;
 import nos.civevents.CivItems.Events.*;
 import nos.civevents.CivItems.ItemCommands;
-import nos.civevents.CivItems.Items.*;
+import nos.civevents.CivItems.Items.GhostStaff;
+import nos.civevents.CivItems.Items.MagicBlade;
+import nos.civevents.CivItems.Items.MagicWand;
+import nos.civevents.CivItems.Items.SpellHammer;
 import nos.civevents.CivLocations.LocationCommands;
 import nos.civevents.CivLocations.LocationConfig;
 import nos.civevents.CivLocations.PortalCommands;
@@ -139,10 +140,6 @@ public final class CivEvents extends JavaPlugin {
         Objects.requireNonNull(getCommand("civflags")).setExecutor(new FlagCommands(this, flagConfig));
         Objects.requireNonNull(getCommand("civflags")).setTabCompleter(new FlagCommands(this, flagConfig));
         getServer().getPluginManager().registerEvents(new FlagCommands(this, flagConfig), this);
-
-        // CivHelp
-        Objects.requireNonNull(getCommand("civhelp")).setExecutor(new HelpCommands(new HelpOptions()));
-        Objects.requireNonNull(getCommand("civhelp")).setTabCompleter(new HelpCommands(new HelpOptions()));
 
         // CivItems
         Objects.requireNonNull(getCommand("civitems")).setExecutor(new ItemCommands(this));
