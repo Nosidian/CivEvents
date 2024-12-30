@@ -11,7 +11,7 @@ import java.util.UUID;
 public class AdminPlayerData {
     static void clearAllPlayerData(CommandSender sender) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared.");
+            player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
         }
         File playerDataFolder = new File(Bukkit.getWorlds().get(0).getWorldFolder(), "playerdata");
         if (playerDataFolder.exists() && playerDataFolder.isDirectory()) {
@@ -25,15 +25,15 @@ public class AdminPlayerData {
                     }
                 }
             }
-            sender.sendMessage("§f§lCivEvents §f| §aAll player data has been cleared.");
+            sender.sendMessage("§f§lCivEvents §f| §aAll player data has been cleared");
         } else {
-            sender.sendMessage("§f§lCivEvents §f| §cPlayer data folder not found.");
+            sender.sendMessage("§f§lCivEvents §f| §cPlayer data folder not found");
         }
     }
     static void clearPlayerData(CommandSender sender, String username) {
         Player player = Bukkit.getPlayerExact(username);
         if (player != null) {
-            player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared.");
+            player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
         }
         File playerDataFolder = new File(Bukkit.getWorlds().get(0).getWorldFolder(), "playerdata");
         if (playerDataFolder.exists() && playerDataFolder.isDirectory()) {
@@ -49,7 +49,7 @@ public class AdminPlayerData {
                 sender.sendMessage("§f§lCivEvents §f| §cNo player data found for: " + username);
             }
         } else {
-            sender.sendMessage("§f§lCivEvents §f| §cPlayer data folder not found.");
+            sender.sendMessage("§f§lCivEvents §f| §cPlayer data folder not found");
         }
     }
 }
