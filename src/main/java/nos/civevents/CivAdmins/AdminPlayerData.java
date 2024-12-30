@@ -5,6 +5,7 @@ import net.luckperms.api.model.user.User;
 import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,16 +55,31 @@ public class AdminPlayerData implements Listener {
             Player player = offlinePlayer.getPlayer();
             if (player != null && dataCleared) {
                 clearPlayerDataForOnline(sender, player);
+                clearAllPlayerStatistics(player);
             }
         } else {
             Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("CivEvents"), () -> {
                 Player player = Bukkit.getPlayer(playerUUID);
                 if (player != null && dataCleared) {
                     clearPlayerDataForOnline(sender, player);
+                    clearAllPlayerStatistics(player);
                 } else {
                     sender.sendMessage("§f§lCivEvents §f| §cPlayer is offline. Will clear inventory once they log in.");
                 }
             });
+        }
+        File playerDataFolder = new File(Bukkit.getWorlds().get(0).getWorldFolder(), "playerdata");
+        if (playerDataFolder.exists() && playerDataFolder.isDirectory()) {
+            File playerFile = new File(playerDataFolder, playerUUID + ".dat");
+            if (playerFile.exists()) {
+                if (playerFile.delete()) {
+                    sender.sendMessage("§f§lCivEvents §f| §aDeleted player data for: " + username);
+                } else {
+                    sender.sendMessage("§f§lCivEvents §f| §cFailed to delete player data for: " + username);
+                }
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cNo player data found for: " + username);
+            }
         }
         File[] worldFolders = Bukkit.getWorlds().stream()
                 .map(world -> world.getWorldFolder())
@@ -81,19 +97,6 @@ public class AdminPlayerData implements Listener {
                 } else {
                     sender.sendMessage("§f§lCivEvents §f| §cNo advancement data found for: " + username);
                 }
-            }
-        }
-        File playerDataFolder = new File(Bukkit.getWorlds().get(0).getWorldFolder(), "playerdata");
-        if (playerDataFolder.exists() && playerDataFolder.isDirectory()) {
-            File playerFile = new File(playerDataFolder, playerUUID + ".dat");
-            if (playerFile.exists()) {
-                if (playerFile.delete()) {
-                    sender.sendMessage("§f§lCivEvents §f| §aDeleted player data for: " + username);
-                } else {
-                    sender.sendMessage("§f§lCivEvents §f| §cFailed to delete player data for: " + username);
-                }
-            } else {
-                sender.sendMessage("§f§lCivEvents §f| §cNo player data found for: " + username);
             }
         }
     }
@@ -128,12 +131,22 @@ public class AdminPlayerData implements Listener {
     public static void clearAllPlayerData(CommandSender sender) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             clearPlayerData(sender, player.getName());
+            clearAllPlayerStatistics(player);
         }
         Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("CivEvents"), () -> {
             for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
                 clearPlayerData(sender, offlinePlayer.getName());
+                if (offlinePlayer.isOnline()) {
+                    clearAllPlayerStatistics(offlinePlayer.getPlayer());
+                }
             }
         });
-        sender.sendMessage("§f§lCivEvents §f| §aCleared all player data.");
+        sender.sendMessage("§f§lCivEvents §f| §aCleared all player data including statistics, advancements, and inventory.");
+    }
+    public static void clearAllPlayerStatistics(Player player) {
+        for (Statistic stat : Statistic.values()) {
+            player.setStatistic(stat, 0);
+        }
+        player.sendMessage("§f§lCivEvents §f| §aAll your statistics have been cleared.");
     }
 }
