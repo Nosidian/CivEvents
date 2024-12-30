@@ -101,6 +101,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         List<String> suggestions = new ArrayList<>();
         if (args.length == 1) {
             suggestions.add("airstrike");
+            suggestions.add("playerdata");
         } else if (args.length == 2 && args[0].equalsIgnoreCase("playerdata")) {
             suggestions.add("clearall");
             for (String playerName : getAllPlayerNames()) {
