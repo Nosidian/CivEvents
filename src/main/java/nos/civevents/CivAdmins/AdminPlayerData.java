@@ -54,6 +54,9 @@ public class AdminPlayerData implements Listener {
         if (offlinePlayer.isOnline()) {
             Player player = offlinePlayer.getPlayer();
             if (player != null && dataCleared) {
+                player.getInventory().clear();
+                player.getEnderChest().clear();
+                player.updateInventory();
                 clearPlayerDataForOnline(sender, player);
                 clearAllPlayerStatistics(player);
             }
@@ -61,10 +64,11 @@ public class AdminPlayerData implements Listener {
             Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("CivEvents"), () -> {
                 Player player = Bukkit.getPlayer(playerUUID);
                 if (player != null && dataCleared) {
+                    player.getInventory().clear();
+                    player.getEnderChest().clear();
+                    player.updateInventory();
                     clearPlayerDataForOnline(sender, player);
                     clearAllPlayerStatistics(player);
-                } else {
-                    sender.sendMessage("§f§lCivEvents §f| §cPlayer is offline. Will clear inventory once they log in.");
                 }
             });
         }
@@ -116,18 +120,6 @@ public class AdminPlayerData implements Listener {
         player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
         sender.sendMessage("§f§lCivEvents §f| §aCleared data for online player: " + player.getName());
     }
-    private static void clearPlayerDataForOffline(CommandSender sender, OfflinePlayer offlinePlayer) {
-        UUID playerUUID = offlinePlayer.getUniqueId();
-        Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("CivEvents"), () -> {
-            Player player = Bukkit.getPlayer(playerUUID);
-            if (player != null) {
-                player.getInventory().clear();
-                player.getEnderChest().clear();
-                player.updateInventory();
-            }
-        });
-        sender.sendMessage("§f§lCivEvents §f| §aCleared data for offline player: " + offlinePlayer.getName());
-    }
     public static void clearAllPlayerData(CommandSender sender) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             clearPlayerData(sender, player.getName());
@@ -141,12 +133,11 @@ public class AdminPlayerData implements Listener {
                 }
             }
         });
-        sender.sendMessage("§f§lCivEvents §f| §aCleared all player data including statistics, advancements, and inventory.");
+        sender.sendMessage("§f§lCivEvents §f| §aCleared all player data");
     }
     public static void clearAllPlayerStatistics(Player player) {
         for (Statistic stat : Statistic.values()) {
             player.setStatistic(stat, 0);
         }
-        player.sendMessage("§f§lCivEvents §f| §aAll your statistics have been cleared.");
     }
 }
