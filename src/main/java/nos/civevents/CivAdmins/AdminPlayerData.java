@@ -4,9 +4,11 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,6 +61,7 @@ public class AdminPlayerData implements Listener {
                 player.updateInventory();
                 clearPlayerDataForOnline(sender, player);
                 clearAllPlayerStatistics(player);
+                player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
             }
         } else {
             Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("CivEvents"), () -> {
@@ -117,13 +120,13 @@ public class AdminPlayerData implements Listener {
         player.getInventory().clear();
         player.getEnderChest().clear();
         player.updateInventory();
-        player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
         sender.sendMessage("§f§lCivEvents §f| §aCleared data for online player: " + player.getName());
     }
     public static void clearAllPlayerData(CommandSender sender) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             clearPlayerData(sender, player.getName());
             clearAllPlayerStatistics(player);
+            player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
         }
         Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugin("CivEvents"), () -> {
             for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
@@ -136,8 +139,24 @@ public class AdminPlayerData implements Listener {
         sender.sendMessage("§f§lCivEvents §f| §aCleared all player data");
     }
     public static void clearAllPlayerStatistics(Player player) {
-        for (Statistic stat : Statistic.values()) {
-            player.setStatistic(stat, 0);
+        for(Statistic statistic : Statistic.values()) {
+            for(Material material : Material.values()) {
+                try {
+                    player.setStatistic(statistic, material, 0);
+                } catch (IllegalArgumentException e) {
+                    break;
+                }
+            }
+            for(EntityType entityType : EntityType.values()) {
+                try {
+                    player.setStatistic(statistic, entityType, 0);
+                } catch (IllegalArgumentException e) {
+                    break;
+                }
+            }
+            try{
+                player.setStatistic(statistic, 0);
+            } catch (IllegalArgumentException ignored){}
         }
     }
 }
