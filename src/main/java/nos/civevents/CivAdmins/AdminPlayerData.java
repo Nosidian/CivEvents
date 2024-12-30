@@ -4,12 +4,10 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.advancement.Advancement;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.UUID;
 
 @SuppressWarnings("all")
@@ -22,11 +20,22 @@ public class AdminPlayerData {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().clear();
             player.getEnderChest().clear();
-            Iterator<Advancement> advancements = Bukkit.advancementIterator();
-            while (advancements.hasNext()) {
-                Advancement advancement = advancements.next();
-                player.getAdvancementProgress(advancement).getRemainingCriteria()
-                        .forEach(criteria -> player.getAdvancementProgress(advancement).revokeCriteria(criteria));
+            UUID playerUUID = player.getUniqueId();
+            File[] worldFolders = Bukkit.getWorlds().stream()
+                    .map(world -> world.getWorldFolder())
+                    .toArray(File[]::new);
+            for (File worldFolder : worldFolders) {
+                File advancementsFolder = new File(worldFolder, "advancements");
+                if (advancementsFolder.exists() && advancementsFolder.isDirectory()) {
+                    File playerAdvancementFile = new File(advancementsFolder, playerUUID + ".json");
+                    if (playerAdvancementFile.exists()) {
+                        if (playerAdvancementFile.delete()) {
+                            sender.sendMessage("§f§lCivEvents §f| §aDeleted advancement data for: " + player.getName());
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cFailed to delete advancement data for: " + player.getName());
+                        }
+                    }
+                }
             }
             player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
         }
@@ -63,18 +72,30 @@ public class AdminPlayerData {
                 luckPerms.getUserManager().saveUser(user);
             }
         }
-        if (((OfflinePlayer) offlinePlayer).isOnline()) {
+        if (offlinePlayer.isOnline()) {
             Player player = offlinePlayer.getPlayer();
             if (player != null) {
                 player.getInventory().clear();
                 player.getEnderChest().clear();
-                Iterator<Advancement> advancements = Bukkit.advancementIterator();
-                while (advancements.hasNext()) {
-                    Advancement advancement = advancements.next();
-                    player.getAdvancementProgress(advancement).getRemainingCriteria()
-                            .forEach(criteria -> player.getAdvancementProgress(advancement).revokeCriteria(criteria));
-                }
                 player.kickPlayer("§f§lCivEvents §f| §cYour data is being cleared");
+            }
+        }
+        File[] worldFolders = Bukkit.getWorlds().stream()
+                .map(world -> world.getWorldFolder())
+                .toArray(File[]::new);
+        for (File worldFolder : worldFolders) {
+            File advancementsFolder = new File(worldFolder, "advancements");
+            if (advancementsFolder.exists() && advancementsFolder.isDirectory()) {
+                File playerAdvancementFile = new File(advancementsFolder, playerUUID + ".json");
+                if (playerAdvancementFile.exists()) {
+                    if (playerAdvancementFile.delete()) {
+                        sender.sendMessage("§f§lCivEvents §f| §aDeleted advancement data for: " + username);
+                    } else {
+                        sender.sendMessage("§f§lCivEvents §f| §cFailed to delete advancement data for: " + username);
+                    }
+                } else {
+                    sender.sendMessage("§f§lCivEvents §f| §cNo advancement data found for: " + username);
+                }
             }
         }
         File playerDataFolder = new File(Bukkit.getWorlds().get(0).getWorldFolder(), "playerdata");
