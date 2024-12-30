@@ -111,6 +111,7 @@ public final class CivEvents extends JavaPlugin {
         Objects.requireNonNull(getCommand("gmsp")).setExecutor(new AdminSpectator());
         Objects.requireNonNull(getCommand("gmsp")).setTabCompleter(new AdminSpectator());
         getServer().getPluginManager().registerEvents(new AdminCommands(this, new AdminBomb(this)), this);
+        getServer().getPluginManager().registerEvents(new AdminPlayerData(this, luckPerms), this);
 
         // CivBans
         Objects.requireNonNull(getCommand("civban")).setExecutor(new BanCommands(this, banConfig));
