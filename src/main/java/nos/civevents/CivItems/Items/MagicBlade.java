@@ -22,7 +22,7 @@ import java.util.UUID;
 @SuppressWarnings("all")
 public class MagicBlade implements Listener {
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN = 60;
+    private static final int COOLDOWN = 30;
     private final CivEvents plugin;
     public MagicBlade(CivEvents plugin) {
         this.plugin = plugin;

@@ -22,7 +22,7 @@ import java.util.UUID;
 @SuppressWarnings("all")
 public class MagicWand implements Listener {
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN = 30;
+    private static final int COOLDOWN = 15;
     private final CivEvents plugin;
     public MagicWand(CivEvents plugin) {
         this.plugin = plugin;

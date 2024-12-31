@@ -361,6 +361,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                     "§7§m-----------------",
                     "§7When You Die While",
                     "§7Holding This Sword",
+                    "§7In Your Main Hand",
                     "§7You Will Be Revived",
                     "§7But The Sword Will",
                     "§7Be Destroyed",
@@ -480,8 +481,8 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                     "§7§m----------------",
                     "§7When Right Clicked",
                     "§7Shoots A Particle",
-                    "§7Line Dealing 2.5",
-                    "§7Hearts Of Damage",
+                    "§7Line Dealing Lots",
+                    "§7Of Heart Damage",
                     "§7§m----------------"
             ));
             meta.setCustomModelData(10);
