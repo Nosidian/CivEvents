@@ -51,13 +51,33 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                         locationNumber++;
                     }
                     Location loc = player.getLocation();
+                    loc.setX(Math.floor(loc.getX()) + 0.5);
+                    loc.setZ(Math.floor(loc.getZ()) + 0.5);
                     String blockType = locationConfig.getConfig().getString("platform.blocktype", "NONE");
                     String slabType = locationConfig.getConfig().getString("platform.slabtype", "NONE");
                     if (!blockType.equalsIgnoreCase("NONE") && !slabType.equalsIgnoreCase("NONE")) {
-                        createPlatform(loc, Material.valueOf(blockType), Material.valueOf(slabType));
+                        Material blockMaterial = Material.valueOf(blockType.toUpperCase());
+                        Material slabMaterial = Material.valueOf(slabType.toUpperCase());
+                        createPlatform(loc, blockMaterial, slabMaterial);
                         loc.add(0, 1, 0);
                     }
                     locationConfig.getConfig().set("locations." + locationNumber, loc.serialize());
+                    locationConfig.saveConfig();
+                    List<Location> locations = Arrays.asList(loc);
+                    int index = locationNumber;
+                    for (Location location : locations) {
+                        while (existingNumbers.contains(index)) {
+                            index++;
+                        }
+                        locationConfig.getConfig().set("locations." + index + ".world", location.getWorld().getName());
+                        locationConfig.getConfig().set("locations." + index + ".x", location.getX());
+                        locationConfig.getConfig().set("locations." + index + ".y", location.getY());
+                        locationConfig.getConfig().set("locations." + index + ".z", location.getZ());
+                        locationConfig.getConfig().set("locations." + index + ".yaw", location.getYaw());
+                        locationConfig.getConfig().set("locations." + index + ".pitch", location.getPitch());
+                        existingNumbers.add(index);
+                        index++;
+                    }
                     locationConfig.saveConfig();
                     player.sendMessage("§f§lCivEvents §f| §aLocation " + locationNumber + " has been set");
                 }
@@ -85,9 +105,19 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                         }
                     }
                     List<Location> locations = new ArrayList<>();
-                    if (locationConfig.getConfig().getConfigurationSection("locations") != null) {
-                        for (String key : Objects.requireNonNull(locationConfig.getConfig().getConfigurationSection("locations")).getKeys(false)) {
-                            locations.add(Location.deserialize(Objects.requireNonNull(locationConfig.getConfig().getConfigurationSection("locations." + key)).getValues(false)));
+                    ConfigurationSection locationsSection = locationConfig.getConfig().getConfigurationSection("locations");
+                    if (locationsSection != null) {
+                        for (String key : locationsSection.getKeys(false)) {
+                            ConfigurationSection locationSection = locationsSection.getConfigurationSection(key);
+                            if (locationSection != null) {
+                                try {
+                                    locations.add(Location.deserialize(locationSection.getValues(false)));
+                                } catch (IllegalArgumentException e) {
+                                    player.sendMessage("§f§lCivEvents §f| §cInvalid location data for key: " + key);
+                                }
+                            } else {
+                                player.sendMessage("§f§lCivEvents §f| §cMissing location data for key: " + key);
+                            }
                         }
                     }
                     if (nonOpPlayers.size() > locations.size()) {
@@ -232,10 +262,6 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                         suggestions.addAll(locationConfig.getConfig().getConfigurationSection("locations").getKeys(false));
                     }
                     return suggestions;
-                } else if (args[0].equalsIgnoreCase("set")) {
-                    if (locationConfig.getConfig().getConfigurationSection("locations") != null) {
-                        return new ArrayList<>(locationConfig.getConfig().getConfigurationSection("locations").getKeys(false));
-                    }
                 } else if (args[0].equalsIgnoreCase("platform")) {
                     List<String> blockSuggestions = new ArrayList<>();
                     for (Material material : Material.values()) {
