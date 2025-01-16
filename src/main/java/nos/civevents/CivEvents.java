@@ -4,12 +4,9 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import nos.civevents.CivAdmins.*;
 import nos.civevents.CivBans.*;
+import nos.civevents.CivDeaths.AllDeaths;
 import nos.civevents.CivDeaths.DeathCommands;
 import nos.civevents.CivDeaths.DeathConfig;
-import nos.civevents.CivDeaths.Deaths.ExplosionDeath;
-import nos.civevents.CivDeaths.Deaths.FireworksDeath;
-import nos.civevents.CivDeaths.Deaths.GraveDeath;
-import nos.civevents.CivDeaths.Deaths.LightningDeath;
 import nos.civevents.CivEntities.EntityCommands;
 import nos.civevents.CivEntities.EntityConfig;
 import nos.civevents.CivFlags.FlagCommands;
@@ -127,10 +124,7 @@ public final class CivEvents extends JavaPlugin {
         // CivDeaths
         Objects.requireNonNull(getCommand("civdeaths")).setExecutor(new DeathCommands(this, deathConfig));
         Objects.requireNonNull(getCommand("civdeaths")).setTabCompleter(new DeathCommands(this, deathConfig));
-        getServer().getPluginManager().registerEvents(new LightningDeath(this, deathConfig), this);
-        getServer().getPluginManager().registerEvents(new ExplosionDeath(this, deathConfig), this);
-        getServer().getPluginManager().registerEvents(new FireworksDeath(this, deathConfig), this);
-        getServer().getPluginManager().registerEvents(new GraveDeath(this, deathConfig), this);
+        getServer().getPluginManager().registerEvents(new AllDeaths(this, deathConfig), this);
 
         // CivEntities
         Objects.requireNonNull(getCommand("civentities")).setExecutor(new EntityCommands(this, entityConfig));

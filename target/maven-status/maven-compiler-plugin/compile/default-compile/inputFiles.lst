@@ -1,10 +1,13 @@
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivEvents.java
+C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Items\SpellHammer.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivAdmins\AdminSpectator.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\Scythe.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\Hero.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivTeams\CustomPortals.java
+C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Items\MagicWand.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivEntities\BossBars.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivRecipes\RecipesGui.java
+C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivAdmins\AdminPlayerData.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\DwarfAxe.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivDeaths\Deaths\ExplosionDeath.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivPackages\TierTwo.java
@@ -12,7 +15,6 @@ C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivBans\PlayerCon
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivDeaths\DeathConfig.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivFlags\FlagCommands.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\LegueStaff.java
-C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivHelp\HelpCommands.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivRecipes\RecipeConfig.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\ItemCommands.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivLocations\LocationCommands.java
@@ -29,14 +31,12 @@ C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivPackages\TierT
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivWorlds\WorldBackrooms.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivFlags\FlagConfig.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\Silver.java
-C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivWorlds\WorldEvent.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\Mace.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivAdmins\AdminBomb.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivPackages\TierFive.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivBans\BanConfig.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivPackages\TierFour.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivTeams\TeamCommands.java
-C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivHelp\HelpOptions.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivBans\ScytherConfig.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\Spear.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Events\Trickster.java
@@ -59,4 +59,5 @@ C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivLocations\Port
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivWorlds\WorldConfig.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivWorlds\WorldGenerator.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivRecipes\OperatorCommands.java
+C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivItems\Items\MagicBlade.java
 C:\Users\Kleim\Downloads\CivEvents\src\main\java\nos\civevents\CivRecipes\RecipeCommands.java

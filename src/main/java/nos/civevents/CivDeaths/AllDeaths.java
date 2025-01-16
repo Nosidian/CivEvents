@@ -1,36 +1,57 @@
-package nos.civevents.CivDeaths.Deaths;
+package nos.civevents.CivDeaths;
 
-import nos.civevents.CivDeaths.DeathConfig;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Objects;
 
-public class GraveDeath implements Listener {
+@SuppressWarnings("all")
+public class AllDeaths implements Listener{
     private final Plugin plugin;
     private final DeathConfig deathConfig;
-    public GraveDeath(Plugin plugin, DeathConfig deathConfig) {
+    public AllDeaths(Plugin plugin, DeathConfig deathConfig) {
         this.plugin = plugin;
         this.deathConfig = deathConfig;
     }
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Location deathLocation = player.getLocation();
+        Location deathLocation = event.getEntity().getLocation();
         if (deathConfig.getConfig().getBoolean("grave.enabled")) {
             spawnGrave(deathLocation, player);
             event.getDrops().clear();
             Objects.requireNonNull(deathLocation.getWorld()).playSound(deathLocation, Sound.ENTITY_PLAYER_DEATH, 1.0f, 1.0f);
+        }
+        if (deathConfig.getConfig().getBoolean("fireworks.enabled", false)) {
+            Firework firework = (Firework) deathLocation.getWorld().spawnEntity(deathLocation, EntityType.FIREWORK);
+            FireworkMeta fireworkMeta = firework.getFireworkMeta();
+            FireworkEffect fireworkEffect = FireworkEffect.builder()
+                    .withColor(Color.RED)
+                    .with(FireworkEffect.Type.BURST)
+                    .build();
+            fireworkMeta.addEffect(fireworkEffect);
+            fireworkMeta.setPower(2);
+            firework.setFireworkMeta(fireworkMeta);
+            deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1.0f, 1.0f);
+        }
+        if (deathConfig.getConfig().getBoolean("lightning.enabled", false)) {
+            deathLocation.getWorld().strikeLightningEffect(deathLocation);
+            deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
+        }
+        if (deathConfig.getConfig().getBoolean("explosion.enabled", false)) {
+            deathLocation.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, deathLocation, 1);
+            deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
         }
     }
     public void spawnGrave(Location location, Player player) {
