@@ -27,7 +27,7 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("civlocations") && args.length >= 2) {
+        if (command.getName().equalsIgnoreCase("civlocations") && args.length >= 1) {
             if (!(sender instanceof Player player)) {
                 sender.sendMessage("Only players can use this command.");
                 return true;
@@ -35,7 +35,21 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
             String action = args[0];
             switch (action.toLowerCase()) {
                 case "set" -> {
-                    String locationNumber = args[1];
+                    Set<Integer> existingNumbers = new HashSet<>();
+                    ConfigurationSection section = locationConfig.getConfig().getConfigurationSection("locations");
+                    if (section != null) {
+                        for (String key : section.getKeys(false)) {
+                            try {
+                                int num = Integer.parseInt(key);
+                                existingNumbers.add(num);
+                            } catch (NumberFormatException ignored) {
+                            }
+                        }
+                    }
+                    int locationNumber = 1;
+                    while (existingNumbers.contains(locationNumber)) {
+                        locationNumber++;
+                    }
                     Location loc = player.getLocation();
                     String blockType = locationConfig.getConfig().getString("platform.blocktype", "NONE");
                     String slabType = locationConfig.getConfig().getString("platform.slabtype", "NONE");
