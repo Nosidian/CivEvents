@@ -78,6 +78,26 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 giveMagicBlade(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 12");
                 return true;
+            } else if (args[0].equalsIgnoreCase("silversword")) {
+                giveSilverSword(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 13");
+                return true;
+            } else if (args[0].equalsIgnoreCase("silverspear")) {
+                giveSilverSpear(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 14");
+                return true;
+            } else if (args[0].equalsIgnoreCase("silverscythe")) {
+                giveSilverScythe(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 15");
+                return true;
+            } else if (args[0].equalsIgnoreCase("battleaxe")) {
+                giveBattleAxe(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 16");
+                return true;
+            } else if (args[0].equalsIgnoreCase("warhammer")) {
+                giveWarHammer(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 17");
+                return true;
             }
             sender.sendMessage("§f§lCivEvents §f| §cInvalid item name");
         } else {
@@ -102,6 +122,11 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             completions.add("magicwand");
             completions.add("spellhammer");
             completions.add("magicblade");
+            completions.add("silversword");
+            completions.add("silverspear");
+            completions.add("silverscythe");
+            completions.add("battleaxe");
+            completions.add("warhammer");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
@@ -276,6 +301,71 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             }
         } else {
             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems magicblade <player>");
+        }
+    }
+    private void giveSilverSword(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createSilerSword());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Silver Sword to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems silversword <player>");
+        }
+    }
+    private void giveSilverSpear(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createSilerSpear());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Silver Spear to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems silverspear <player>");
+        }
+    }
+    private void giveSilverScythe(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createSilerScythe());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Silver Scythe to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems silverscythe <player>");
+        }
+    }
+    private void giveBattleAxe(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createBattleAxe());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Battle Axe to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems battleaxe <player>");
+        }
+    }
+    private void giveWarHammer(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createWarHammer());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the War Hammer to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems warhammer <player>");
         }
     }
     public static ItemStack createGhostStaff() {
@@ -528,5 +618,55 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             magicBlade.setItemMeta(meta);
         }
         return magicBlade;
+    }
+    public static ItemStack createSilerSword() {
+        ItemStack medievalSword = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = medievalSword.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§f§lＳＩＬＶＥＲ ＳＷＯＲＤ");
+            meta.setCustomModelData(13);
+            medievalSword.setItemMeta(meta);
+        }
+        return medievalSword;
+    }
+    public static ItemStack createSilerSpear() {
+        ItemStack medievalSpear = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = medievalSpear.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§5§lＳＩＬＶＥＲ ＳＰＥＡＲ");
+            meta.setCustomModelData(14);
+            medievalSpear.setItemMeta(meta);
+        }
+        return medievalSpear;
+    }
+    public static ItemStack createSilerScythe() {
+        ItemStack medievalScythe = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = medievalScythe.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§d§lＳＩＬＶＥＲ ＳＣＹＴＨＥ");
+            meta.setCustomModelData(15);
+            medievalScythe.setItemMeta(meta);
+        }
+        return medievalScythe;
+    }
+    public static ItemStack createBattleAxe() {
+        ItemStack medievalBattleAxe = new ItemStack(Material.NETHERITE_AXE);
+        ItemMeta meta = medievalBattleAxe.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§c§lＢＡＴＴＬＥ ＡＸＥ");
+            meta.setCustomModelData(16);
+            medievalBattleAxe.setItemMeta(meta);
+        }
+        return medievalBattleAxe;
+    }
+    public static ItemStack createWarHammer() {
+        ItemStack medievalWarHammer = new ItemStack(Material.NETHERITE_AXE);
+        ItemMeta meta = medievalWarHammer.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§6§lＷＡＲ ＨＡＭＭＥＲ");
+            meta.setCustomModelData(17);
+            medievalWarHammer.setItemMeta(meta);
+        }
+        return medievalWarHammer;
     }
 }

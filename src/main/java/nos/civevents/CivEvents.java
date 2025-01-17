@@ -17,6 +17,7 @@ import nos.civevents.CivItems.Items.GhostStaff;
 import nos.civevents.CivItems.Items.MagicBlade;
 import nos.civevents.CivItems.Items.MagicWand;
 import nos.civevents.CivItems.Items.SpellHammer;
+import nos.civevents.CivItems.Medieval.*;
 import nos.civevents.CivLocations.LocationCommands;
 import nos.civevents.CivLocations.LocationConfig;
 import nos.civevents.CivLocations.PortalCommands;
@@ -152,6 +153,11 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MagicWand(this), this);
         getServer().getPluginManager().registerEvents(new SpellHammer(this), this);
         getServer().getPluginManager().registerEvents(new MagicBlade(this), this);
+        getServer().getPluginManager().registerEvents(new SilverSword(this), this);
+        getServer().getPluginManager().registerEvents(new SilverSpear(this), this);
+        getServer().getPluginManager().registerEvents(new SilverScythe(this), this);
+        getServer().getPluginManager().registerEvents(new BattleAxe(this), this);
+        getServer().getPluginManager().registerEvents(new WarHammer(this), this);
 
         // CivLocations
         Objects.requireNonNull(getCommand("civlocations")).setExecutor(new LocationCommands(this, locationConfig));
