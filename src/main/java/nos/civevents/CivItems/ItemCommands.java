@@ -54,7 +54,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 giveEventIceStaff(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 6");
                 return true;
-            } else if (args[0].equalsIgnoreCase("silversword")) {
+            } else if (args[0].equalsIgnoreCase("swordsilver")) {
                 giveEventSilverSword(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 7");
                 return true;
@@ -116,7 +116,7 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             completions.add("herosword");
             completions.add("trickster");
             completions.add("icestaff");
-            completions.add("silversword");
+            completions.add("swordsilver");
             completions.add("dwarfaxe");
             completions.add("leguestaff");
             completions.add("magicwand");
