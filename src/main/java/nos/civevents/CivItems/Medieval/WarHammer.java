@@ -92,9 +92,9 @@ public class WarHammer implements Listener {
                         "§6§lＷＡＲ ＨＡＭＭＥＲ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
                     if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
                         long timeLeft = (cooldowns.get(playerId) - currentTime) / 1000;
-                        sendActionBar(player, "§6§lSpellHammer §f- §c" + timeLeft + "§cs");
+                        sendActionBar(player, "§6§lWarHammer §f- §c" + timeLeft + "§cs");
                     } else {
-                        sendActionBar(player, "§6§lSpellHammer §f- §aReady");
+                        sendActionBar(player, "§6§lWarHammer §f- §aReady");
                     }
                 }
             }
