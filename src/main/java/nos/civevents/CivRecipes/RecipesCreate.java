@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
@@ -169,13 +170,9 @@ public class RecipesCreate implements Listener {
         if (resultMeta != null) {
             if (resultMeta.hasDisplayName()) {
                 recipeConfig.getConfig().set("Recipes." + recipeName + ".Result.DisplayName", resultMeta.getDisplayName());
-            } else {
-                recipeConfig.getConfig().set("Recipes." + recipeName + ".Result.DisplayName", "");
             }
             if (resultMeta.hasLore()) {
                 recipeConfig.getConfig().set("Recipes." + recipeName + ".Result.Lore", resultMeta.getLore());
-            } else {
-                recipeConfig.getConfig().set("Recipes." + recipeName + ".Result.Lore", new ArrayList<>());
             }
             if (resultMeta.hasEnchants()) {
                 for (Map.Entry<Enchantment, Integer> enchantment : resultMeta.getEnchants().entrySet()) {
@@ -187,8 +184,6 @@ public class RecipesCreate implements Listener {
             }
             if (resultMeta.hasCustomModelData()) {
                 recipeConfig.getConfig().set("Recipes." + recipeName + ".Result.CustomModelData", resultMeta.getCustomModelData());
-            } else {
-                recipeConfig.getConfig().set("Recipes." + recipeName + ".Result.CustomModelData", -1);
             }
         }
         for (int i = 0; i < ingredients.length; i++) {
@@ -199,13 +194,9 @@ public class RecipesCreate implements Listener {
                 if (ingredientMeta != null) {
                     if (ingredientMeta.hasDisplayName()) {
                         recipeConfig.getConfig().set("Recipes." + recipeName + ".Ingredients." + pos + ".DisplayName", ingredientMeta.getDisplayName());
-                    } else {
-                        recipeConfig.getConfig().set("Recipes." + recipeName + ".Ingredients." + pos + ".DisplayName", "");
                     }
                     if (ingredientMeta.hasLore()) {
                         recipeConfig.getConfig().set("Recipes." + recipeName + ".Ingredients." + pos + ".Lore", ingredientMeta.getLore());
-                    } else {
-                        recipeConfig.getConfig().set("Recipes." + recipeName + ".Ingredients." + pos + ".Lore", new ArrayList<>());
                     }
                     if (ingredientMeta.hasEnchants()) {
                         for (Map.Entry<Enchantment, Integer> enchantment : ingredientMeta.getEnchants().entrySet()) {
@@ -217,8 +208,6 @@ public class RecipesCreate implements Listener {
                     }
                     if (ingredientMeta.hasCustomModelData()) {
                         recipeConfig.getConfig().set("Recipes." + recipeName + ".Ingredients." + pos + ".CustomModelData", ingredientMeta.getCustomModelData());
-                    } else {
-                        recipeConfig.getConfig().set("Recipes." + recipeName + ".Ingredients." + pos + ".CustomModelData", -1);
                     }
                 }
             } else {
@@ -246,6 +235,14 @@ public class RecipesCreate implements Listener {
                 }
             }
             Bukkit.addRecipe(recipe);
+        }
+    }
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (recipeConfig.getConfig().contains("Recipes")) {
+            for (String recipeName : recipeConfig.getConfig().getConfigurationSection("Recipes").getKeys(false)) {
+                event.getPlayer().discoverRecipe(new NamespacedKey(plugin, recipeName));
+            }
         }
     }
 }

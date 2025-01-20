@@ -36,6 +36,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -238,9 +239,9 @@ public final class CivEvents extends JavaPlugin {
                         'I', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.9"))
                 );
                 for (Map.Entry<Character, ItemStack> entry : ingredientMap.entrySet()) {
-                    Material material = entry.getValue().getType();
-                    if (material != Material.AIR) {
-                        recipe.setIngredient(entry.getKey(), material);
+                    ItemStack ingredient = entry.getValue();
+                    if (ingredient.getType() != Material.AIR) {
+                        recipe.setIngredient(entry.getKey(), new RecipeChoice.ExactChoice(ingredient));
                     }
                 }
                 Bukkit.addRecipe(recipe);
