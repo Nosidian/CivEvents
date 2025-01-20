@@ -87,10 +87,6 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
                 }
                 RecipesCreate.openViewRecipeGui(player, recipeName);
             }
-            case "reload" -> {
-                plugin.registerRecipesFromConfig();
-                sender.sendMessage("§f§lCivEvents §f| §aRecipes registered");
-            }
             default -> sender.sendMessage("§f§lCivEvents §f| §cUnknown command");
         }
         return true;
@@ -102,7 +98,6 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
             suggestions.add("create");
             suggestions.add("remove");
             suggestions.add("view");
-            suggestions.add("reload");
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("view")) {
                 Set<String> recipes = Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection("Recipes")).getKeys(false);

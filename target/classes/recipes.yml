@@ -3,6 +3,7 @@
 #---------------------------------#
 Recipes:
   Example:
+    Slot: 9
     Result:
       Material: GRASS_BLOCK
       Amount: 1
@@ -78,4 +79,3 @@ Recipes:
         Enchantments: {}
         Unbreakable: false
         CustomModelData: -1
-    Slot: 9

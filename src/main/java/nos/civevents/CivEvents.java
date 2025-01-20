@@ -225,8 +225,7 @@ public final class CivEvents extends JavaPlugin {
                 String path = "Recipes." + recipeName;
                 ItemStack result = createItemFromConfig(Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection(path + ".Result")));
                 ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(this, recipeName), result);
-                String[] shape = new String[]{"ABC", "DEF", "GHI"};
-                recipe.shape(shape);
+                recipe.shape("ABC", "DEF", "GHI");
                 Map<Character, ItemStack> ingredientMap = Map.of(
                         'A', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.1")),
                         'B', createItemFromConfig(recipeConfig.getConfig().getConfigurationSection(path + ".Ingredients.2")),
