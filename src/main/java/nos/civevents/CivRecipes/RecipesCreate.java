@@ -19,7 +19,6 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -139,26 +138,6 @@ public class RecipesCreate implements Listener {
                 }
             }
         }
-    }
-    private String getExistingRecipeName(ItemStack item) {
-        for (String recipeName : recipeConfig.getConfig().getConfigurationSection("Recipes").getKeys(false)) {
-            ConfigurationSection resultSection = recipeConfig.getConfig().getConfigurationSection("Recipes." + recipeName + ".Result");
-            if (resultSection != null) {
-                Material resultMaterial = Material.matchMaterial(resultSection.getString("Material"));
-                if (resultMaterial != null && resultMaterial.equals(item.getType())) {
-                    ItemStack recipeResult = new ItemStack(resultMaterial);
-                    ItemMeta meta = recipeResult.getItemMeta();
-                    if (meta != null) {
-                        loadItemMeta(resultSection, meta);
-                        recipeResult.setItemMeta(meta);
-                    }
-                    if (item.equals(recipeResult)) {
-                        return recipeName;
-                    }
-                }
-            }
-        }
-        return null;
     }
     private void saveRecipeToConfig(String recipeName, ItemStack result, ItemStack[] ingredients) {
         if (result == null || result.getType() == Material.AIR) {
