@@ -7,7 +7,7 @@ Recipes:
     Result:
       Material: GRASS_BLOCK
       Amount: 1
-      DisplayName: '§bExample block'
+      DisplayName: §bExample block
       Lore:
         - '§aThis is an example!'
         - '§eWith epic lore.'
