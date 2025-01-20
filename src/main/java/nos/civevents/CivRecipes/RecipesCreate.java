@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -238,15 +239,12 @@ public class RecipesCreate implements Listener {
         if (result != null && result.getType() != Material.AIR) {
             ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, recipeName), result);
             recipe.shape("ABC", "DEF", "GHI");
-            if (ingredients[0].getType() != Material.AIR) recipe.setIngredient('A', ingredients[0].getType());
-            if (ingredients[1].getType() != Material.AIR) recipe.setIngredient('B', ingredients[1].getType());
-            if (ingredients[2].getType() != Material.AIR) recipe.setIngredient('C', ingredients[2].getType());
-            if (ingredients[3].getType() != Material.AIR) recipe.setIngredient('D', ingredients[3].getType());
-            if (ingredients[4].getType() != Material.AIR) recipe.setIngredient('E', ingredients[4].getType());
-            if (ingredients[5].getType() != Material.AIR) recipe.setIngredient('F', ingredients[5].getType());
-            if (ingredients[6].getType() != Material.AIR) recipe.setIngredient('G', ingredients[6].getType());
-            if (ingredients[7].getType() != Material.AIR) recipe.setIngredient('H', ingredients[7].getType());
-            if (ingredients[8].getType() != Material.AIR) recipe.setIngredient('I', ingredients[8].getType());
+            char[] shapeKeys = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
+            for (int i = 0; i < ingredients.length && i < shapeKeys.length; i++) {
+                if (ingredients[i] != null && ingredients[i].getType() != Material.AIR) {
+                    recipe.setIngredient(shapeKeys[i], new RecipeChoice.ExactChoice(ingredients[i]));
+                }
+            }
             Bukkit.addRecipe(recipe);
         }
     }
