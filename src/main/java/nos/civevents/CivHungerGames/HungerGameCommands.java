@@ -4,6 +4,7 @@ import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -242,6 +243,11 @@ public class HungerGameCommands implements CommandExecutor, TabCompleter, Listen
                     player.sendMessage("§f§lCivEvents §f| §aPlatforms created around you, all facing you");
                     return true;
                 }
+                case "countdown" -> {
+                    String[] titles = {"&a&l10", "&a&l9", "&a&l8", "&a&l7", "&a&l6", "&a&l5", "&a&l4", "&e&l3", "&6&l2", "&c&l1"};
+                    startCountdown(titles);
+                    return true;
+                }
                 default -> player.sendMessage("§f§lCivEvents §f| §cInvalid action");
             }
             return true;
@@ -332,5 +338,23 @@ public class HungerGameCommands implements CommandExecutor, TabCompleter, Listen
         loc.clone().add(-1, 0, 0).getBlock().setType(slabType);
         loc.clone().add(0, 0, 1).getBlock().setType(slabType);
         loc.clone().add(0, 0, -1).getBlock().setType(slabType);
+    }
+    private void startCountdown(String[] titles) {
+        new BukkitRunnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                if (count < titles.length) {
+                    String title = titles[count];
+                    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                        onlinePlayer.sendTitle(title, "", 10, 20, 10);
+                        onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+                    }
+                    count++;
+                } else {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0, 20);
     }
 }
