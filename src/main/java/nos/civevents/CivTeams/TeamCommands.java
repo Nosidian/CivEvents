@@ -237,13 +237,13 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         } else {
             Bukkit.getLogger().warning("LuckPerms group not found: " + playerTeam);
         }
-        teamConfig.removeTeam(playerTeam);
         for (String teamMember : teamConfig.getTeamMembers(playerTeam)) {
             Player onlineMember = Bukkit.getPlayer(teamMember);
             if (onlineMember != null) {
                 onlineMember.sendMessage("§f§lCivEvents §f| §aYour team " + playerTeam + " has been disbanded by " + player.getName());
             }
         }
+        teamConfig.removeTeam(playerTeam);
     }
     private void kickMember(Player player, String targetName) {
         String playerTeam = teamConfig.getPlayerTeam(player.getName());
@@ -303,8 +303,16 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             }
         }
         teamConfig.removePlayerFromTeam(player.getName(), playerTeam);
-        player.sendMessage("§f§lCivEvents §f| §aYou have left the team " + playerTeam);
-        Bukkit.broadcastMessage("§f§lCivEvents §f| §b" + player.getName() + " has left the team " + playerTeam);
+        if (teamConfig.getTeamMembers(playerTeam).isEmpty()) {
+            disbandTeam(player);
+            return;
+        }
+        for (String teamMember : teamConfig.getTeamMembers(playerTeam)) {
+            Player onlineMember = Bukkit.getPlayer(teamMember);
+            if (onlineMember != null) {
+                onlineMember.sendMessage("§f§lCivEvents §f| §b" + player.getName() + " has left the team " + playerTeam);
+            }
+        }
     }
     private void teamInfo(Player player) {
         String playerTeam = teamConfig.getPlayerTeam(player.getName());
@@ -328,6 +336,10 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         String playerName = player.getName();
         String playerTeam = teamConfig.getPlayerTeam(playerName);
         if (playerTeam != null) {
+            if (teamConfig.getTeamMembers(playerTeam).isEmpty()) {
+                disbandTeam(player);
+                return;
+            }
             teamConfig.removePlayerFromTeam(playerName, playerTeam);
             teamConfig.removeInvite(playerName);
             try {
