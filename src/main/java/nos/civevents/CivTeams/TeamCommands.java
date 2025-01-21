@@ -16,7 +16,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.*;
@@ -109,6 +108,11 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
     }
     private String createTeam(Player player) {
         try {
+            String playerTeam = teamConfig.getPlayerTeam(player.getName());
+            if (playerTeam != null) {
+                player.sendMessage("§f§lCivEvents §f| §cYou are already in a team");
+                return null;
+            }
             int randomId = 100 + random.nextInt(899);
             ChatColor randomColor = Arrays.stream(ChatColor.values())
                     .filter(color -> color.isColor())
@@ -184,9 +188,18 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             player.sendMessage("§f§lCivEvents §f| §cTeam is already full");
             return;
         }
+        if (teamName != null) {
+            try {
+                luckPerms.getUserManager().modifyUser(player.getUniqueId(), user -> {
+                    user.data().add(Node.builder("group." + teamName).build());
+                }).get();
+            } catch (Exception e) {
+                Bukkit.getLogger().severe("Failed to add " + player + " to group: " + teamName);
+                e.printStackTrace();
+            }
+        }
         teamConfig.addPlayerToTeam(player.getName(), teamName);
         teamConfig.removeInvite(player.getName());
-        addPlayerToLuckPermsGroup(player);
         player.sendMessage("§f§lCivEvents §f| §aYou joined the team " + teamName);
         Bukkit.broadcastMessage("§f§lCivEvents §f| §b" + player.getName() + " has joined " + teamName);
     }
@@ -270,9 +283,20 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             player.sendMessage("§f§lCivEvents §f| §cYou are not part of a team");
             return;
         }
-        if (teamConfig.getTeamLeader(playerTeam).equals(player)) {
+        String teamLeader = teamConfig.getTeamLeader(playerTeam);
+        if (teamLeader != null && teamLeader.equalsIgnoreCase(player.getName())) {
             player.sendMessage("§f§lCivEvents §f| §cYou cannot leave as the team leader");
             return;
+        }
+        if (player != null) {
+            try {
+                luckPerms.getUserManager().modifyUser(player.getUniqueId(), user -> {
+                    user.data().remove(Node.builder("group." + playerTeam).build());
+                }).get();
+            } catch (Exception e) {
+                player.sendMessage("§f§lCivEvents §f| §cFailed to remove " + player + " from the group: " + playerTeam);
+                e.printStackTrace();
+            }
         }
         teamConfig.removePlayerFromTeam(player.getName(), playerTeam);
         player.sendMessage("§f§lCivEvents §f| §aYou have left the team " + playerTeam);
@@ -303,21 +327,18 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             promoteNewLeader(playerTeam);
         }
         teamConfig.removeInvite(playerName);
-        removePlayerFromLuckPermsGroup(player);
-    }
-
-    @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        String playerName = player.getName();
-        String playerTeam = teamConfig.getPlayerTeam(playerName);
-        if (playerTeam != null && teamConfig.getTeamLeader(playerTeam).equalsIgnoreCase(playerName)) {
-            promoteNewLeader(playerTeam);
+        teamConfig.removePlayerFromTeam(String.valueOf(player), playerTeam);
+        if (player != null) {
+            try {
+                luckPerms.getUserManager().modifyUser(player.getUniqueId(), user -> {
+                    user.data().remove(Node.builder("group." + playerTeam).build());
+                }).get();
+            } catch (Exception e) {
+                player.sendMessage("§f§lCivEvents §f| §cFailed to remove " + player + " from the group: " + playerTeam);
+                e.printStackTrace();
+            }
         }
-        teamConfig.removeInvite(playerName);
-        removePlayerFromLuckPermsGroup(player);
     }
-
     private void promoteNewLeader(String teamName) {
         List<String> teamMembers = teamConfig.getTeamMembers(teamName);
         if (teamMembers.size() > 1) {
@@ -334,34 +355,6 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                 if (teamMember != null) {
                     teamMember.sendMessage("§f§lCivEvents §f| §a" + newLeader + " is now the new leader of " + teamName);
                 }
-            }
-        }
-    }
-    private void removePlayerFromLuckPermsGroup(Player player) {
-        String playerName = player.getName();
-        String teamName = teamConfig.getPlayerTeam(playerName);
-        if (teamName != null) {
-            try {
-                luckPerms.getUserManager().modifyUser(player.getUniqueId(), user -> {
-                    user.data().remove(Node.builder("group." + teamName).build());
-                }).get();
-            } catch (Exception e) {
-                Bukkit.getLogger().severe("Failed to add " + playerName + " to group: " + teamName);
-                e.printStackTrace();
-            }
-        }
-    }
-    private void addPlayerToLuckPermsGroup(Player player) {
-        String playerName = player.getName();
-        String teamName = teamConfig.getPlayerTeam(playerName);
-        if (teamName != null) {
-            try {
-                luckPerms.getUserManager().modifyUser(player.getUniqueId(), user -> {
-                    user.data().add(Node.builder("group." + teamName).build());
-                }).get();
-            } catch (Exception e) {
-                Bukkit.getLogger().severe("Failed to add " + playerName + " to group: " + teamName);
-                e.printStackTrace();
             }
         }
     }
