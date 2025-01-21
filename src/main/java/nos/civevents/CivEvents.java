@@ -95,9 +95,9 @@ public final class CivEvents extends JavaPlugin {
             Objects.requireNonNull(getCommand("civcivilizations")).setTabCompleter(new CivilizationCommands(this, civilizationConfig));
 
             // CivTeams
-            Objects.requireNonNull(getCommand("team")).setExecutor(new TeamCommands(this, luckPerms));
-            Objects.requireNonNull(getCommand("team")).setTabCompleter(new TeamCommands(this, luckPerms));
-            getServer().getPluginManager().registerEvents(new TeamCommands(this, luckPerms), this);
+            Objects.requireNonNull(getCommand("team")).setExecutor(new TeamCommands(this, luckPerms, teamConfig));
+            Objects.requireNonNull(getCommand("team")).setTabCompleter(new TeamCommands(this, luckPerms, teamConfig));
+            getServer().getPluginManager().registerEvents(new TeamCommands(this, luckPerms, teamConfig), this);
             getLogger().info("CivEvents: Luckperms is connected");
         } else {
             luckPerms = null;

@@ -2,6 +2,7 @@ package nos.civevents.CivTeams;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
@@ -20,15 +21,14 @@ import java.util.*;
 
 @SuppressWarnings("all")
 public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
-    private final Map<String, String> pendingInvites = new HashMap<>();
-    private final Map<String, String> teamLeaders = new HashMap<>();
-    private final Map<String, List<String>> teams = new HashMap<>();
     private final Random random = new Random();
+    private final TeamConfig teamConfig;
     private final LuckPerms luckPerms;
     private final CivEvents plugin;
-    public TeamCommands(CivEvents plugin, LuckPerms luckPerms) {
+    public TeamCommands(CivEvents plugin, LuckPerms luckPerms, TeamConfig teamConfig) {
         this.plugin = plugin;
         this.luckPerms = luckPerms;
+        this.teamConfig = teamConfig;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -126,6 +126,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             luckPerms.getUserManager().modifyUser(player.getUniqueId(), user -> {
                 user.data().add(Node.builder("group." + groupName).build());
             }).get();
+            teamConfig.createTeam(groupName, player.getName());
             return groupName;
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,170 +139,117 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             inviter.sendMessage("§f§lCivEvents §f| §cPlayer not found");
             return;
         }
-        String inviterTeam = getPlayerTeam(inviter.getName());
+        String inviterTeam = teamConfig.getPlayerTeam(inviter.getName());
         if (inviterTeam == null) {
             inviter.sendMessage("§f§lCivEvents §f| §cYou are not part of a team");
             return;
         }
-        if (teams.get(inviterTeam).size() >= 4) {
+        if (teamConfig.getTeamMembers(inviterTeam).size() >= 4) {
             inviter.sendMessage("§f§lCivEvents §f| §cYour team is full");
             return;
         }
-        pendingInvites.put(target.getName(), inviterTeam);
+        teamConfig.addInvite(target.getName(), inviterTeam);
         target.sendMessage("§f§lCivEvents §f| §aYou have been invited to join " + inviterTeam + " by " + inviter.getName());
         target.sendMessage("§f§lCivEvents §f| §aClick here to accept: §b/teams join " + inviterTeam);
         inviter.sendMessage("§f§lCivEvents §f| §aInvitation sent to " + target.getName());
     }
     private void joinTeam(Player player, String teamName) {
-        String invitedTeam = pendingInvites.get(player.getName());
+        String invitedTeam = teamConfig.getInvite(player.getName());
         if (invitedTeam == null || !invitedTeam.equalsIgnoreCase(teamName)) {
             player.sendMessage("§f§lCivEvents §f| §cYou don't have an invitation to join this team");
             return;
         }
-        if (!teams.containsKey(teamName)) {
+        if (!teamConfig.doesTeamExist(teamName)) {
             player.sendMessage("§f§lCivEvents §f| §cTeam does not exist");
             return;
         }
-        if (teams.get(teamName).size() >= 4) {
+        if (teamConfig.getTeamMembers(teamName).size() >= 4) {
             player.sendMessage("§f§lCivEvents §f| §cTeam is already full");
             return;
         }
-        teams.get(teamName).add(player.getName());
-        pendingInvites.remove(player.getName());
+        teamConfig.addPlayerToTeam(player.getName(), teamName);
+        teamConfig.removeInvite(player.getName());
         player.sendMessage("§f§lCivEvents §f| §aYou joined the team " + teamName);
         Bukkit.broadcastMessage("§f§lCivEvents §f| §b" + player.getName() + " has joined " + teamName);
     }
     private void disbandTeam(Player player) {
-        String playerTeam = getPlayerTeam(player.getName());
+        String playerTeam = teamConfig.getPlayerTeam(player.getName());
         if (playerTeam == null) {
             player.sendMessage("§f§lCivEvents §f| §cYou are not part of a team");
             return;
         }
-        if (!teamLeaders.get(playerTeam).equals(player.getName())) {
+        if (!teamConfig.getTeamLeader(playerTeam).equals(player.getName())) {
             player.sendMessage("§f§lCivEvents §f| §cOnly the team leader can disband the team");
             return;
         }
-        teams.remove(playerTeam);
-        teamLeaders.remove(playerTeam);
-        pendingInvites.values().removeIf(team -> team.equals(playerTeam));
-        luckPerms.getGroupManager().loadGroup(playerTeam).thenAccept(optionalGroup -> {
-            if (optionalGroup.isPresent()) {
-                luckPerms.getGroupManager().deleteGroup(optionalGroup.get()).thenRun(() -> {
-                    player.sendMessage("§f§lCivEvents §f| §aTeam " + playerTeam + " has been disbanded successfully");
-                    Bukkit.broadcastMessage("§f§lCivEvents §f| §aTeam " + playerTeam + " has been disbanded by " + player.getName());
-                }).exceptionally(error -> {
-                    player.sendMessage("§f§lCivEvents §f| §cAn error occurred while disbanding the team");
-                    error.printStackTrace();
-                    return null;
-                });
-            } else {
-                player.sendMessage("§f§lCivEvents §f| §cFailed to disband the team, Group not found");
-            }
-        }).exceptionally(error -> {
-            player.sendMessage("§f§lCivEvents §f| §cAn error occurred while retrieving the group");
-            error.printStackTrace();
-            return null;
-        });
+        teamConfig.removeTeam(playerTeam);
+        player.sendMessage("§f§lCivEvents §f| §aTeam " + playerTeam + " has been disbanded successfully");
+        Bukkit.broadcastMessage("§f§lCivEvents §f| §aTeam " + playerTeam + " has been disbanded by " + player.getName());
     }
     private void kickMember(Player player, String targetName) {
-        String playerTeam = getPlayerTeam(player.getName());
+        String playerTeam = teamConfig.getPlayerTeam(player.getName());
         if (playerTeam == null) {
             player.sendMessage("§f§lCivEvents §f| §cYou are not part of a team");
             return;
         }
-        if (!teamLeaders.get(playerTeam).equals(player.getName())) {
+        if (!teamConfig.getTeamLeader(playerTeam).equals(player.getName())) {
             player.sendMessage("§f§lCivEvents §f| §cYou are not the team leader and cannot kick players");
             return;
         }
-        if (!teams.get(playerTeam).contains(targetName)) {
+        if (!teamConfig.getTeamMembers(playerTeam).contains(targetName)) {
             player.sendMessage("§f§lCivEvents §f| §cPlayer not in your team");
             return;
         }
-        teams.get(playerTeam).remove(targetName);
+        teamConfig.removePlayerFromTeam(targetName, playerTeam);
         Player target = Bukkit.getPlayer(targetName);
         if (target != null) {
-            target.sendMessage("§f§lCivEvents §f| §cYou have been kicked from the team " + playerTeam);
+            target.sendMessage("§f§lCivEvents §f| §aYou have been kicked from team " + playerTeam);
         }
-        player.sendMessage("§f§lCivEvents §f| §aPlayer " + targetName + " has been kicked from your team");
+        player.sendMessage("§f§lCivEvents §f| §a" + targetName + " has been kicked from your team");
     }
     private void leaveTeam(Player player) {
-        String playerTeam = getPlayerTeam(player.getName());
+        String playerTeam = teamConfig.getPlayerTeam(player.getName());
         if (playerTeam == null) {
             player.sendMessage("§f§lCivEvents §f| §cYou are not part of a team");
             return;
         }
-        if (teamLeaders.get(playerTeam).equals(player.getName())) {
-            player.sendMessage("§f§lCivEvents §f| §cYou cannot leave your own team as the leader");
-            return;
-        }
-        teams.get(playerTeam).remove(player.getName());
-        player.sendMessage("§f§lCivEvents §f| §aYou left the team " + playerTeam);
-        Bukkit.broadcastMessage("§f§lCivEvents §f| §b" + player.getName() + " has left " + playerTeam);
+        teamConfig.removePlayerFromTeam(player.getName(), playerTeam);
+        player.sendMessage("§f§lCivEvents §f| §aYou have left the team " + playerTeam);
+        Bukkit.broadcastMessage("§f§lCivEvents §f| §b" + player.getName() + " has left the team " + playerTeam);
     }
     private void teamInfo(Player player) {
-        String playerTeam = getPlayerTeam(player.getName());
+        String playerTeam = teamConfig.getPlayerTeam(player.getName());
         if (playerTeam == null) {
             player.sendMessage("§f§lCivEvents §f| §cYou are not part of a team");
             return;
         }
+        String leader = teamConfig.getTeamLeader(playerTeam);
+        List<String> members = teamConfig.getTeamMembers(playerTeam);
         player.sendMessage("§f§lCivEvents §f| §aTeam: " + playerTeam);
-        player.sendMessage("§f§lCivEvents §f| §aLeader: " + teamLeaders.get(playerTeam));
-        player.sendMessage("§f§lCivEvents §f| §aMembers: " + String.join(", ", teams.get(playerTeam)));
-    }
-    private String getPlayerTeam(String playerName) {
-        return teams.entrySet().stream()
-                .filter(entry -> entry.getValue().contains(playerName))
-                .map(Map.Entry::getKey)
-                .findFirst().orElse(null);
-    }
-    private void broadcastToTeam(String teamName, String message) {
-        for (String member : teams.get(teamName)) {
-            Player teamMember = Bukkit.getPlayer(member);
-            if (teamMember != null && teamMember.isOnline()) {
-                teamMember.sendMessage(message);
-            }
-        }
-    }
-    private void disbandEmptyTeam(String teamName) {
-        teams.remove(teamName);
-        teamLeaders.remove(teamName);
-        pendingInvites.values().removeIf(invitedTeam -> invitedTeam.equals(teamName));
-        Bukkit.broadcastMessage("§f§lCivEvents §f| §aTeam " + teamName + " has been disbanded because it became empty");
+        player.sendMessage("§f§lCivEvents §f| §aLeader: " + leader);
+        player.sendMessage("§f§lCivEvents §f| §aMembers: " + String.join(", ", members));
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        String playerTeam = getPlayerTeam(event.getPlayer().getName());
-        if (playerTeam != null) {
-            teams.get(playerTeam).remove(event.getPlayer().getName());
-        }
+        String playerName = event.getPlayer().getName();
+        teamConfig.removeInvite(playerName);
+        removePlayerFromLuckPermsGroup(playerName);
     }
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        String playerTeam = getPlayerTeam(event.getEntity().getName());
-        if (playerTeam != null) {
-            teams.get(playerTeam).remove(event.getEntity().getName());
-        }
+        String playerName = event.getEntity().getName();
+        teamConfig.removeInvite(playerName);
+        removePlayerFromLuckPermsGroup(playerName);
     }
-    private void handlePlayerRemoval(Player player) {
-        String playerTeam = getPlayerTeam(player.getName());
-        if (playerTeam == null) {
-            return;
-        }
-        List<String> members = teams.get(playerTeam);
-        members.remove(player.getName());
-        if (teamLeaders.get(playerTeam).equals(player.getName())) {
-            if (!members.isEmpty()) {
-                String newLeader = members.get((int) (Math.random() * members.size()));
-                teamLeaders.put(playerTeam, newLeader);
-                broadcastToTeam(playerTeam, "§f§lCivEvents §f| §a" + newLeader + " is now the team leader");
-            } else {
-                disbandEmptyTeam(playerTeam);
+    private void removePlayerFromLuckPermsGroup(String playerName) {
+        User user = luckPerms.getUserManager().getUser(playerName);
+        if (user != null) {
+            String teamName = teamConfig.getPlayerTeam(playerName);
+            if (teamName != null) {
+                Node node = Node.builder("groups." + teamName).build();
+                user.data().remove(node);
+                luckPerms.getUserManager().saveUser(user);
             }
         }
-        luckPerms.getUserManager().modifyUser(player.getUniqueId(), user -> {
-            user.data().clear();
-            user.data().add(Node.builder("group.default").build());
-        });
-        player.sendMessage("§f§lCivEvents §f| §cYou have been removed from your team");
     }
 }
