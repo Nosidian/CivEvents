@@ -31,6 +31,10 @@ commands:
     permission: civevents.scythers
     permission-message: Permission = civevents.scythers
     aliases: [as, scyther, scythers]
+  civcivilizations:
+    permission: civevents.civilizations
+    permission-message: Permission = civevents.civilizations
+    aliases: [cc, civc, civcivilization]
   civdeaths:
     permission: civevents.death
     permission-message: Permission = civevents.death
@@ -43,14 +47,14 @@ commands:
     permission: civevents.flag
     permission-message: Permission = civevents.flag
     aliases: [cf, civf, civflag]
+  civhungergames:
+    permission: civevents.location
+    permission-message: Permission = civevents.location
+    aliases: [hg, hungergame, hungergames]
   civitems:
     permission: civevents.item
     permission-message: Permission = civevents.item
     aliases: [ci, civi, civitem]
-  civlocations:
-    permission: civevents.location
-    permission-message: Permission = civevents.location
-    aliases: [cl, civl, civlocation, hg, hungergame, hungergames]
   civportals:
     permission: civevents.portal
     permission-message: Permission = civevents.portal
@@ -67,14 +71,10 @@ commands:
     permission: civevents.recipe
     permission-message: Permission = civevents.recipe
     aliases: [recipe, craft, crafts]
-  civteams:
-    permission: civevents.teamall
-    permission-message: Permission = civevents.teamall
-    aliases: [ct, civt, civteam]
   team:
     permission: civevents.team
     permission-message: Permission = civevents.team
-    aliases: [t, teams]
+    aliases: [t, teams, ct, civt, civteam, civteams]
   civworlds:
     permission: civevents.world
     permission-message: Permission = civevents.world
