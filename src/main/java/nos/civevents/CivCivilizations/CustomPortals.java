@@ -1,4 +1,4 @@
-package nos.civevents.CivTeams;
+package nos.civevents.CivCivilizations;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;

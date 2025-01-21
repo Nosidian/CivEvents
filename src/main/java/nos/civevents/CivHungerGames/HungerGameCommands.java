@@ -1,4 +1,4 @@
-package nos.civevents.CivLocations;
+package nos.civevents.CivHungerGames;
 
 import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
@@ -18,16 +18,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 @SuppressWarnings("all")
-public class LocationCommands implements CommandExecutor, TabCompleter, Listener {
+public class HungerGameCommands implements CommandExecutor, TabCompleter, Listener {
     private final CivEvents plugin;
-    private final LocationConfig locationConfig;
-    public LocationCommands(CivEvents plugin, LocationConfig locationConfig) {
+    private final HungerGameConfig hungerGameConfig;
+    public HungerGameCommands(CivEvents plugin, HungerGameConfig locationConfig) {
         this.plugin = plugin;
-        this.locationConfig = locationConfig;
+        this.hungerGameConfig = locationConfig;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("civlocations") && args.length >= 1) {
+        if (command.getName().equalsIgnoreCase("civhungergames") && args.length >= 1) {
             if (!(sender instanceof Player player)) {
                 sender.sendMessage("Only players can use this command.");
                 return true;
@@ -36,7 +36,7 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
             switch (action.toLowerCase()) {
                 case "set" -> {
                     Set<Integer> existingNumbers = new HashSet<>();
-                    ConfigurationSection section = locationConfig.getConfig().getConfigurationSection("locations");
+                    ConfigurationSection section = hungerGameConfig.getConfig().getConfigurationSection("locations");
                     if (section != null) {
                         for (String key : section.getKeys(false)) {
                             try {
@@ -53,44 +53,44 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                     Location loc = player.getLocation();
                     loc.setX(Math.floor(loc.getX()) + 0.5);
                     loc.setZ(Math.floor(loc.getZ()) + 0.5);
-                    String blockType = locationConfig.getConfig().getString("platform.blocktype", "NONE");
-                    String slabType = locationConfig.getConfig().getString("platform.slabtype", "NONE");
+                    String blockType = hungerGameConfig.getConfig().getString("platform.blocktype", "NONE");
+                    String slabType = hungerGameConfig.getConfig().getString("platform.slabtype", "NONE");
                     if (!blockType.equalsIgnoreCase("NONE") && !slabType.equalsIgnoreCase("NONE")) {
                         Material blockMaterial = Material.valueOf(blockType.toUpperCase());
                         Material slabMaterial = Material.valueOf(slabType.toUpperCase());
                         createPlatform(loc, blockMaterial, slabMaterial);
                         loc.add(0, 1, 0);
                     }
-                    locationConfig.getConfig().set("locations." + locationNumber, loc.serialize());
-                    locationConfig.saveConfig();
+                    hungerGameConfig.getConfig().set("locations." + locationNumber, loc.serialize());
+                    hungerGameConfig.saveConfig();
                     List<Location> locations = Arrays.asList(loc);
                     int index = locationNumber;
                     for (Location location : locations) {
                         while (existingNumbers.contains(index)) {
                             index++;
                         }
-                        locationConfig.getConfig().set("locations." + index + ".world", location.getWorld().getName());
-                        locationConfig.getConfig().set("locations." + index + ".x", location.getX());
-                        locationConfig.getConfig().set("locations." + index + ".y", location.getY());
-                        locationConfig.getConfig().set("locations." + index + ".z", location.getZ());
-                        locationConfig.getConfig().set("locations." + index + ".yaw", location.getYaw());
-                        locationConfig.getConfig().set("locations." + index + ".pitch", location.getPitch());
+                        hungerGameConfig.getConfig().set("locations." + index + ".world", location.getWorld().getName());
+                        hungerGameConfig.getConfig().set("locations." + index + ".x", location.getX());
+                        hungerGameConfig.getConfig().set("locations." + index + ".y", location.getY());
+                        hungerGameConfig.getConfig().set("locations." + index + ".z", location.getZ());
+                        hungerGameConfig.getConfig().set("locations." + index + ".yaw", location.getYaw());
+                        hungerGameConfig.getConfig().set("locations." + index + ".pitch", location.getPitch());
                         existingNumbers.add(index);
                         index++;
                     }
-                    locationConfig.saveConfig();
+                    hungerGameConfig.saveConfig();
                     player.sendMessage("§f§lCivEvents §f| §aLocation " + locationNumber + " has been set");
                 }
                 case "remove" -> {
                     String locationNumber = args[1].toLowerCase();
                     if (locationNumber.equals("all") || locationNumber.equals("<all>")) {
-                        locationConfig.getConfig().set("locations", null);
-                        locationConfig.saveConfig();
+                        hungerGameConfig.getConfig().set("locations", null);
+                        hungerGameConfig.saveConfig();
                         player.sendMessage("§f§lCivEvents §f| §aAll locations have been removed");
                     } else {
-                        if (locationConfig.getConfig().contains("locations." + locationNumber)) {
-                            locationConfig.getConfig().set("locations." + locationNumber, null);
-                            locationConfig.saveConfig();
+                        if (hungerGameConfig.getConfig().contains("locations." + locationNumber)) {
+                            hungerGameConfig.getConfig().set("locations." + locationNumber, null);
+                            hungerGameConfig.saveConfig();
                             player.sendMessage("§f§lCivEvents §f| §aLocation " + locationNumber + " has been removed");
                         } else {
                             player.sendMessage("§f§lCivEvents §f| §cLocation " + locationNumber + " does not exist");
@@ -105,7 +105,7 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                         }
                     }
                     List<Location> locations = new ArrayList<>();
-                    ConfigurationSection locationsSection = locationConfig.getConfig().getConfigurationSection("locations");
+                    ConfigurationSection locationsSection = hungerGameConfig.getConfig().getConfigurationSection("locations");
                     if (locationsSection != null) {
                         for (String key : locationsSection.getKeys(false)) {
                             ConfigurationSection locationSection = locationsSection.getConfigurationSection(key);
@@ -154,27 +154,27 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                     if (args.length == 3) {
                         String blockType = args[1];
                         String slabType = args[2];
-                        locationConfig.getConfig().set("platform.blocktype", blockType);
-                        locationConfig.getConfig().set("platform.slabtype", slabType);
-                        locationConfig.saveConfig();
+                        hungerGameConfig.getConfig().set("platform.blocktype", blockType);
+                        hungerGameConfig.getConfig().set("platform.slabtype", slabType);
+                        hungerGameConfig.saveConfig();
                         player.sendMessage("§f§lCivEvents §f| §aPlatform set with block type " + blockType + " and slab type " + slabType);
                     } else if (args.length == 2 && args[1].equalsIgnoreCase("reset")) {
-                        locationConfig.getConfig().set("platform.blocktype", "NONE");
-                        locationConfig.getConfig().set("platform.slabtype", "NONE");
-                        locationConfig.saveConfig();
+                        hungerGameConfig.getConfig().set("platform.blocktype", "NONE");
+                        hungerGameConfig.getConfig().set("platform.slabtype", "NONE");
+                        hungerGameConfig.saveConfig();
                         player.sendMessage("§f§lCivEvents §f| §aPlatform settings have been reset to NONE");
                     } else if (args.length == 2 && args[1].equalsIgnoreCase("<reset>")) {
-                        locationConfig.getConfig().set("platform.blocktype", "NONE");
-                        locationConfig.getConfig().set("platform.slabtype", "NONE");
-                        locationConfig.saveConfig();
+                        hungerGameConfig.getConfig().set("platform.blocktype", "NONE");
+                        hungerGameConfig.getConfig().set("platform.slabtype", "NONE");
+                        hungerGameConfig.saveConfig();
                         player.sendMessage("§f§lCivEvents §f| §aPlatform settings have been reset to NONE");
                     } else {
-                        player.sendMessage("§f§lCivEvents §f| §cUsage: /civlocations platform <blocktype> <slabtype> or /civlocations platform reset");
+                        player.sendMessage("§f§lCivEvents §f| §cUsage: /civhungergames platform <blocktype> <slabtype> or /civlocations platform reset");
                     }
                 }
                 case "automatic" -> {
                     if (args.length != 2) {
-                        player.sendMessage("§f§lCivEvents §f| §cUsage: /civlocations automatic <blockrange>");
+                        player.sendMessage("§f§lCivEvents §f| §cUsage: /civhungergames automatic <blockrange>");
                         return true;
                     }
                     int range;
@@ -184,8 +184,8 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                         player.sendMessage("§f§lCivEvents §f| §cInvalid range number");
                         return true;
                     }
-                    String blockTypeConfig = locationConfig.getConfig().getString("platform.blocktype", "NONE");
-                    String slabTypeConfig = locationConfig.getConfig().getString("platform.slabtype", "NONE");
+                    String blockTypeConfig = hungerGameConfig.getConfig().getString("platform.blocktype", "NONE");
+                    String slabTypeConfig = hungerGameConfig.getConfig().getString("platform.slabtype", "NONE");
                     Material blockMaterial = blockTypeConfig.equalsIgnoreCase("NONE") ? null : Material.getMaterial(blockTypeConfig.toUpperCase());
                     Material slabMaterial = slabTypeConfig.equalsIgnoreCase("NONE") ? null : Material.getMaterial(slabTypeConfig.toUpperCase());
                     if (blockMaterial == null && slabMaterial == null) {
@@ -193,7 +193,7 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                         return true;
                     }
                     Set<Integer> existingNumbers = new HashSet<>();
-                    ConfigurationSection section = locationConfig.getConfig().getConfigurationSection("locations");
+                    ConfigurationSection section = hungerGameConfig.getConfig().getConfigurationSection("locations");
                     if (section != null) {
                         for (String key : section.getKeys(false)) {
                             try {
@@ -229,16 +229,16 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                         while (existingNumbers.contains(index)) {
                             index++;
                         }
-                        locationConfig.getConfig().set("locations." + index + ".world", loc.getWorld().getName());
-                        locationConfig.getConfig().set("locations." + index + ".x", loc.getX());
-                        locationConfig.getConfig().set("locations." + index + ".y", loc.getY());
-                        locationConfig.getConfig().set("locations." + index + ".z", loc.getZ());
-                        locationConfig.getConfig().set("locations." + index + ".yaw", loc.getYaw());
-                        locationConfig.getConfig().set("locations." + index + ".pitch", loc.getPitch());
+                        hungerGameConfig.getConfig().set("locations." + index + ".world", loc.getWorld().getName());
+                        hungerGameConfig.getConfig().set("locations." + index + ".x", loc.getX());
+                        hungerGameConfig.getConfig().set("locations." + index + ".y", loc.getY());
+                        hungerGameConfig.getConfig().set("locations." + index + ".z", loc.getZ());
+                        hungerGameConfig.getConfig().set("locations." + index + ".yaw", loc.getYaw());
+                        hungerGameConfig.getConfig().set("locations." + index + ".pitch", loc.getPitch());
                         existingNumbers.add(index);
                         index++;
                     }
-                    locationConfig.saveConfig();
+                    hungerGameConfig.saveConfig();
                     player.sendMessage("§f§lCivEvents §f| §aPlatforms created around you, all facing you");
                     return true;
                 }
@@ -250,7 +250,7 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
     }
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (command.getName().equalsIgnoreCase("civlocations")) {
+        if (command.getName().equalsIgnoreCase("civhungergames")) {
             if (args.length == 1) {
                 return Arrays.asList("set", "remove", "start", "release", "platform", "automatic");
             } else if (args.length == 2) {
@@ -258,8 +258,8 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
                     List<String> suggestions = new ArrayList<>();
                     suggestions.add("all");
                     suggestions.add("<all>");
-                    if (locationConfig.getConfig().getConfigurationSection("locations") != null) {
-                        suggestions.addAll(locationConfig.getConfig().getConfigurationSection("locations").getKeys(false));
+                    if (hungerGameConfig.getConfig().getConfigurationSection("locations") != null) {
+                        suggestions.addAll(hungerGameConfig.getConfig().getConfigurationSection("locations").getKeys(false));
                     }
                     return suggestions;
                 } else if (args[0].equalsIgnoreCase("platform")) {
@@ -304,20 +304,20 @@ public class LocationCommands implements CommandExecutor, TabCompleter, Listener
         List<String> frozenPlayers = getFrozenPlayers();
         if (!frozenPlayers.contains(player.getName())) {
             frozenPlayers.add(player.getName());
-            locationConfig.getConfig().set("frozen-players", frozenPlayers);
-            locationConfig.saveConfig();
+            hungerGameConfig.getConfig().set("frozen-players", frozenPlayers);
+            hungerGameConfig.saveConfig();
         }
     }
     public void removeFrozenPlayer(Player player) {
         List<String> frozenPlayers = getFrozenPlayers();
         if (frozenPlayers.contains(player.getName())) {
             frozenPlayers.remove(player.getName());
-            locationConfig.getConfig().set("frozen-players", frozenPlayers);
-            locationConfig.saveConfig();
+            hungerGameConfig.getConfig().set("frozen-players", frozenPlayers);
+            hungerGameConfig.saveConfig();
         }
     }
     public List<String> getFrozenPlayers() {
-        return locationConfig.getConfig().getStringList("frozen-players");
+        return hungerGameConfig.getConfig().getStringList("frozen-players");
     }
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {

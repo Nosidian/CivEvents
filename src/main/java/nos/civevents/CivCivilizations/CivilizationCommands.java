@@ -1,4 +1,4 @@
-package nos.civevents.CivTeams;
+package nos.civevents.CivCivilizations;
 
 import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;

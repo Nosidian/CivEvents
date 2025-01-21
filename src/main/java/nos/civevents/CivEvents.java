@@ -18,13 +18,13 @@ import nos.civevents.CivItems.Items.MagicBlade;
 import nos.civevents.CivItems.Items.MagicWand;
 import nos.civevents.CivItems.Items.SpellHammer;
 import nos.civevents.CivItems.Medieval.*;
-import nos.civevents.CivLocations.LocationCommands;
-import nos.civevents.CivLocations.LocationConfig;
-import nos.civevents.CivLocations.PortalCommands;
+import nos.civevents.CivHungerGames.HungerGameCommands;
+import nos.civevents.CivHungerGames.HungerGameConfig;
+import nos.civevents.CivCivilizations.PortalCommands;
 import nos.civevents.CivPackages.*;
 import nos.civevents.CivRecipes.*;
-import nos.civevents.CivTeams.CivilizationCommands;
-import nos.civevents.CivTeams.CivilizationConfig;
+import nos.civevents.CivCivilizations.CivilizationCommands;
+import nos.civevents.CivCivilizations.CivilizationConfig;
 import nos.civevents.CivTeams.TeamCommands;
 import nos.civevents.CivWorlds.WorldBackrooms;
 import nos.civevents.CivWorlds.WorldCommands;
@@ -52,7 +52,7 @@ public final class CivEvents extends JavaPlugin {
     private DeathConfig deathConfig;
     private EntityConfig entityConfig;
     private FlagConfig flagConfig;
-    private LocationConfig locationConfig;
+    private HungerGameConfig hungerGameConfig;
     private RecipeConfig recipeConfig;
     private CivilizationConfig civilizationConfig;
     private WorldConfig worldConfig;
@@ -73,8 +73,8 @@ public final class CivEvents extends JavaPlugin {
         entityConfig.loadConfig();
         flagConfig = new FlagConfig(this);
         flagConfig.loadConfig();
-        locationConfig = new LocationConfig(this);
-        locationConfig.loadConfig();
+        hungerGameConfig = new HungerGameConfig(this);
+        hungerGameConfig.loadConfig();
         recipeConfig = new RecipeConfig(this);
         recipeConfig.loadConfig();
         civilizationConfig = new CivilizationConfig(this);
@@ -86,12 +86,14 @@ public final class CivEvents extends JavaPlugin {
 
         if (getServer().getPluginManager().getPlugin("LuckPerms") != null) {
             luckPerms = LuckPermsProvider.get();
+            // CivCivilizations
+            Objects.requireNonNull(getCommand("civcivilizations")).setExecutor(new CivilizationCommands(this, civilizationConfig));
+            Objects.requireNonNull(getCommand("civcivilizations")).setTabCompleter(new CivilizationCommands(this, civilizationConfig));
+
             // CivTeams
-            Objects.requireNonNull(getCommand("civteams")).setExecutor(new CivilizationCommands(this, civilizationConfig));
-            Objects.requireNonNull(getCommand("civteams")).setTabCompleter(new CivilizationCommands(this, civilizationConfig));
-            Objects.requireNonNull(getCommand("team")).setExecutor(new TeamCommands(this));
-            Objects.requireNonNull(getCommand("team")).setTabCompleter(new TeamCommands(this));
-            getServer().getPluginManager().registerEvents(new TeamCommands(this), this);
+            Objects.requireNonNull(getCommand("team")).setExecutor(new TeamCommands(this, luckPerms));
+            Objects.requireNonNull(getCommand("team")).setTabCompleter(new TeamCommands(this, luckPerms));
+            getServer().getPluginManager().registerEvents(new TeamCommands(this, luckPerms), this);
             getLogger().info("CivEvents: Luckperms is connected");
         } else {
             luckPerms = null;
@@ -123,6 +125,11 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ScytherConfig(this), this);
         getServer().getPluginManager().registerEvents(new PlayerConfig(this), this);
 
+        // CivCivilizations
+        Objects.requireNonNull(getCommand("civportals")).setExecutor(new PortalCommands(this, hungerGameConfig));
+        Objects.requireNonNull(getCommand("civportals")).setTabCompleter(new PortalCommands(this, hungerGameConfig));
+        getServer().getPluginManager().registerEvents(new PortalCommands(this, hungerGameConfig), this);
+
         // CivDeaths
         Objects.requireNonNull(getCommand("civdeaths")).setExecutor(new DeathCommands(this, deathConfig));
         Objects.requireNonNull(getCommand("civdeaths")).setTabCompleter(new DeathCommands(this, deathConfig));
@@ -137,6 +144,11 @@ public final class CivEvents extends JavaPlugin {
         Objects.requireNonNull(getCommand("civflags")).setExecutor(new FlagCommands(this, flagConfig));
         Objects.requireNonNull(getCommand("civflags")).setTabCompleter(new FlagCommands(this, flagConfig));
         getServer().getPluginManager().registerEvents(new FlagCommands(this, flagConfig), this);
+
+        // CivHungerGames
+        Objects.requireNonNull(getCommand("civhungergames")).setExecutor(new HungerGameCommands(this, hungerGameConfig));
+        Objects.requireNonNull(getCommand("civhungergames")).setTabCompleter(new HungerGameCommands(this, hungerGameConfig));
+        getServer().getPluginManager().registerEvents(new HungerGameCommands(this, hungerGameConfig), this);
 
         // CivItems
         Objects.requireNonNull(getCommand("civitems")).setExecutor(new ItemCommands(this));
@@ -159,14 +171,6 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SilverScythe(this), this);
         getServer().getPluginManager().registerEvents(new BattleAxe(this), this);
         getServer().getPluginManager().registerEvents(new WarHammer(this), this);
-
-        // CivLocations
-        Objects.requireNonNull(getCommand("civlocations")).setExecutor(new LocationCommands(this, locationConfig));
-        Objects.requireNonNull(getCommand("civlocations")).setTabCompleter(new LocationCommands(this, locationConfig));
-        Objects.requireNonNull(getCommand("civportals")).setExecutor(new PortalCommands(this, locationConfig));
-        Objects.requireNonNull(getCommand("civportals")).setTabCompleter(new PortalCommands(this, locationConfig));
-        getServer().getPluginManager().registerEvents(new LocationCommands(this, locationConfig), this);
-        getServer().getPluginManager().registerEvents(new PortalCommands(this, locationConfig), this);
 
         // CivPackages
         Objects.requireNonNull(getCommand("civpackages")).setExecutor(new PackageCommands(this, new TierOne(this), new TierTwo(this), new TierThree(this), new TierFour(this), new TierFive(this), new TierPrize(this)));
@@ -195,7 +199,7 @@ public final class CivEvents extends JavaPlugin {
             deathConfig.reloadConfig();
             entityConfig.reloadConfig();
             flagConfig.reloadConfig();
-            locationConfig.reloadConfig();
+            hungerGameConfig.reloadConfig();
             recipeConfig.reloadConfig();
             civilizationConfig.reloadConfig();
             worldConfig.reloadConfig();
@@ -211,7 +215,7 @@ public final class CivEvents extends JavaPlugin {
         deathConfig.saveConfig();
         entityConfig.saveConfig();
         flagConfig.saveConfig();
-        locationConfig.saveConfig();
+        hungerGameConfig.saveConfig();
         recipeConfig.saveConfig();
         civilizationConfig.saveConfig();
         worldConfig.saveConfig();

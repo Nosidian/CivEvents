@@ -1,6 +1,7 @@
-package nos.civevents.CivLocations;
+package nos.civevents.CivCivilizations;
 
 import nos.civevents.CivEvents;
+import nos.civevents.CivHungerGames.HungerGameConfig;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -19,8 +20,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("all")
 public class PortalCommands implements CommandExecutor, TabCompleter, Listener {
     private final CivEvents plugin;
-    private final LocationConfig locationConfig;
-    public PortalCommands(CivEvents plugin, LocationConfig locationConfig) {
+    private final HungerGameConfig locationConfig;
+    public PortalCommands(CivEvents plugin, HungerGameConfig locationConfig) {
         this.plugin = plugin;
         this.locationConfig = locationConfig;
     }
