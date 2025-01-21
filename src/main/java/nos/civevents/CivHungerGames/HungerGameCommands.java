@@ -244,7 +244,7 @@ public class HungerGameCommands implements CommandExecutor, TabCompleter, Listen
                     return true;
                 }
                 case "countdown" -> {
-                    String[] titles = {"&a&l10", "&a&l9", "&a&l8", "&a&l7", "&a&l6", "&a&l5", "&a&l4", "&e&l3", "&6&l2", "&c&l1"};
+                    String[] titles = {"§a§l10", "§a§l9", "§a§l8", "§a§l7", "§a§l6", "§a§l5", "§a§l4", "§e§l3", "§6§l2", "§c§l1"};
                     startCountdown(titles);
                     return true;
                 }
@@ -258,7 +258,7 @@ public class HungerGameCommands implements CommandExecutor, TabCompleter, Listen
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (command.getName().equalsIgnoreCase("civhungergames")) {
             if (args.length == 1) {
-                return Arrays.asList("set", "remove", "start", "release", "platform", "automatic");
+                return Arrays.asList("set", "remove", "start", "release", "platform", "automatic", "countdown");
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("remove")) {
                     List<String> suggestions = new ArrayList<>();

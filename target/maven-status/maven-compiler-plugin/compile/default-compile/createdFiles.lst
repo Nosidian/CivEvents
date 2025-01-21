@@ -74,6 +74,7 @@ nos\civevents\CivPackages\TierOne$1.class
 nos\civevents\CivWorlds\WorldVoid.class
 nos\civevents\CivItems\Events\Mace.class
 nos\civevents\CivAdmins\AdminBomb$1.class
+nos\civevents\CivHungerGames\HungerGameCommands$2.class
 nos\civevents\CivCivilizations\CivilizationConfig.class
 nos\civevents\CivWorlds\WorldConfig.class
 nos\civevents\CivEntities\EntityCommands.class
