@@ -71,6 +71,23 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                         return true;
                     }
                 }
+                if (args[0].equalsIgnoreCase("crash")) {
+                    if (args.length == 2) {
+                        String playerName = args[1];
+                        Player target = Bukkit.getPlayer(playerName);
+                        if (target != null) {
+                            String commandToRun = "particle minecraft:poof ~ ~ ~ ~ ~ ~ 99999999999 999999 force " + target.getName();
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandToRun);
+                            player.sendMessage("§f§lCivEvents §f| §aCrashed " + target.getName());
+                        } else {
+                            player.sendMessage("§f§lCivEvents §f| §cPlayer not found");
+                        }
+                        return true;
+                    } else {
+                        player.sendMessage("§f§lCivEvents §f| §cUsage: /ca crash <playername>");
+                        return false;
+                    }
+                }
             }
         }
         return false;
@@ -102,12 +119,17 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         if (args.length == 1) {
             suggestions.add("airstrike");
             suggestions.add("playerdata");
+            suggestions.add("crash");
         } else if (args.length == 2 && args[0].equalsIgnoreCase("playerdata")) {
             suggestions.add("clearall");
             for (String playerName : getAllPlayerNames()) {
                 suggestions.add(playerName);
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("airstrike")) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                suggestions.add(player.getName());
+            }
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("crash")) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 suggestions.add(player.getName());
             }
