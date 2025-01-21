@@ -11,7 +11,6 @@ import java.util.*;
 @SuppressWarnings("all")
 public class TeamConfig implements Listener {
     private final Map<String, String> invites = new HashMap<>();
-    private Map<String, String> teamLeaders = new HashMap<>();
     private final Map<String, Team> teams = new HashMap<>();
     private final CivEvents plugin;
     private FileConfiguration teamConfig;
@@ -77,9 +76,6 @@ public class TeamConfig implements Listener {
             return team.getLeader();
         }
         return null;
-    }
-    public void setTeamLeader(String teamName, String newLeader) {
-        teamLeaders.put(teamName, newLeader);
     }
     public void addInvite(String playerName, String teamName) {
         invites.put(playerName, teamName);
