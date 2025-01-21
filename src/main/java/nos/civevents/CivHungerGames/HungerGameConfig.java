@@ -10,31 +10,31 @@ import java.io.File;
 @SuppressWarnings("all")
 public class HungerGameConfig implements Listener {
     private final CivEvents plugin;
-    private FileConfiguration locationConfig;
+    private FileConfiguration hungerGameConfig;
     public HungerGameConfig(CivEvents plugin) {
         this.plugin = plugin;
-        this.locationConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "hungergames.yml"));
+        this.hungerGameConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "hungergames.yml"));
         loadConfig();
     }
     public FileConfiguration getConfig() {
-        return locationConfig;
+        return hungerGameConfig;
     }
     public void loadConfig() {
         File configFile = new File(plugin.getDataFolder(), "hungergames.yml");
         if (!configFile.exists()) {
             plugin.saveResource("hungergames.yml", false);
         }
-        locationConfig = YamlConfiguration.loadConfiguration(configFile);
+        hungerGameConfig = YamlConfiguration.loadConfiguration(configFile);
     }
     public void saveConfig() {
         try {
-            locationConfig.save(new File(plugin.getDataFolder(), "hungergames.yml"));
+            hungerGameConfig.save(new File(plugin.getDataFolder(), "hungergames.yml"));
         } catch (Exception e) {
             plugin.getLogger().severe("Could not save config to hungergames.yml");
             e.printStackTrace();
         }
     }
     public void reloadConfig() {
-        this.locationConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "hungergames.yml"));
+        this.hungerGameConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "hungergames.yml"));
     }
 }
