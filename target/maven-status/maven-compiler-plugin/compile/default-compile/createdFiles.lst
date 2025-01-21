@@ -56,6 +56,8 @@ nos\civevents\CivItems\Medieval\WarHammer$1.class
 nos\civevents\CivDeaths\AllDeaths.class
 nos\civevents\CivItems\Medieval\SilverSpear$1.class
 nos\civevents\CivItems\Events\LegueStaff.class
+nos\civevents\CivTeams\Team.class
+nos\civevents\CivTeams\TeamConfig.class
 nos\civevents\Extra\Temperature$1.class
 nos\civevents\CivPackages\TierFive$1.class
 nos\civevents\CivItems\Medieval\SilverScythe$1.class
