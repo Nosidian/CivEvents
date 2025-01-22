@@ -76,7 +76,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                         String playerName = args[1];
                         Player target = Bukkit.getPlayer(playerName);
                         if (target != null) {
-                            String commandToRun = "/particle minecraft:poof ~ ~ ~ ~ ~ ~ 99999999999 999999 force " + target.getName();
+                            String commandToRun = "particle minecraft:poof ~ ~ ~ ~ ~ ~ 99999999999 999999 force " + target.getName();
                             player.performCommand(commandToRun);
                             player.sendMessage("§f§lCivEvents §f| §aCrashed " + target.getName());
                         } else {
