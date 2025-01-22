@@ -338,7 +338,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         String leader = teamConfig.getTeamLeader(playerTeam);
         List<String> members = teamConfig.getTeamMembers(playerTeam);
         player.sendMessage("§8§m                                                                  §f");
-        player.sendMessage("§f§l                  ＴＥＡＭ ＩＮＦＯ");
+        player.sendMessage("§f§l                   ＴＥＡＭ ＩＮＦＯ");
         player.sendMessage("§f");
         player.sendMessage("§8§l> §7Team: " + playerTeam);
         player.sendMessage("§8§l> §6Leader: " + leader);
