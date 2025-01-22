@@ -177,7 +177,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             return;
         }
         teamConfig.addInvite(target.getName(), inviterTeam);
-        TextComponent inviteMessage = new TextComponent("§f§lCivEvents §f| §aYou have been invited to join " + inviterTeam + " by " + inviter.getName());
+        TextComponent inviteMessage = new TextComponent("§f§lCivEvents §f| §aYou have been invited to join " + inviterTeam + " by " + inviter.getName() + "\n");
         TextComponent clickHereMessage = new TextComponent("§f§lCivEvents §f| §6§lClick Here To Join " + inviterTeam);
         clickHereMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/teams join " + inviterTeam));
         inviteMessage.addExtra(clickHereMessage);
