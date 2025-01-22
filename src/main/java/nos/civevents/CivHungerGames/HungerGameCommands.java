@@ -22,9 +22,9 @@ import java.util.*;
 public class HungerGameCommands implements CommandExecutor, TabCompleter, Listener {
     private final CivEvents plugin;
     private final HungerGameConfig hungerGameConfig;
-    public HungerGameCommands(CivEvents plugin, HungerGameConfig locationConfig) {
+    public HungerGameCommands(CivEvents plugin, HungerGameConfig hungerGameConfig) {
         this.plugin = plugin;
-        this.hungerGameConfig = locationConfig;
+        this.hungerGameConfig = hungerGameConfig;
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

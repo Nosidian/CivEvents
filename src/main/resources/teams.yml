@@ -1,3 +1,10 @@
-#---------------------------------#
-# Team System - /teams           #
-#---------------------------------#
+teams:
+  team1:
+    leader: "player1"
+    members:
+      - "player1"
+      - "player2"
+      - "player3"
+      - "player4"
+    invites:
+      - "player5"
