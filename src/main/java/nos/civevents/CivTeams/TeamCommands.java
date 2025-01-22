@@ -318,18 +318,13 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             }
         }
         teamConfig.removePlayerFromTeam(player.getName(), playerTeam);
-        List<String> remainingMembers = teamConfig.getTeamMembers(playerTeam);
-        if (remainingMembers == null || remainingMembers.isEmpty()) {
-            disbandTeam(playerTeam);
-            return;
-        }
         for (String teamMember : teamConfig.getTeamMembers(playerTeam)) {
             Player onlineMember = Bukkit.getPlayer(teamMember);
             if (onlineMember != null) {
                 onlineMember.sendMessage("§f§lCivEvents §f| §b" + player.getName() + " has left the team " + playerTeam);
             }
         }
-        player.sendMessage("§f§lCivEvents §f| §bHas left the team " + playerTeam);
+        player.sendMessage("§f§lCivEvents §f| §bYou just left the team " + playerTeam);
     }
     private void teamInfo(Player player) {
         String playerTeam = teamConfig.getPlayerTeam(player.getName());
@@ -364,33 +359,5 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                 e.printStackTrace();
             }
         }
-        List<String> remainingMembers = teamConfig.getTeamMembers(playerTeam);
-        if (remainingMembers == null || remainingMembers.isEmpty()) {
-            disbandTeam(playerTeam);
-        }
-    }
-    public void disbandTeam(String teamName) {
-        List<String> teamMembers = teamConfig.getTeamMembers(teamName);
-        if (teamMembers == null || teamMembers.isEmpty()) {
-            Bukkit.getLogger().warning("§f§lCivEvents §f| §cTeam " + teamName + " does not exist or has no members");
-            return;
-        }
-        for (String memberName : teamMembers) {
-            Player member = Bukkit.getPlayer(memberName);
-            if (member != null) {
-                member.sendMessage("§f§lCivEvents §f| §cYour team " + teamName + " has been disbanded");
-            }
-            try {
-                OfflinePlayer offlineMember = Bukkit.getOfflinePlayer(memberName);
-                luckPerms.getUserManager().modifyUser(offlineMember.getUniqueId(), user -> {
-                    user.data().remove(Node.builder("group." + teamName).build());
-                }).get();
-            } catch (Exception e) {
-                Bukkit.getLogger().severe("Failed to remove LuckPerms group for " + memberName);
-                e.printStackTrace();
-            }
-        }
-        teamConfig.removeTeam(teamName);
-        Bukkit.getLogger().info("§f§lCivEvents §f| Team " + teamName + " has been successfully disbanded");
     }
 }
