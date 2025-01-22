@@ -209,7 +209,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                     user.data().add(Node.builder("group." + teamName).build());
                 }).get();
             } catch (Exception e) {
-                Bukkit.getLogger().severe("Failed to add " + player + " to group: " + teamName);
+                Bukkit.getLogger().severe("Failed to add " + player + " to group " + teamName);
                 e.printStackTrace();
             }
         }
@@ -236,7 +236,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                         user.data().remove(Node.builder("group." + playerTeam).build());
                     }).get();
                 } catch (Exception e) {
-                    Bukkit.getLogger().severe("Failed to remove " + teamMember + " from group: " + playerTeam);
+                    Bukkit.getLogger().severe("Failed to remove " + teamMember + " from group " + playerTeam);
                     e.printStackTrace();
                 }
             }
@@ -246,7 +246,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             try {
                 luckPerms.getGroupManager().deleteGroup(group).get();
             } catch (Exception e) {
-                Bukkit.getLogger().severe("Failed to delete the LuckPerms group: " + playerTeam);
+                Bukkit.getLogger().severe("Failed to delete the LuckPerms group " + playerTeam);
                 e.printStackTrace();
             }
         } else {
@@ -285,7 +285,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                     user.data().remove(Node.builder("group." + playerTeam).build());
                 }).get();
             } catch (Exception e) {
-                player.sendMessage("§f§lCivEvents §f| §cFailed to remove " + targetName + " from the group: " + playerTeam);
+                player.sendMessage("§f§lCivEvents §f| §cFailed to remove " + targetName + " from the group " + playerTeam);
                 e.printStackTrace();
             }
         }
@@ -313,13 +313,14 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                     user.data().remove(Node.builder("group." + playerTeam).build());
                 }).get();
             } catch (Exception e) {
-                player.sendMessage("§f§lCivEvents §f| §cFailed to remove " + player + " from the group: " + playerTeam);
+                player.sendMessage("§f§lCivEvents §f| §cFailed to remove " + player + " from the group " + playerTeam);
                 e.printStackTrace();
             }
         }
         teamConfig.removePlayerFromTeam(player.getName(), playerTeam);
-        if (teamConfig.getTeamMembers(playerTeam).size() == 1) {
-            disbandTeam(player);
+        List<String> remainingMembers = teamConfig.getTeamMembers(playerTeam);
+        if (remainingMembers == null || remainingMembers.isEmpty()) {
+            disbandTeam(playerTeam);
             return;
         }
         for (String teamMember : teamConfig.getTeamMembers(playerTeam)) {
@@ -328,6 +329,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                 onlineMember.sendMessage("§f§lCivEvents §f| §b" + player.getName() + " has left the team " + playerTeam);
             }
         }
+        player.sendMessage("§f§lCivEvents §f| §bHas left the team " + playerTeam);
     }
     private void teamInfo(Player player) {
         String playerTeam = teamConfig.getPlayerTeam(player.getName());
@@ -342,7 +344,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         player.sendMessage("§f");
         player.sendMessage("§8§l> §7Team: " + playerTeam);
         player.sendMessage("§8§l> §6Leader: " + leader);
-        player.sendMessage("§8§l> §aMembers: " + String.join("§8§l, §a", members));
+        player.sendMessage("§8§l> §aMembers: " + String.join("§f, §a", members));
         player.sendMessage("§8§m                                                                  §f");
     }
     @EventHandler
@@ -351,10 +353,6 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         String playerName = player.getName();
         String playerTeam = teamConfig.getPlayerTeam(playerName);
         if (playerTeam != null) {
-            if (teamConfig.getTeamMembers(playerTeam).size() == 1) {
-                disbandTeam(player);
-                return;
-            }
             teamConfig.removePlayerFromTeam(playerName, playerTeam);
             teamConfig.removeInvite(playerName);
             try {
@@ -362,9 +360,37 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                     user.data().remove(Node.builder("group." + playerTeam).build());
                 }).get();
             } catch (Exception e) {
-                Bukkit.getLogger().severe("Failed to remove " + playerName + " from the group: " + playerTeam);
+                Bukkit.getLogger().severe("Failed to remove " + playerName + " from the group " + playerTeam);
                 e.printStackTrace();
             }
         }
+        List<String> remainingMembers = teamConfig.getTeamMembers(playerTeam);
+        if (remainingMembers == null || remainingMembers.isEmpty()) {
+            disbandTeam(playerTeam);
+        }
+    }
+    public void disbandTeam(String teamName) {
+        List<String> teamMembers = teamConfig.getTeamMembers(teamName);
+        if (teamMembers == null || teamMembers.isEmpty()) {
+            Bukkit.getLogger().warning("§f§lCivEvents §f| §cTeam " + teamName + " does not exist or has no members");
+            return;
+        }
+        for (String memberName : teamMembers) {
+            Player member = Bukkit.getPlayer(memberName);
+            if (member != null) {
+                member.sendMessage("§f§lCivEvents §f| §cYour team " + teamName + " has been disbanded");
+            }
+            try {
+                OfflinePlayer offlineMember = Bukkit.getOfflinePlayer(memberName);
+                luckPerms.getUserManager().modifyUser(offlineMember.getUniqueId(), user -> {
+                    user.data().remove(Node.builder("group." + teamName).build());
+                }).get();
+            } catch (Exception e) {
+                Bukkit.getLogger().severe("Failed to remove LuckPerms group for " + memberName);
+                e.printStackTrace();
+            }
+        }
+        teamConfig.removeTeam(teamName);
+        Bukkit.getLogger().info("§f§lCivEvents §f| Team " + teamName + " has been successfully disbanded");
     }
 }
