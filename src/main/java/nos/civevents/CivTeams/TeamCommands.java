@@ -304,7 +304,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             }
         }
         teamConfig.removePlayerFromTeam(player.getName(), playerTeam);
-        if (teamConfig.getTeamMembers(playerTeam).isEmpty()) {
+        if (teamConfig.getTeamMembers(playerTeam).size() == 1) {
             disbandTeam(player);
             return;
         }
