@@ -50,6 +50,8 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                 } else {
                     player.sendMessage("§f§lCivEvents §f| §cFailed to create team");
                 }
+                teamConfig.saveConfig();
+                teamConfig.loadConfig();
             }
             case "invite" -> {
                 if (args.length < 2) {
@@ -57,6 +59,8 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                     return false;
                 }
                 invitePlayer(player, args[1]);
+                teamConfig.saveConfig();
+                teamConfig.loadConfig();
             }
             case "join" -> {
                 if (args.length < 2) {
@@ -64,9 +68,13 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                     return false;
                 }
                 joinTeam(player, args[1]);
+                teamConfig.saveConfig();
+                teamConfig.loadConfig();
             }
             case "disband" -> {
                 disbandTeam(player);
+                teamConfig.saveConfig();
+                teamConfig.loadConfig();
             }
             case "kick" -> {
                 if (args.length < 2) {
@@ -74,12 +82,18 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                     return false;
                 }
                 kickMember(player, args[1]);
+                teamConfig.saveConfig();
+                teamConfig.loadConfig();
             }
             case "leave" -> {
                 leaveTeam(player);
+                teamConfig.saveConfig();
+                teamConfig.loadConfig();
             }
             case "info" -> {
                 teamInfo(player);
+                teamConfig.saveConfig();
+                teamConfig.loadConfig();
             }
             default -> {
                 player.sendMessage("§f§lCivEvents §f| §cUnknown command");
