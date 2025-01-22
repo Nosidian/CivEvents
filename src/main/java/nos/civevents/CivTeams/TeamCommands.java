@@ -114,9 +114,10 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
                 return null;
             }
             int randomId = 100 + random.nextInt(899);
-            ChatColor randomColor = Arrays.stream(ChatColor.values())
-                    .filter(color -> color.isColor())
-                    .toArray(ChatColor[]::new)[random.nextInt(ChatColor.values().length - 4)];
+            ChatColor[] colors = Arrays.stream(ChatColor.values())
+                    .filter(ChatColor::isColor)
+                    .toArray(ChatColor[]::new);
+            ChatColor randomColor = colors[random.nextInt(colors.length)];
             String groupName = String.valueOf(randomId);
             Group group = luckPerms.getGroupManager().createAndLoadGroup(groupName).get();
             if (group == null) return null;
@@ -336,7 +337,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         String playerName = player.getName();
         String playerTeam = teamConfig.getPlayerTeam(playerName);
         if (playerTeam != null) {
-            if (teamConfig.getTeamMembers(playerTeam).isEmpty()) {
+            if (teamConfig.getTeamMembers(playerTeam).size() == 1) {
                 disbandTeam(player);
                 return;
             }

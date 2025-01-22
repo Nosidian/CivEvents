@@ -1,6 +1,3 @@
-#---------------------------------#
-# Deaths System - /civdeaths     #
-#---------------------------------#
 lightning:
   enabled: false
 explosion:

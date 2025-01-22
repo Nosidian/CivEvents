@@ -1,6 +1,3 @@
-#---------------------------------#
-# Custom Entities - /civentities   #
-#---------------------------------#
 entities:
   Example:
     entityType: ZOMBIE

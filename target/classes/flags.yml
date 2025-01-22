@@ -1,6 +1,3 @@
-#---------------------------------#
-# Flags System - /civflag        #
-#---------------------------------#
 flags:
   pvp: true
   deathban: false
