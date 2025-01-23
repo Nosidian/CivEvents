@@ -116,9 +116,11 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                             }
                             boolean isToggled = grabToggle.getOrDefault(player.getUniqueId(), false);
                             if (isToggled) {
+                                grabToggle.remove(player.getUniqueId());
                                 user.data().remove(Node.builder(permission).build());
                                 player.sendMessage("§f§lCivEvents §f| §cGrab and throw disabled");
                             } else {
+                                grabToggle.put(player.getUniqueId(), true);
                                 user.data().add(Node.builder(permission).build());
                                 player.sendMessage("§f§lCivEvents §f| §aGrab and throw enabled");
                             }
