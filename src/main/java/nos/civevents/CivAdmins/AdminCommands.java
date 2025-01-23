@@ -1,24 +1,31 @@
 package nos.civevents.CivAdmins;
 
 import nos.civevents.CivEvents;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 @SuppressWarnings("all")
 public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
-    private final Map<Player, Integer> playerPageMap = new HashMap<>();
-    private static final int GREEN_GLASS_PANE_SLOT = 53;
-    private static final int BACK_GLASS_PANE_SLOT = 45;
-    private static final int GUI_SIZE = 54;
+    private final HashMap<UUID, Entity> grabbedEntities = new HashMap<>();
+    private final HashMap<UUID, Boolean> grabToggle = new HashMap<>();
     private final CivEvents plugin;
     private final AdminBomb adminBomb;
     public AdminCommands(CivEvents plugin, AdminBomb adminBomb) {
@@ -88,9 +95,51 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                         return false;
                     }
                 }
+                if (command.getName().equalsIgnoreCase("grab")) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage("Only players can use this command!");
+                        return true;
+                    }
+                    boolean isToggled = grabToggle.getOrDefault(player.getUniqueId(), true);
+                    grabToggle.put(player.getUniqueId(), !isToggled);
+                    if (isToggled) {
+                        player.sendMessage("§f§lCivEvents §f| §cGrab and launch has been disabled");
+                    } else {
+                        player.sendMessage("§f§lCivEvents §f| §aGrab and launch has been enabled");
+                    }
+                    return true;
+                }
             }
         }
         return false;
+    }
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        if (args.length == 1) {
+            suggestions.add("airstrike");
+            suggestions.add("playerdata");
+            suggestions.add("crash");
+            suggestions.add("grab");
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("playerdata")) {
+            suggestions.add("clearall");
+            for (String playerName : getAllPlayerNames()) {
+                suggestions.add(playerName);
+            }
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("airstrike")) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                suggestions.add(player.getName());
+            }
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("crash")) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                suggestions.add(player.getName());
+            }
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("airstrike")) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                suggestions.add("<explostion-size>");
+            }
+        }
+        return suggestions;
     }
     private List<String> getAllPlayerNames() {
         List<String> playerNames = new ArrayList<>();
@@ -113,31 +162,54 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         }
         return playerNames;
     }
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> suggestions = new ArrayList<>();
-        if (args.length == 1) {
-            suggestions.add("airstrike");
-            suggestions.add("playerdata");
-            suggestions.add("crash");
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("playerdata")) {
-            suggestions.add("clearall");
-            for (String playerName : getAllPlayerNames()) {
-                suggestions.add(playerName);
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        if (player.isSneaking()) {
+            if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+                return;
             }
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("airstrike")) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                suggestions.add(player.getName());
+            Entity target = event.getRightClicked();
+            if (grabbedEntities.containsKey(player.getUniqueId())) {
+                player.sendMessage("§f§lCivEvents §f| §cYou are already holding something");
+                return;
             }
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("crash")) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                suggestions.add(player.getName());
-            }
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("airstrike")) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                suggestions.add("<explostion-size>");
+            if (target instanceof LivingEntity) {
+                grabbedEntities.put(player.getUniqueId(), target);
+                player.sendMessage("§f§lCivEvents §f| §aYou grabbed " + target.getName());
+                startDragging(player, target);
             }
         }
-        return suggestions;
+    }
+    @EventHandler
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+        Player player = event.getPlayer();
+        if (!player.isSneaking() && grabbedEntities.containsKey(player.getUniqueId())) {
+            Entity target = grabbedEntities.remove(player.getUniqueId());
+            if (target != null) {
+                throwEntity(player, target);
+            }
+        }
+    }
+    private void startDragging(Player player, Entity target) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!player.isOnline() || !target.isValid() || !grabbedEntities.containsKey(player.getUniqueId())) {
+                    grabbedEntities.remove(player.getUniqueId());
+                    this.cancel();
+                    return;
+                }
+                Location playerLocation = player.getLocation().add(player.getLocation().getDirection().multiply(2));
+                target.teleport(playerLocation);
+                player.getWorld().spawnParticle(Particle.REDSTONE, target.getLocation().add(0, 1, 0), 1, new Particle.DustOptions(Color.RED, 1.0F));
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
+    }
+    private void throwEntity(Player player, Entity target) {
+        Vector direction = player.getLocation().getDirection().normalize().multiply(2).add(new Vector(0, 1, 0));
+        target.setVelocity(direction);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1.0F, 1.0F);
+        player.sendMessage("§f§lCivEvents §f| §aYou threw " + target.getName());
     }
 }
