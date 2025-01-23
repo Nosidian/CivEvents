@@ -17,15 +17,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings("all")
 public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
     private final HashMap<UUID, Entity> grabbedEntities = new HashMap<>();
-    private final HashMap<UUID, Boolean> grabToggle = new HashMap<>();
+    private final Set<UUID> grabToggle = new HashSet<>();
     private final CivEvents plugin;
     private final AdminBomb adminBomb;
     public AdminCommands(CivEvents plugin, AdminBomb adminBomb) {
@@ -96,15 +93,12 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                     }
                 }
                 if (args[0].equalsIgnoreCase("grab")) {
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage("Only players can use this command!");
-                        return true;
-                    }
-                    boolean isToggled = grabToggle.getOrDefault(player.getUniqueId(), false);
-                    grabToggle.put(player.getUniqueId(), !isToggled);
-                    if (isToggled) {
+                    UUID playerUUID = player.getUniqueId();
+                    if (grabToggle.contains(playerUUID)) {
+                        grabToggle.remove(playerUUID);
                         player.sendMessage("§f§lCivEvents §f| §cGrab and launch has been disabled");
                     } else {
+                        grabToggle.add(playerUUID);
                         player.sendMessage("§f§lCivEvents §f| §aGrab and launch has been enabled");
                     }
                     return true;
@@ -165,15 +159,11 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
-            return;
-        }
+        if (!grabToggle.contains(player.getUniqueId())) return;
         if (player.isSneaking()) {
             Entity target = event.getRightClicked();
-            if (grabbedEntities.containsKey(player.getUniqueId())) {
-                return;
-            }
-            if (target instanceof LivingEntity) {
+            if (!(target instanceof LivingEntity)) return;
+            if (!grabbedEntities.containsKey(player.getUniqueId())) {
                 grabbedEntities.put(player.getUniqueId(), target);
                 player.sendMessage("§f§lCivEvents §f| §aYou grabbed " + target.getName());
                 startDragging(player, target);
@@ -183,20 +173,13 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
-        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
-            return;
-        }
+        if (!grabToggle.contains(player.getUniqueId())) return;
         if (!player.isSneaking() && grabbedEntities.containsKey(player.getUniqueId())) {
             Entity target = grabbedEntities.remove(player.getUniqueId());
-            if (target != null) {
-                throwEntity(player, target);
-            }
+            if (target != null) throwEntity(player, target);
         }
     }
     private void startDragging(Player player, Entity target) {
-        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
-            return;
-        }
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -212,9 +195,6 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
     private void throwEntity(Player player, Entity target) {
-        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
-            return;
-        }
         Vector direction = player.getLocation().getDirection().normalize().multiply(2).add(new Vector(0, 1, 0));
         target.setVelocity(direction);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1.0F, 1.0F);
