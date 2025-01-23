@@ -105,8 +105,8 @@ public final class CivEvents extends JavaPlugin {
         }
 
         // CivAdmins
-        Objects.requireNonNull(getCommand("civadmins")).setExecutor(new AdminCommands(this, new AdminBomb(this)));
-        Objects.requireNonNull(getCommand("civadmins")).setTabCompleter(new AdminCommands(this, new AdminBomb(this)));
+        Objects.requireNonNull(getCommand("civadmins")).setExecutor(new AdminCommands(this, new AdminBomb(this), luckPerms));
+        Objects.requireNonNull(getCommand("civadmins")).setTabCompleter(new AdminCommands(this, new AdminBomb(this), luckPerms));
         Objects.requireNonNull(getCommand("gms")).setExecutor(new AdminSurvival());
         Objects.requireNonNull(getCommand("gms")).setTabCompleter(new AdminSurvival());
         Objects.requireNonNull(getCommand("gmc")).setExecutor(new AdminCreative());
@@ -115,7 +115,7 @@ public final class CivEvents extends JavaPlugin {
         Objects.requireNonNull(getCommand("gma")).setTabCompleter(new AdminAdventure());
         Objects.requireNonNull(getCommand("gmsp")).setExecutor(new AdminSpectator());
         Objects.requireNonNull(getCommand("gmsp")).setTabCompleter(new AdminSpectator());
-        getServer().getPluginManager().registerEvents(new AdminCommands(this, new AdminBomb(this)), this);
+        getServer().getPluginManager().registerEvents(new AdminCommands(this, new AdminBomb(this), luckPerms), this);
         getServer().getPluginManager().registerEvents(new AdminPlayerData(this, luckPerms), this);
 
         // CivBans
