@@ -165,10 +165,10 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
+        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+            return;
+        }
         if (player.isSneaking()) {
-            if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
-                return;
-            }
             Entity target = event.getRightClicked();
             if (grabbedEntities.containsKey(player.getUniqueId())) {
                 return;
@@ -183,6 +183,9 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
+        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+            return;
+        }
         if (!player.isSneaking() && grabbedEntities.containsKey(player.getUniqueId())) {
             Entity target = grabbedEntities.remove(player.getUniqueId());
             if (target != null) {
@@ -191,6 +194,9 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         }
     }
     private void startDragging(Player player, Entity target) {
+        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+            return;
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -206,6 +212,9 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
     private void throwEntity(Player player, Entity target) {
+        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+            return;
+        }
         Vector direction = player.getLocation().getDirection().normalize().multiply(2).add(new Vector(0, 1, 0));
         target.setVelocity(direction);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1.0F, 1.0F);
