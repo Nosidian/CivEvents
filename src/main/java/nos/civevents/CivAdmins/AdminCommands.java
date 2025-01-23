@@ -95,12 +95,12 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                         return false;
                     }
                 }
-                if (command.getName().equalsIgnoreCase("grab")) {
+                if (args[0].equalsIgnoreCase("grab")) {
                     if (!(sender instanceof Player)) {
                         sender.sendMessage("Only players can use this command!");
                         return true;
                     }
-                    boolean isToggled = grabToggle.getOrDefault(player.getUniqueId(), true);
+                    boolean isToggled = grabToggle.getOrDefault(player.getUniqueId(), false);
                     grabToggle.put(player.getUniqueId(), !isToggled);
                     if (isToggled) {
                         player.sendMessage("§f§lCivEvents §f| §cGrab and launch has been disabled");
