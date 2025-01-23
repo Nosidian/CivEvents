@@ -165,7 +165,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
-        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
             return;
         }
         if (player.isSneaking()) {
@@ -183,7 +183,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
-        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
             return;
         }
         if (!player.isSneaking() && grabbedEntities.containsKey(player.getUniqueId())) {
@@ -194,7 +194,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         }
     }
     private void startDragging(Player player, Entity target) {
-        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
             return;
         }
         new BukkitRunnable() {
@@ -212,7 +212,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         }.runTaskTimer(plugin, 0L, 1L);
     }
     private void throwEntity(Player player, Entity target) {
-        if (!grabToggle.getOrDefault(player.getUniqueId(), true)) {
+        if (!grabToggle.getOrDefault(player.getUniqueId(), false)) {
             return;
         }
         Vector direction = player.getLocation().getDirection().normalize().multiply(2).add(new Vector(0, 1, 0));
