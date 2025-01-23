@@ -236,6 +236,5 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         Vector direction = player.getLocation().getDirection().normalize().multiply(2).add(new Vector(0, 1, 0));
         target.setVelocity(direction);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1.0F, 1.0F);
-        player.sendMessage("§f§lCivEvents §f| §aYou threw " + target.getName());
     }
 }
