@@ -171,7 +171,6 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
             }
             Entity target = event.getRightClicked();
             if (grabbedEntities.containsKey(player.getUniqueId())) {
-                player.sendMessage("§f§lCivEvents §f| §cYou are already holding something");
                 return;
             }
             if (target instanceof LivingEntity) {
