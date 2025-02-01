@@ -16,6 +16,7 @@ nos\civevents\CivPackages\PackageCommands.class
 nos\civevents\CivItems\Events\Trickster.class
 nos\civevents\CivPackages\TierThree.class
 nos\civevents\CivAdmins\AdminCommands.class
+nos\civevents\CivItems\Medieval\PharaohSword.class
 nos\civevents\CivRecipes\OperatorCommands.class
 nos\civevents\CivBans\BanConfig.class
 nos\civevents\CivFlags\FlagCommands.class
@@ -23,6 +24,7 @@ nos\civevents\CivPackages\TierThree$1.class
 nos\civevents\CivItems\Items\GhostStaff.class
 nos\civevents\CivRecipes\RecipesCreate.class
 nos\civevents\CivBans\PlayerConfig.class
+nos\civevents\CivItems\Medieval\MagmaPickaxe.class
 nos\civevents\CivEvents.class
 nos\civevents\CivItems\Items\MagicBlade.class
 nos\civevents\CivItems\Medieval\WarHammer.class
@@ -70,6 +72,7 @@ nos\civevents\CivAdmins\AdminBomb.class
 nos\civevents\CivPackages\TierFive.class
 nos\civevents\CivRecipes\RecipesGui.class
 nos\civevents\Extra\Temperature.class
+nos\civevents\CivItems\Medieval\PharaohSword$1.class
 nos\civevents\CivItems\Medieval\SilverSword.class
 nos\civevents\CivPackages\TierOne$1.class
 nos\civevents\CivWorlds\WorldVoid.class
