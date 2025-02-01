@@ -5,7 +5,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import nos.civevents.CivEvents;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WitherSkeleton;
 import org.bukkit.event.EventHandler;
@@ -24,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("all")
 public class PharaohSword implements Listener {
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int COOLDOWN = 120;
+    private static final int COOLDOWN = 300;
     private final CivEvents plugin;
     public PharaohSword(CivEvents plugin) {
         this.plugin = plugin;
@@ -71,18 +73,26 @@ public class PharaohSword implements Listener {
         player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 5 * 60 * 20, 0));
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
     }
-    private void createQuicksand(Player player) {
-        Location center = player.getLocation();
+    public void createQuicksand(Player player) {
+        Location center = player.getLocation().getBlock().getLocation();
         List<Location> affectedBlocks = new ArrayList<>();
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                Location blockLoc = center.clone().add(x, 0, z);
-                if (blockLoc.getBlock().getType().isSolid()) {
-                    affectedBlocks.add(blockLoc);
-                    blockLoc.getBlock().setType(Material.COBWEB);
-                    blockLoc.clone().add(0, 2, 0).getBlock().setType(Material.SAND);
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                for (int y = 0; y < 2; y++) {
+                    Location blockLoc = center.clone().add(x, -y, z);
+                    Block block = blockLoc.getBlock();
+                    if (block.getType().isSolid()) {
+                        affectedBlocks.add(blockLoc);
+                        block.setType(Material.COBWEB);
+                    }
                 }
             }
+        }
+        for (Location loc : affectedBlocks) {
+            Location sandLoc = loc.clone().add(0.5, 1.1, 0.5);
+            FallingBlock fallingSand = sandLoc.getWorld().spawnFallingBlock(sandLoc, Material.SAND.createBlockData());
+            fallingSand.setDropItem(false);
+            fallingSand.setGravity(true);
         }
         new BukkitRunnable() {
             @Override
@@ -93,7 +103,7 @@ public class PharaohSword implements Listener {
                     }
                 }
             }
-        }.runTaskLater(plugin, 500L);
+        }.runTaskLater(plugin, 400L);
         player.sendMessage("§eThe ground turns into quicksand!");
     }
     @EventHandler
@@ -125,7 +135,7 @@ public class PharaohSword implements Listener {
             long currentTime = System.currentTimeMillis();
             for (Player player : plugin.getServer().getOnlinePlayers()) {
                 UUID playerId = player.getUniqueId();
-                if (player.getInventory().getItemInMainHand().getType() == Material.DIAMOND_SWORD &&
+                if (player.getInventory().getItemInMainHand().getType() == Material.NETHERITE_SWORD &&
                         player.getInventory().getItemInMainHand().hasItemMeta() &&
                         "§e§lＰＨＡＲＡＯＨ ＳＷＯＲＤ".equals(Objects.requireNonNull(player.getInventory().getItemInMainHand().getItemMeta()).getDisplayName())) {
                     if (cooldowns.containsKey(playerId) && cooldowns.get(playerId) > currentTime) {
