@@ -175,6 +175,8 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SilverScythe(this), this);
         getServer().getPluginManager().registerEvents(new BattleAxe(this), this);
         getServer().getPluginManager().registerEvents(new WarHammer(this), this);
+        getServer().getPluginManager().registerEvents(new PharaohSword(this), this);
+        getServer().getPluginManager().registerEvents(new MagmaPickaxe(this), this);
 
         // CivPackages
         Objects.requireNonNull(getCommand("civpackages")).setExecutor(new PackageCommands(this, new TierOne(this), new TierTwo(this), new TierThree(this), new TierFour(this), new TierFive(this), new TierPrize(this)));

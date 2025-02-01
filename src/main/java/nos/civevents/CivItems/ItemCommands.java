@@ -98,6 +98,14 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 giveWarHammer(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 17");
                 return true;
+            } else if (args[0].equalsIgnoreCase("pharaoh")) {
+                givePharaohSword(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 18");
+                return true;
+            } else if (args[0].equalsIgnoreCase("magmapick")) {
+                giveMagmaPickaxe(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 19");
+                return true;
             }
             sender.sendMessage("§f§lCivEvents §f| §cInvalid item name");
         } else {
@@ -127,6 +135,8 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             completions.add("silverscythe");
             completions.add("battleaxe");
             completions.add("warhammer");
+            completions.add("pharaoh");
+            completions.add("magmapick");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
@@ -366,6 +376,32 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             }
         } else {
             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems warhammer <player>");
+        }
+    }
+    private void givePharaohSword(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createPharaohSword());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Pharaoh Sword to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems pharaoh <player>");
+        }
+    }
+    private void giveMagmaPickaxe(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createMagmaPickaxe());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Magma Pickaxe to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems magmapick <player>");
         }
     }
     public static ItemStack createGhostStaff() {
@@ -668,5 +704,25 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             medievalWarHammer.setItemMeta(meta);
         }
         return medievalWarHammer;
+    }
+    public static ItemStack createPharaohSword() {
+        ItemStack medievalPharaohSword = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = medievalPharaohSword.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§e§lＰＨＡＲＡＯＨ ＳＷＯＲＤ");
+            meta.setCustomModelData(18);
+            medievalPharaohSword.setItemMeta(meta);
+        }
+        return medievalPharaohSword;
+    }
+    public static ItemStack createMagmaPickaxe() {
+        ItemStack medievalMagmaPickaxe = new ItemStack(Material.NETHERITE_PICKAXE);
+        ItemMeta meta = medievalMagmaPickaxe.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§4§lＭＡＧＭＡ ＰＩＣＫＡＸＥ");
+            meta.setCustomModelData(19);
+            medievalMagmaPickaxe.setItemMeta(meta);
+        }
+        return medievalMagmaPickaxe;
     }
 }
