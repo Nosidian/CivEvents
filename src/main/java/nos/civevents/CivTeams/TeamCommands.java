@@ -105,7 +105,6 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             Collections.addAll(suggestions, "create", "invite", "join", "disband", "kick", "leave", "info");
         } else if (args.length == 2) {
@@ -163,7 +162,8 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
             return;
         }
         String playerTeam = teamConfig.getPlayerTeam(inviter.getName());
-        if (!teamConfig.getTeamLeader(playerTeam).equals(inviter.getName())) {
+        String teamLeader = teamConfig.getTeamLeader(playerTeam);
+        if (teamLeader == null ||!teamConfig.getTeamLeader(playerTeam).equals(inviter.getName())) {
             inviter.sendMessage("§f§lCivEvents §f| §cOnly the team leader can invite players to the team");
             return;
         }
@@ -216,7 +216,12 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         teamConfig.addPlayerToTeam(player.getName(), teamName);
         teamConfig.removeInvite(player.getName());
         player.sendMessage("§f§lCivEvents §f| §aYou joined the team " + teamName);
-        Bukkit.broadcastMessage("§f§lCivEvents §f| §b" + player.getName() + " has joined " + teamName);
+        for (String teamMember : teamConfig.getTeamMembers(playerTeam)) {
+            Player onlineMember = Bukkit.getPlayer(teamMember);
+            if (onlineMember != null) {
+                onlineMember.sendMessage("§f§lCivEvents §f| §a" + player.getName() + " has joined " + teamName);
+            }
+        }
     }
     private void disbandTeam(Player player) {
         String playerTeam = teamConfig.getPlayerTeam(player.getName());
@@ -255,7 +260,7 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         for (String teamMember : teamConfig.getTeamMembers(playerTeam)) {
             Player onlineMember = Bukkit.getPlayer(teamMember);
             if (onlineMember != null) {
-                onlineMember.sendMessage("§f§lCivEvents §f| §aYour team " + playerTeam + " has been disbanded by " + player.getName());
+                onlineMember.sendMessage("§f§lCivEvents §f| §eYour team " + playerTeam + " has been disbanded by " + player.getName());
             }
         }
         teamConfig.removeTeam(playerTeam);
@@ -321,10 +326,10 @@ public class TeamCommands implements CommandExecutor, TabCompleter, Listener {
         for (String teamMember : teamConfig.getTeamMembers(playerTeam)) {
             Player onlineMember = Bukkit.getPlayer(teamMember);
             if (onlineMember != null) {
-                onlineMember.sendMessage("§f§lCivEvents §f| §b" + player.getName() + " has left the team " + playerTeam);
+                onlineMember.sendMessage("§f§lCivEvents §f| §e" + player.getName() + " has left the team " + playerTeam);
             }
         }
-        player.sendMessage("§f§lCivEvents §f| §bYou just left the team " + playerTeam);
+        player.sendMessage("§f§lCivEvents §f| §eYou just left the team " + playerTeam);
     }
     private void teamInfo(Player player) {
         String playerTeam = teamConfig.getPlayerTeam(player.getName());
