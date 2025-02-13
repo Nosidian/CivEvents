@@ -12,6 +12,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Objects;
@@ -28,6 +29,31 @@ public class AllDeaths implements Listener{
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Location deathLocation = event.getEntity().getLocation();
+        if (deathConfig.getConfig().getBoolean("event.enabled")) {
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                player.setHealth(player.getMaxHealth());
+            });
+            for (ItemStack item : player.getInventory().getContents()) {
+                if (item != null && item.getType() != Material.AIR) {
+                    deathLocation.getWorld().dropItemNaturally(deathLocation, item);
+                }
+            }
+            ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
+            SkullMeta skullMeta = (SkullMeta) playerHead.getItemMeta();
+            if (skullMeta != null) {
+                skullMeta.setOwningPlayer(player);
+                playerHead.setItemMeta(skullMeta);
+            }
+            deathLocation.getWorld().dropItemNaturally(deathLocation, playerHead);
+            deathLocation.getWorld().strikeLightningEffect(deathLocation);
+            deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!player.isOp() && !Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(player.getName())) {
+                    Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(player.getName(), "§f§lCivEvents §f- §aThanks For Playing", null, null);
+                    player.kickPlayer("§f§lCivEvents §f- §aThanks For Playing");
+                }
+            });
+        }
         if (deathConfig.getConfig().getBoolean("grave.enabled")) {
             spawnGrave(deathLocation, player);
             event.getDrops().clear();
