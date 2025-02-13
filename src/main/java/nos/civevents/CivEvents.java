@@ -1,5 +1,6 @@
 package nos.civevents;
 
+import com.comphenix.protocol.ProtocolLib;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import nos.civevents.CivAdmins.*;
@@ -59,6 +60,7 @@ public final class CivEvents extends JavaPlugin {
     private TeamConfig teamConfig;
     private WorldConfig worldConfig;
     private LuckPerms luckPerms;
+    private ProtocolLib protocolLib;
     public static CivEvents instance;
     @Override
     public void onEnable() {
@@ -102,6 +104,16 @@ public final class CivEvents extends JavaPlugin {
         } else {
             luckPerms = null;
             getLogger().info("CivEvents: Luckperms is missing");
+        }
+
+        if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
+            protocolLib = (ProtocolLib) getServer().getPluginManager().getPlugin("ProtocolLib");
+            // CivItems
+            getServer().getPluginManager().registerEvents(new Hero(this), this);
+            getLogger().info("CivEvents: Protocollib is connected");
+        } else {
+            protocolLib = null;
+            getLogger().info("CivEvents: Protocollib is missing");
         }
 
         // CivAdmins
@@ -161,7 +173,6 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new Spear(this), this);
         getServer().getPluginManager().registerEvents(new Scythe(this), this);
         getServer().getPluginManager().registerEvents(new Mace(this), this);
-        getServer().getPluginManager().registerEvents(new Hero(this), this);
         getServer().getPluginManager().registerEvents(new Trickster(this), this);
         getServer().getPluginManager().registerEvents(new IceStaff(this), this);
         getServer().getPluginManager().registerEvents(new Silver(this), this);

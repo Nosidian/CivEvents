@@ -47,8 +47,8 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
                     player.sendMessage("§f§lCivEvents §f| §cSlot must be a valid number");
                     return true;
                 }
-                if (slot < 0 || slot > 53) {
-                    player.sendMessage("§f§lCivEvents §f| §cSlot must be between 0 and 53");
+                if (slot < 9 || slot > 44) {
+                    player.sendMessage("§f§lCivEvents §f| §cSlot must be between 9 and 44");
                     return true;
                 }
                 ConfigurationSection recipes = recipeConfig.getConfig().getConfigurationSection("Recipes");

@@ -124,18 +124,25 @@ public class RecipesCreate implements Listener {
             if (inv.getSize() < 10) {
                 return;
             }
+            Player player = (Player) event.getPlayer();
             ItemStack result = inv.getItem(0);
             ItemStack[] ingredients = new ItemStack[9];
+            boolean hasIngredients = false;
             for (int i = 1; i < 10; i++) {
                 ingredients[i - 1] = inv.getItem(i) == null ? new ItemStack(Material.AIR) : inv.getItem(i);
-            }
-            if (result != null && result.getType() != Material.AIR) {
-                try {
-                    saveRecipeToConfig(recipeName, result, ingredients);
-                    registerRecipe(recipeName, result, ingredients);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (ingredients[i - 1].getType() != Material.AIR) {
+                    hasIngredients = true;
                 }
+            }
+            if (result == null || result.getType() == Material.AIR || !hasIngredients) {
+                player.sendMessage("§f§lCivEvents §f| §cRecipe creation failed missing ingredients or result item");
+                return;
+            }
+            try {
+                saveRecipeToConfig(recipeName, result, ingredients);
+                registerRecipe(recipeName, result, ingredients);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

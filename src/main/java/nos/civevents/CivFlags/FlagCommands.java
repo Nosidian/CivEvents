@@ -262,8 +262,10 @@ public class FlagCommands implements CommandExecutor, TabCompleter, Listener {
         boolean deathBanEnabled = flagConfig.getConfig().getBoolean("flags.deathban", false);
         if (deathBanEnabled) {
             Bukkit.getScheduler().runTask(plugin, () -> {
-                Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(player.getName(), "§f§lCivEvents §f- §aThanks For Playing", null, null);
-                player.kickPlayer("§f§lCivEvents §f- §aThanks For Playing");
+                if (!Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(player.getName())) {
+                    Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(player.getName(), "§f§lCivEvents §f- §aThanks For Playing", null, null);
+                    player.kickPlayer("§f§lCivEvents §f- §aThanks For Playing");
+                }
             });
         }
         boolean disableDropsEnabled = flagConfig.getConfig().getBoolean("flags.disable-drops", false);
