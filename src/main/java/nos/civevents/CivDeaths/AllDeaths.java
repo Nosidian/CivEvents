@@ -47,6 +47,12 @@ public class AllDeaths implements Listener{
             deathLocation.getWorld().dropItemNaturally(deathLocation, playerHead);
             deathLocation.getWorld().strikeLightningEffect(deathLocation);
             deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
+            Player killer = player.getKiller();
+            if (killer != null) {
+                Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §8has been slain by §e" + killer.getName());
+            } else {
+                Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §8has died of natural causes");
+            }
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (!player.isOp() && !Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(player.getName())) {
                     Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(player.getName(), "§f§lCivEvents §f- §aThanks For Playing", null, null);
