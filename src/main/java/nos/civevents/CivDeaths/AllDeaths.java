@@ -30,6 +30,7 @@ public class AllDeaths implements Listener{
         Player player = event.getEntity();
         Location deathLocation = event.getEntity().getLocation();
         if (deathConfig.getConfig().getBoolean("event.enabled")) {
+            event.setDeathMessage(null);
             event.setKeepInventory(true);
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (!player.isOp() && !Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(player.getName())) {
@@ -48,9 +49,9 @@ public class AllDeaths implements Listener{
             deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
             Player killer = player.getKiller();
             if (killer != null) {
-                Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §8has been slain by §e" + killer.getName());
+                Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §chas been slain by §e" + killer.getName());
             } else {
-                Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §8has died of natural causes");
+                Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §chas died of natural causes");
             }
         }
         if (deathConfig.getConfig().getBoolean("grave.enabled")) {
