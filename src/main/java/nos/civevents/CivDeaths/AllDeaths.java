@@ -30,8 +30,12 @@ public class AllDeaths implements Listener{
         Player player = event.getEntity();
         Location deathLocation = event.getEntity().getLocation();
         if (deathConfig.getConfig().getBoolean("event.enabled")) {
+            event.setKeepInventory(true);
             Bukkit.getScheduler().runTask(plugin, () -> {
-                player.setHealth(player.getMaxHealth());
+                if (!player.isOp() && !Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(player.getName())) {
+                    Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(player.getName(), "§f§lCivEvents §f- §aThanks For Playing", null, null);
+                    player.kickPlayer("§f§lCivEvents §f- §aThanks For Playing");
+                }
             });
             for (ItemStack item : player.getInventory().getContents()) {
                 if (item != null && item.getType() != Material.AIR) {
@@ -53,12 +57,6 @@ public class AllDeaths implements Listener{
             } else {
                 Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §8has died of natural causes");
             }
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                if (!player.isOp() && !Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(player.getName())) {
-                    Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(player.getName(), "§f§lCivEvents §f- §aThanks For Playing", null, null);
-                    player.kickPlayer("§f§lCivEvents §f- §aThanks For Playing");
-                }
-            });
         }
         if (deathConfig.getConfig().getBoolean("grave.enabled")) {
             spawnGrave(deathLocation, player);

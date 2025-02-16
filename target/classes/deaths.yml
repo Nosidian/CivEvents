@@ -6,3 +6,5 @@ fireworks:
   enabled: false
 grave:
   enabled: false
+event:
+  enabled: false
