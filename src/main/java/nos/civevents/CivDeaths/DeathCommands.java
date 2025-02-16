@@ -30,23 +30,23 @@ public class DeathCommands implements CommandExecutor, TabCompleter {
             switch (args[0].toLowerCase()) {
                 case "event" -> {
                     deathConfig.getConfig().set("event.enabled", enable);
-                    sender.sendMessage("§f§lCivEvents §f| §aEvent (Lightning + Deathban + Dropitems + Drophead) on death has been " + (enable ? "enabled" : "disabled"));
+                    sender.sendMessage("§f§lCivEvents §f| §7Event (Lightning + Deathban + Dropitems + Drophead) on death has been " + (enable ? "§aenabled" : "§cdisabled"));
                 }
                 case "lightning" -> {
                     deathConfig.getConfig().set("lightning.enabled", enable);
-                    sender.sendMessage("§f§lCivEvents §f| §aLightning on death has been " + (enable ? "enabled" : "disabled"));
+                    sender.sendMessage("§f§lCivEvents §f| §7Lightning on death has been " + (enable ? "§aenabled" : "§cdisabled"));
                 }
                 case "explosion" -> {
                     deathConfig.getConfig().set("explosion.enabled", enable);
-                    sender.sendMessage("§f§lCivEvents §f| §aExplosion on death has been " + (enable ? "enabled" : "disabled"));
+                    sender.sendMessage("§f§lCivEvents §f| §7Explosion on death has been " + (enable ? "§aenabled" : "§cdisabled"));
                 }
                 case "fireworks" -> {
                     deathConfig.getConfig().set("fireworks.enabled", enable);
-                    sender.sendMessage("§f§lCivEvents §f| §aFireworks on death has been " + (enable ? "enabled" : "disabled"));
+                    sender.sendMessage("§f§lCivEvents §f| §7Fireworks on death has been " + (enable ? "§aenabled" : "§cdisabled"));
                 }
                 case "grave" -> {
                     deathConfig.getConfig().set("grave.enabled", enable);
-                    sender.sendMessage("§f§lCivEvents §f| §aGrave on death has been " + (enable ? "enabled" : "disabled"));
+                    sender.sendMessage("§f§lCivEvents §f| §7Grave on death has been " + (enable ? "§aenabled" : "§cdisabled"));
                 }
                 default -> {
                     sender.sendMessage("§f§lCivEvents §f| §cInvalid option");
