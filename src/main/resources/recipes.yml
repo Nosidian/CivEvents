@@ -1,3 +1,5 @@
+Broadcast: false
+
 Recipes:
   Example:
     Slot: 9

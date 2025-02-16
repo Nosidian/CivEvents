@@ -119,12 +119,12 @@ public class RecipesCreate implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         String title = event.getView().getTitle();
         if (title.startsWith(GUI_TITLE)) {
-            String recipeName = title.substring(GUI_TITLE.length());
             Inventory inv = event.getInventory();
             if (inv.getSize() < 10) {
                 return;
             }
             Player player = (Player) event.getPlayer();
+            String recipeName = title.substring(GUI_TITLE.length());
             ItemStack result = inv.getItem(0);
             ItemStack[] ingredients = new ItemStack[9];
             boolean hasIngredients = false;
@@ -135,12 +135,19 @@ public class RecipesCreate implements Listener {
                 }
             }
             if (result == null || result.getType() == Material.AIR || !hasIngredients) {
-                player.sendMessage("§f§lCivEvents §f| §cRecipe creation failed missing ingredients or result item");
+                player.sendMessage("§f§lCivEvents §f| §cMissing ingredients or result item");
+                ConfigurationSection recipes = recipeConfig.getConfig().getConfigurationSection("Recipes");
+                if (recipes != null && recipes.contains(recipeName)) {
+                    recipes.set(recipeName, null);
+                    recipeConfig.saveConfig();
+                }
                 return;
             }
             try {
                 saveRecipeToConfig(recipeName, result, ingredients);
                 registerRecipe(recipeName, result, ingredients);
+                recipeConfig.saveConfig();
+                player.sendMessage("§f§lCivEvents §f| §aRecipe " + recipeName + " was created");
             } catch (Exception e) {
                 e.printStackTrace();
             }

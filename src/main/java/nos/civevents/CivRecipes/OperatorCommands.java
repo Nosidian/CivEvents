@@ -21,6 +21,10 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
     public OperatorCommands(CivEvents plugin, RecipeConfig recipeConfig) {
         this.plugin = plugin;
         this.recipeConfig = recipeConfig;
+        if (!recipeConfig.getConfig().contains("Broadcast")) {
+            recipeConfig.getConfig().set("Broadcast", false);
+            recipeConfig.saveConfig();
+        }
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -87,6 +91,24 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
                 }
                 RecipesCreate.openViewRecipeGui(player, recipeName);
             }
+            case "broadcast" -> {
+                if (args.length < 2) {
+                    player.sendMessage("§f§lCivEvents §f| §cUsage: /civrecipes broadcast <true/false>");
+                    return true;
+                }
+                boolean newValue;
+                if (args[1].equalsIgnoreCase("true")) {
+                    newValue = true;
+                } else if (args[1].equalsIgnoreCase("false")) {
+                    newValue = false;
+                } else {
+                    player.sendMessage("§f§lCivEvents §f| §cInvalid value, true or false");
+                    return true;
+                }
+                recipeConfig.getConfig().set("Broadcast", newValue);
+                recipeConfig.saveConfig();
+                player.sendMessage("§f§lCivEvents §f| §6Legendary item broadcast is now " + (newValue ? "§aenabled" : "§cdisabled"));
+            }
             default -> sender.sendMessage("§f§lCivEvents §f| §cUnknown command");
         }
         return true;
@@ -98,12 +120,16 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
             suggestions.add("create");
             suggestions.add("remove");
             suggestions.add("view");
+            suggestions.add("broadcast");
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("view")) {
                 Set<String> recipes = Objects.requireNonNull(recipeConfig.getConfig().getConfigurationSection("Recipes")).getKeys(false);
                 suggestions.addAll(recipes);
             } else if (args[0].equalsIgnoreCase("create")) {
                 suggestions.add("<name>");
+            } else if (args[0].equalsIgnoreCase("broadcast")) {
+                suggestions.add("true");
+                suggestions.add("false");
             }
         } else if (args.length == 3 && args[0].equalsIgnoreCase("create")) {
             suggestions.add("<slot>");

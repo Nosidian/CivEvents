@@ -4,15 +4,13 @@ import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -195,5 +193,31 @@ public class RecipesGui implements Listener {
             plugin.getLogger().warning("Invalid slot key: " + key);
             return 0;
         }
+    }
+    @EventHandler
+    public void onCraftItem(CraftItemEvent event) {
+        if (!recipeConfig.getConfig().getBoolean("Broadcast", false)) {
+            return;
+        }
+        ItemStack result = event.getRecipe().getResult();
+        if (result == null || result.getType() == Material.AIR) return;
+        if (!isWeaponOrTool(result.getType())) return;
+        ItemMeta meta = result.getItemMeta();
+        String itemName = (meta != null && meta.hasDisplayName()) ? meta.getDisplayName() : result.getType().name();
+        Player player = (Player) event.getWhoClicked();
+        Bukkit.broadcastMessage("§6§ki §6§l" + itemName + " §6§ki §7crafted by §a" + player.getName());
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+        }
+    }
+    private boolean isWeaponOrTool(Material material) {
+        return material.name().endsWith("_SWORD") ||
+                material.name().endsWith("_AXE") ||
+                material.name().endsWith("_PICKAXE") ||
+                material.name().endsWith("_SHOVEL") ||
+                material.name().endsWith("_HOE") ||
+                material == Material.BOW ||
+                material == Material.CROSSBOW ||
+                material == Material.TRIDENT;
     }
 }
