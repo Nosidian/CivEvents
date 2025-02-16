@@ -37,11 +37,6 @@ public class AllDeaths implements Listener{
                     player.kickPlayer("§f§lCivEvents §f- §aThanks For Playing");
                 }
             });
-            for (ItemStack item : player.getInventory().getContents()) {
-                if (item != null && item.getType() != Material.AIR) {
-                    deathLocation.getWorld().dropItemNaturally(deathLocation, item);
-                }
-            }
             ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta skullMeta = (SkullMeta) playerHead.getItemMeta();
             if (skullMeta != null) {
