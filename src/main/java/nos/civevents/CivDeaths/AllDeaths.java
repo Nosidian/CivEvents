@@ -73,6 +73,12 @@ public class AllDeaths implements Listener{
             deathLocation.getWorld().strikeLightningEffect(deathLocation);
             deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
             Bukkit.broadcastMessage("§c§lELIMINATION! §cA player has fallen");
+            Player killer = player.getKiller();
+            if (killer != null) {
+                Bukkit.getLogger().info("ELIMINATED " + player.getName() + " has been slain by " + killer.getName());
+            } else {
+                Bukkit.getLogger().info("ELIMINATED " + player.getName() + " has died of natural causes");
+            }
         }
         if (deathConfig.getConfig().getBoolean("grave.enabled")) {
             spawnGrave(deathLocation, player);
