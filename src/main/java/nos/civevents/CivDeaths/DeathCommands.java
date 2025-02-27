@@ -32,6 +32,10 @@ public class DeathCommands implements CommandExecutor, TabCompleter {
                     deathConfig.getConfig().set("event.enabled", enable);
                     sender.sendMessage("§f§lCivEvents §f| §7Event (Lightning + Deathban + Dropitems + Drophead) on death has been " + (enable ? "§aenabled" : "§cdisabled"));
                 }
+                case "event2" -> {
+                    deathConfig.getConfig().set("event.enabled", enable);
+                    sender.sendMessage("§f§lCivEvents §f| §7Event2 (Lightning + Deathban + Dropitems + Drophead) on death has been " + (enable ? "§aenabled" : "§cdisabled"));
+                }
                 case "lightning" -> {
                     deathConfig.getConfig().set("lightning.enabled", enable);
                     sender.sendMessage("§f§lCivEvents §f| §7Lightning on death has been " + (enable ? "§aenabled" : "§cdisabled"));
@@ -62,7 +66,7 @@ public class DeathCommands implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("event", "lightning", "explosion", "fireworks", "grave");
+            return Arrays.asList("event", "event2", "lightning", "explosion", "fireworks", "grave");
         } else if (args.length == 2) {
             return Arrays.asList("true", "false");
         }

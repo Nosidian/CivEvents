@@ -54,6 +54,26 @@ public class AllDeaths implements Listener{
                 Bukkit.broadcastMessage("§c§lELIMINATED §7" + player.getName() + " §chas died of natural causes");
             }
         }
+        if (deathConfig.getConfig().getBoolean("event2.enabled")) {
+            event.setDeathMessage(null);
+            event.setKeepInventory(true);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!player.isOp() && !Bukkit.getBanList(org.bukkit.BanList.Type.NAME).isBanned(player.getName())) {
+                    Bukkit.getBanList(org.bukkit.BanList.Type.NAME).addBan(player.getName(), "§f§lCivEvents §f- §aThanks For Playing", null, null);
+                    player.kickPlayer("§f§lCivEvents §f- §aThanks For Playing");
+                }
+            });
+            ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
+            SkullMeta skullMeta = (SkullMeta) playerHead.getItemMeta();
+            if (skullMeta != null) {
+                skullMeta.setOwningPlayer(player);
+                playerHead.setItemMeta(skullMeta);
+            }
+            deathLocation.getWorld().dropItemNaturally(deathLocation, playerHead);
+            deathLocation.getWorld().strikeLightningEffect(deathLocation);
+            deathLocation.getWorld().playSound(deathLocation, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
+            Bukkit.broadcastMessage("§c§lELIMINATION! §cA player has fallen");
+        }
         if (deathConfig.getConfig().getBoolean("grave.enabled")) {
             spawnGrave(deathLocation, player);
             event.getDrops().clear();
