@@ -8,14 +8,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("all")
 public class WorldCommands implements CommandExecutor, TabCompleter {
+    private final Map<World, BorderData> customBorders = new HashMap<>();
     private final CivEvents plugin;
     private final WorldConfig worldConfig;
     public WorldCommands(CivEvents plugin, WorldConfig worldConfig) {
@@ -28,6 +34,8 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
             sender.sendMessage("Only players can use this command.");
             return true;
         }
+        Player player = (Player) sender;
+        World world = player.getWorld();
         if (command.getName().equalsIgnoreCase("civworlds")) {
             if (args.length >= 1) {
                 if (args[0].equalsIgnoreCase("create")) {
@@ -59,10 +67,59 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
                     String worldName = args[1];
                     resetChunksAndLevelDat(sender, worldName);
                     return true;
+                } else if (args[0].equalsIgnoreCase("border")) {
+                    if (args.length == 2 && args[1].equalsIgnoreCase("center")) {
+                        setBorderCenter(player, world);
+                        return true;
+                    } else if (args[1].equalsIgnoreCase("shrink") || args[1].equalsIgnoreCase("expand")) {
+                        try {
+                            int seconds = Integer.parseInt(args[2]);
+                            int newSize = Integer.parseInt(args[3]);
+                            boolean shrink = args[1].equalsIgnoreCase("shrink");
+                            updateBorderSize(world, newSize, seconds, shrink);
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("§f§lCivEvents §f| §c/civworlds border <shrink|expand> <seconds> <radius>");
+                        }
+                        return true;
+                    } else {
+                        player.sendMessage("§f§lCivEvents §f| §cInvalid border command usage.");
+                    }
+                    return true;
                 }
             }
         }
         return false;
+    }
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("civworlds")) {
+            if (args.length == 1) {
+                return List.of("create", "tp", "delete", "edit", "border");
+            } else if (args.length == 2 && args[0].equalsIgnoreCase("create") || (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("edit"))) {
+                ConfigurationSection worldsSection = worldConfig.getConfig().getConfigurationSection("worlds");
+                List<String> worldNames = new ArrayList<>();
+                if (worldsSection != null) {
+                    worldNames.addAll(worldsSection.getKeys(false));
+                }
+                for (World world : Bukkit.getWorlds()) {
+                    if (!worldNames.contains(world.getName())) {
+                        worldNames.add(world.getName());
+                    }
+                }
+                return worldNames;
+            } else if (args.length == 2 && args[0].equalsIgnoreCase("border")) {
+                return List.of("center", "shrink", "expand");
+            } else if (args.length == 3 && args[0].equalsIgnoreCase("create")) {
+                return List.of("normal", "custom", "void", "backrooms");
+            } else if (args.length == 3 && args[0].equalsIgnoreCase("edit")) {
+                return List.of("chunks");
+            } else if (args.length == 3 && (args[1].equalsIgnoreCase("shrink") || args[1].equalsIgnoreCase("expand"))) {
+                return List.of("<seconds>");
+            } else if (args.length == 4 && (args[1].equalsIgnoreCase("shrink") || args[1].equalsIgnoreCase("expand"))) {
+                return List.of("<range>");
+            }
+        }
+        return null;
     }
     private void createWorld(CommandSender sender, String worldName, String worldType) {
         if (Bukkit.getWorld(worldName) != null) {
@@ -176,29 +233,89 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
         Bukkit.createWorld(creator);
         sender.sendMessage("§f§lCivEvents §f| §aReset chunks and level.dat for world '" + worldName + "' to normal generation");
     }
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (command.getName().equalsIgnoreCase("civworlds")) {
-            if (args.length == 1) {
-                return List.of("create", "tp", "delete", "edit");
-            } else if (args.length == 2 && args[0].equalsIgnoreCase("create") || (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("edit"))) {
-                ConfigurationSection worldsSection = worldConfig.getConfig().getConfigurationSection("worlds");
-                List<String> worldNames = new ArrayList<>();
-                if (worldsSection != null) {
-                    worldNames.addAll(worldsSection.getKeys(false));
+    private void setBorderCenter(Player player, World world) {
+        BorderData borderData = customBorders.computeIfAbsent(world, w -> new BorderData(player.getLocation(), 100));
+        borderData.setCenter(player.getLocation());
+        player.sendMessage("§f§lCivEvents §f| §aBorder center set at your location");
+    }
+    private void updateBorderSize(World world, int newSize, int duration, boolean shrink) {
+        BorderData borderData = customBorders.computeIfAbsent(world, w -> new BorderData(world.getSpawnLocation(), 100));
+        int oldSize = borderData.getRadius();
+        if (newSize <= 0 || duration <= 0) {
+            Bukkit.broadcastMessage("§f§lCivEvents §f| §cInvalid values. Radius and duration must be greater than 0.");
+            return;
+        }
+        int ticks = duration * 20;
+        int steps = Math.max(1, ticks / Math.abs(newSize - oldSize));
+        Bukkit.broadcastMessage("§f§lCivEvents §f| §eBorder " + (shrink ? "shrinking" : "expanding") +
+                " to " + newSize + " blocks over " + duration + " seconds.");
+        new BukkitRunnable() {
+            int size = oldSize;
+            @Override
+            public void run() {
+                if (shrink) {
+                    size--;
+                } else {
+                    size++;
                 }
-                for (World world : Bukkit.getWorlds()) {
-                    if (!worldNames.contains(world.getName())) {
-                        worldNames.add(world.getName());
-                    }
+                borderData.setRadius(size);
+                spawnParticleBorder(world, borderData.getCenter(), size);
+                if ((shrink && size <= newSize) || (!shrink && size >= newSize)) {
+                    cancel();
                 }
-                return worldNames;
-            } else if (args.length == 3 && args[0].equalsIgnoreCase("create")) {
-                return List.of("normal", "custom", "void", "backrooms");
-            } else if (args.length == 3 && args[0].equalsIgnoreCase("edit")) {
-                return List.of("chunks");
+            }
+        }.runTaskTimer(plugin, 0, steps);
+    }
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        World world = player.getWorld();
+        BorderData borderData = customBorders.get(world);
+        if (borderData == null) return;
+        Location center = borderData.getCenter();
+        int radius = borderData.getRadius();
+        Location playerLocation = player.getLocation();
+        double distance = center.distance(playerLocation);
+        if (distance > radius) {
+            Location newLoc = center.clone().add(playerLocation.toVector().subtract(center.toVector()).normalize().multiply(radius));
+            newLoc.setY(playerLocation.getY());
+            player.teleport(newLoc);
+            player.sendMessage("§f§lCivEvents §f| §cYou have reached the world border!");
+        }
+    }
+    private void spawnParticleBorder(World world, Location center, int radius) {
+        int points = 100;
+        double angleStep = 2 * Math.PI / points;
+        int minY = -65;
+        int maxY = 320;
+        int stepY = 5;
+        for (int i = 0; i < points; i++) {
+            double angle = i * angleStep;
+            double x = center.getX() + radius * Math.cos(angle);
+            double z = center.getZ() + radius * Math.sin(angle);
+            for (int y = minY; y <= maxY; y += stepY) {
+                world.spawnParticle(Particle.DRIP_LAVA, new Location(world, x, y, z), 1, 0, 0, 0, 0);
             }
         }
-        return null;
+    }
+    private static class BorderData {
+        private Location center;
+        private int radius;
+        public BorderData(Location center, int radius) {
+            this.center = center;
+            this.radius = radius;
+        }
+        public Location getCenter() {
+            return center;
+        }
+        public void setCenter(Location center) {
+            this.center = center;
+        }
+        public int getRadius() {
+            return radius;
+        }
+        public void setRadius(int radius) {
+            this.radius = radius;
+        }
     }
 }
