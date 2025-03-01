@@ -7,11 +7,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.BlockDisplay;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Transformation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.Map;
 @SuppressWarnings("all")
 public class WorldCommands implements CommandExecutor, TabCompleter {
     private final Map<World, BorderData> customBorders = new HashMap<>();
+    private final List<Entity> borderDisplays = new ArrayList<>();
     private final CivEvents plugin;
     private final WorldConfig worldConfig;
     public WorldCommands(CivEvents plugin, WorldConfig worldConfig) {
@@ -127,7 +130,6 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
             return;
         }
         WorldCreator creator = new WorldCreator(worldName);
-
         if (worldType.equalsIgnoreCase("custom")) {
             creator.generator(new WorldGenerator(plugin, worldConfig));
         } else if (worldType.equalsIgnoreCase("void")) {
@@ -259,31 +261,23 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
                     size++;
                 }
                 borderData.setRadius(size);
-                spawnParticleBorder(world, borderData.getCenter(), size);
+                spawnBlockDisplayBorder(world, borderData.getCenter(), size);
                 if ((shrink && size <= newSize) || (!shrink && size >= newSize)) {
                     cancel();
                 }
             }
         }.runTaskTimer(plugin, 0, steps);
     }
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        World world = player.getWorld();
-        BorderData borderData = customBorders.get(world);
-        if (borderData == null) return;
-        Location center = borderData.getCenter();
-        int radius = borderData.getRadius();
-        Location playerLocation = player.getLocation();
-        double distance = center.distance(playerLocation);
-        if (distance > radius) {
-            Location newLoc = center.clone().add(playerLocation.toVector().subtract(center.toVector()).normalize().multiply(radius));
-            newLoc.setY(playerLocation.getY());
-            player.teleport(newLoc);
-            player.sendMessage("§f§lCivEvents §f| §cYou have reached the world border!");
-        }
-    }
-    private void spawnParticleBorder(World world, Location center, int radius) {
+    private void spawnBlockDisplayBorder(World world, Location center, int radius) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Entity entity : borderDisplays) {
+                    entity.remove();
+                }
+                borderDisplays.clear();
+            }
+        }.runTaskLater(plugin, 1L);
         int points = 100;
         double angleStep = 2 * Math.PI / points;
         int minY = -65;
@@ -293,8 +287,16 @@ public class WorldCommands implements CommandExecutor, TabCompleter {
             double angle = i * angleStep;
             double x = center.getX() + radius * Math.cos(angle);
             double z = center.getZ() + radius * Math.sin(angle);
+            float yaw = (float) Math.toDegrees(-angle);
             for (int y = minY; y <= maxY; y += stepY) {
-                world.spawnParticle(Particle.DRIP_LAVA, new Location(world, x, y, z), 1, 0, 0, 0, 0);
+                Location loc = new Location(world, x, y, z);
+                BlockDisplay blockDisplay = (BlockDisplay) world.spawnEntity(loc, EntityType.BLOCK_DISPLAY);
+                blockDisplay.setBlock(Bukkit.createBlockData(Material.RED_STAINED_GLASS_PANE));
+                Transformation transformation = blockDisplay.getTransformation();
+                transformation.getScale().set(5f, stepY, 0.5f);
+                blockDisplay.setTransformation(transformation);
+                blockDisplay.setRotation(yaw, 0);
+                borderDisplays.add(blockDisplay);
             }
         }
     }

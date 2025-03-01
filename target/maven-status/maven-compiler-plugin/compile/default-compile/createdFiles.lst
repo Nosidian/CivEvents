@@ -1,4 +1,5 @@
 nos\civevents\Extra\Temperature$3.class
+nos\civevents\CivWorlds\WorldCommands$BorderData.class
 nos\civevents\CivEntities\EntityConfig.class
 nos\civevents\CivItems\Events\Hero.class
 nos\civevents\CivWorlds\WorldBackrooms.class
@@ -8,6 +9,7 @@ nos\civevents\CivAdmins\AdminCommands$1.class
 nos\civevents\CivItems\Items\SpellHammer.class
 nos\civevents\CivItems\Medieval\SilverSpear.class
 nos\civevents\CivItems\Events\IceStaff.class
+nos\civevents\CivWorlds\WorldCommands$1.class
 nos\civevents\CivHungerGames\HungerGameCommands$1.class
 nos\civevents\CivItems\Events\Mace$3.class
 nos\civevents\CivPackages\TierFour$1.class
@@ -65,6 +67,7 @@ nos\civevents\Extra\Temperature$1.class
 nos\civevents\CivPackages\TierFive$1.class
 nos\civevents\CivItems\Medieval\SilverScythe$1.class
 nos\civevents\CivTeams\TeamCommands.class
+nos\civevents\CivWorlds\WorldCommands$2.class
 nos\civevents\CivDeaths\DeathCommands.class
 nos\civevents\CivAdmins\AdminSpectator.class
 nos\civevents\CivItems\Events\Mace$2.class
