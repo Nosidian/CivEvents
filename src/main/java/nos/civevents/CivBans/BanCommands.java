@@ -45,7 +45,7 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                 case "add":
                     if (args.length < 2) {
                         if (!(sender instanceof Player player)) {
-                            sender.sendMessage("[CivEvents] Command invalide - /civban add <player>");
+                            sender.sendMessage("[CivEvents] Command invalid - /civban add <player>");
                             return true;
                         } else {
                             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban add <player>");
@@ -78,7 +78,7 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                 case "remove":
                     if (args.length < 2) {
                         if (!(sender instanceof Player player)) {
-                            sender.sendMessage("[CivEvents] Command invalide - /civban remove <player>");
+                            sender.sendMessage("[CivEvents] Command invalid - /civban remove <player>");
                             return true;
                         } else {
                             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban remove <player>");
@@ -111,7 +111,7 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                 case "ipadd":
                     if (args.length < 2) {
                         if (!(sender instanceof Player player)) {
-                            sender.sendMessage("[CivEvents] Command invalide - /civban ipadd <player>");
+                            sender.sendMessage("[CivEvents] Command invalid - /civban ipadd <player>");
                             return true;
                         } else {
                             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban ipadd <player>");
@@ -154,7 +154,7 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                 case "ipremove":
                     if (args.length < 2) {
                         if (!(sender instanceof Player player)) {
-                            sender.sendMessage("[CivEvents] Command invalide - /civban ipremove <player>");
+                            sender.sendMessage("[CivEvents] Command invalid - /civban ipremove <player>");
                             return true;
                         } else {
                             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban ipremove <player>");
@@ -187,7 +187,7 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                 case "alts":
                     if (args.length < 2) {
                         if (!(sender instanceof Player player)) {
-                            sender.sendMessage("[CivEvents] Command invalide - /civban alts <player>");
+                            sender.sendMessage("[CivEvents] Command invalid - /civban alts <player>");
                             return true;
                         } else {
                             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban alts <player>");
