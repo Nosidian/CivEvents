@@ -40,16 +40,17 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("Only players can use this command.");
-            return true;
-        }
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "add":
                     if (args.length < 2) {
-                        sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban add <username>");
-                        return true;
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] Command invalide - /civban add <player>");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban add <player>");
+                            return true;
+                        }
                     }
                     String usernameToAdd = args[1];
                     List<String> blockedPlayers = banConfig.getConfig().getStringList("blocked_players");
@@ -58,15 +59,31 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                         banConfig.getConfig().set("blocked_players", blockedPlayers);
                         banConfig.saveConfig();
                         scheduleConfigReload();
-                        sender.sendMessage("§f§lCivEvents §f| §aUser " + usernameToAdd + " added to the list");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User " + usernameToAdd + " added to the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §aUser " + usernameToAdd + " added to the list");
+                            return true;
+                        }
                     } else {
-                        sender.sendMessage("§f§lCivEvents §f| §cUser " + usernameToAdd + " is already in the list");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User " + usernameToAdd + " is already in the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUser " + usernameToAdd + " is already in the list");
+                            return true;
+                        }
                     }
-                    return true;
                 case "remove":
                     if (args.length < 2) {
-                        sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban remove <username>");
-                        return true;
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] Command invalide - /civban remove <player>");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban remove <player>");
+                            return true;
+                        }
                     }
                     String usernameToRemove = args[1];
                     List<String> currentBlockedPlayers = banConfig.getConfig().getStringList("blocked_players");
@@ -75,20 +92,41 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                         banConfig.getConfig().set("blocked_players", currentBlockedPlayers);
                         banConfig.saveConfig();
                         scheduleConfigReload();
-                        sender.sendMessage("§f§lCivEvents §f| §aUser " + usernameToRemove + " removed from the list");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User " + usernameToRemove + " removed from the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §aUser " + usernameToRemove + " removed from the list");
+                            return true;
+                        }
                     } else {
-                        sender.sendMessage("§f§lCivEvents §f| §cUser " + usernameToRemove + " not found in the list");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User " + usernameToRemove + " not found in the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUser " + usernameToRemove + " not found in the list");
+                            return true;
+                        }
                     }
-                    return true;
                 case "ipadd":
                     if (args.length < 2) {
-                        sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban ipadd <username>");
-                        return true;
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] Command invalide - /civban ipadd <player>");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban ipadd <player>");
+                            return true;
+                        }
                     }
                     Player playerToAdd = Bukkit.getPlayer(args[1]);
                     if (playerToAdd == null) {
-                        sender.sendMessage("§f§lCivEvents §f| §cPlayer " + args[1] + " is not online");
-                        return true;
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] Player " + args[1] + " is not online");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cPlayer " + args[1] + " is not online");
+                            return true;
+                        }
                     }
                     String playerIP = Objects.requireNonNull(playerToAdd.getAddress()).getAddress().getHostAddress();
                     List<String> blockedIPs = banConfig.getConfig().getStringList("blocked_ips");
@@ -97,15 +135,31 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                         banConfig.getConfig().set("blocked_ips", blockedIPs);
                         banConfig.saveConfig();
                         scheduleConfigReload();
-                        sender.sendMessage("§f§lCivEvents §f| §aUser IP " + playerIP + " added to the list.");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User IP " + playerIP + " added to the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §aUser IP " + playerIP + " added to the list");
+                            return true;
+                        }
                     } else {
-                        sender.sendMessage("§f§lCivEvents §f| §cUser IP " + playerIP + " is already in the list.");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User IP " + playerIP + " is already in the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUser IP " + playerIP + " is already in the list");
+                            return true;
+                        }
                     }
-                    return true;
                 case "ipremove":
                     if (args.length < 2) {
-                        sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban ipremove <Ip Address>");
-                        return true;
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] Command invalide - /civban ipremove <player>");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban ipremove <player>");
+                            return true;
+                        }
                     }
                     String ipToRemove = args[1];
                     List<String> currentBlockedIPs = banConfig.getConfig().getStringList("blocked_ips");
@@ -114,15 +168,31 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                         banConfig.getConfig().set("blocked_ips", currentBlockedIPs);
                         banConfig.saveConfig();
                         scheduleConfigReload();
-                        sender.sendMessage("§f§lCivEvents §f| §aUser IP " + ipToRemove + " removed from the list.");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User IP " + ipToRemove + " removed from the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §aUser IP " + ipToRemove + " removed from the list");
+                            return true;
+                        }
                     } else {
-                        sender.sendMessage("§f§lCivEvents §f| §cUser IP " + ipToRemove + " is not found in the list.");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] User IP " + ipToRemove + " is not found in the list");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUser IP " + ipToRemove + " is not found in the list");
+                            return true;
+                        }
                     }
-                    return true;
                 case "alts":
                     if (args.length < 2) {
-                        sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban alts <username>");
-                        return true;
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] Command invalide - /civban alts <player>");
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civban alts <player>");
+                            return true;
+                        }
                     }
                     String targetName = args[1];
                     List<String> alts = new ArrayList<>();
@@ -132,14 +202,28 @@ public class BanCommands implements CommandExecutor, TabCompleter, Listener {
                         }
                     }
                     if (!alts.isEmpty()) {
-                        sender.sendMessage("§aAlt accounts for " + targetName + ":");
-                        sender.sendMessage("§2=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
-                        alts.forEach(ip -> sender.sendMessage(ipToUsernameMap.get(ip).toString()));
-                        sender.sendMessage("§2=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("Alt accounts for " + targetName + ":");
+                            sender.sendMessage("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+                            alts.forEach(ip -> sender.sendMessage(ipToUsernameMap.get(ip).toString()));
+                            sender.sendMessage("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+                            return true;
+                        } else {
+                            sender.sendMessage("§aAlt accounts for " + targetName + ":");
+                            sender.sendMessage("§2=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+                            alts.forEach(ip -> sender.sendMessage(ipToUsernameMap.get(ip).toString()));
+                            sender.sendMessage("§2=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
+                            return true;
+                        }
                     } else {
-                        sender.sendMessage("§f§lCivEvents §f| §cNo alt accounts found for " + targetName);
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage("[CivEvents] No alt accounts found for " + targetName);
+                            return true;
+                        } else {
+                            sender.sendMessage("§f§lCivEvents §f| §cNo alt accounts found for " + targetName);
+                            return true;
+                        }
                     }
-                    return true;
             }
         }
         return false;
