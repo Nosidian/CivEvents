@@ -16,25 +16,45 @@ import java.util.stream.Collectors;
 public class AdminCreative implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command.");
-            return true;
-        }
         if (args.length == 0) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("[CivEvents] Console can't use this command - /gmc");
+                return true;
+            }
             player.setGameMode(GameMode.CREATIVE);
             player.sendMessage("§f§lCivEvents §f| §aYou are now in creative mode");
             return true;
         } else if (args.length == 1) {
             Player target = Bukkit.getPlayer(args[0]);
+            if (target == null) {
+                sender.sendMessage("[CivEvents] Player not found");
+                return true;
+            }
             if (target != null && target.isOnline()) {
                 target.setGameMode(GameMode.CREATIVE);
-                player.sendMessage("§f§lCivEvents §f| §a" + target.getName() + " is now in creative mode");
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage("[CivEvents] " + target.getName() + " is now in creative mode");
+                    return true;
+                } else {
+                    sender.sendMessage("§f§lCivEvents §f| §a" + target.getName() + " is now in creative mode");
+                    return true;
+                }
             } else {
-                player.sendMessage("§f§lCivEvents §f| §cPlayer not found");
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage("[CivEvents] Player not found - /gmc" + target.getName());
+                    return true;
+                } else {
+                    sender.sendMessage("§f§lCivEvents §f| §cPlayer not found");
+                    return true;
+                }
             }
-            return true;
         } else {
-            player.sendMessage("§f§lCivEvents §f| §cUsage: /gmc <player>");
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage("[CivEvents] Invalide command or player");
+                return true;
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cInvalide command or player");
+            }
             return false;
         }
     }

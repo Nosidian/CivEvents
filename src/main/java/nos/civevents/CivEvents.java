@@ -64,7 +64,14 @@ public final class CivEvents extends JavaPlugin {
     public static CivEvents instance;
     @Override
     public void onEnable() {
-        System.out.println("CivEvents: Enabled");
+        System.out.println(" ");
+        System.out.println("  _____ _       ______               _       \n");
+        System.out.println(" / ____(_)     |  ____|             | |      \n");
+        System.out.println("| |     ___   _| |____   _____ _ __ | |_ ___ \n");
+        System.out.println("| |    | \\ \\ / /  __\\ \\ / / _ \\ '_ \\| __/ __|\n");
+        System.out.println("| |____| |\\ V /| |___\\ V /  __/ | | | |_\\__ \\\n");
+        System.out.println(" \\_____|_| \\_/ |______\\_/ \\___|_| |_|\\__|___/");
+        System.out.println(" ");
         banConfig = new BanConfig(this);
         banConfig.loadConfig();
         scytherConfig = new ScytherConfig(this);
@@ -100,20 +107,20 @@ public final class CivEvents extends JavaPlugin {
             Objects.requireNonNull(getCommand("team")).setExecutor(new TeamCommands(this, luckPerms, teamConfig));
             Objects.requireNonNull(getCommand("team")).setTabCompleter(new TeamCommands(this, luckPerms, teamConfig));
             getServer().getPluginManager().registerEvents(new TeamCommands(this, luckPerms, teamConfig), this);
-            getLogger().info("CivEvents: Luckperms is connected");
+            getLogger().info("Luckperms is connected");
         } else {
             luckPerms = null;
-            getLogger().info("CivEvents: Luckperms is missing");
+            getLogger().info("Luckperms is missing");
         }
 
         if (getServer().getPluginManager().getPlugin("ProtocolLib") != null) {
             protocolLib = (ProtocolLib) getServer().getPluginManager().getPlugin("ProtocolLib");
             // CivItems
             getServer().getPluginManager().registerEvents(new Hero(this), this);
-            getLogger().info("CivEvents: Protocollib is connected");
+            getLogger().info("Protocollib is connected");
         } else {
             protocolLib = null;
-            getLogger().info("CivEvents: Protocollib is missing");
+            getLogger().info("Protocollib is missing");
         }
 
         // CivAdmins
@@ -221,12 +228,12 @@ public final class CivEvents extends JavaPlugin {
             recipeConfig.reloadConfig();
             teamConfig.reloadConfig();
             worldConfig.reloadConfig();
-            getLogger().info("CivEvents: Reloaded All Configs");
+            getLogger().info("Reloaded All Configs");
         }, 100L);
     }
     @Override
     public void onDisable() {
-        System.out.println("CivEvents: Disabled");
+        System.out.println("Disabled");
         banConfig.saveConfig();
         scytherConfig.saveConfig();
         playerConfig.saveConfig();
@@ -238,7 +245,7 @@ public final class CivEvents extends JavaPlugin {
         recipeConfig.saveConfig();
         teamConfig.saveConfig();
         worldConfig.saveConfig();
-        getLogger().info("CivEvents: Saved All Configs");
+        getLogger().info("Saved All Configs");
     }
     public LuckPerms getLuckPerms() {
         return luckPerms;

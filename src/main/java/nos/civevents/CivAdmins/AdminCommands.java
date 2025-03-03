@@ -43,6 +43,10 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
         if (sender instanceof Player player) {
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("airstrike")) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage("[CivEvents] Console can't use this command - /airstrike");
+                        return true;
+                    }
                     if (args.length == 3) {
                         String targetName = args[1];
                         int explosionSize;
@@ -75,6 +79,10 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                     }
                 }
                 if (args[0].equalsIgnoreCase("playerdata")) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage("[CivEvents] Console can't use this command - /playerdata");
+                        return true;
+                    }
                     if (args[1].equalsIgnoreCase("clearall")) {
                         AdminPlayerData.clearAllPlayerData(sender);
                         return true;
@@ -85,6 +93,10 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                     }
                 }
                 if (args[0].equalsIgnoreCase("crash")) {
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage("[CivEvents] Console can't use this command - /crash");
+                        return true;
+                    }
                     if (args.length == 2) {
                         String playerName = args[1];
                         Player target = Bukkit.getPlayer(playerName);
@@ -103,7 +115,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter, Listener {
                 }
                 if (args[0].equalsIgnoreCase("grab")) {
                     if (!(sender instanceof Player)) {
-                        sender.sendMessage("Only players can use this command!");
+                        sender.sendMessage("[CivEvents] Console can't use this command - /grab");
                         return true;
                     }
                     String permission = "civevents.grab";
