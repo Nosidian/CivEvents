@@ -24,7 +24,7 @@ public class SilverSpear implements Listener {
     private final HashMap<UUID, Long> bleedingEntities = new HashMap<>();
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
     private static final double BLEED_DAMAGE = 0.5;
-    private static final int BLEED_DURATION = 30;
+    private static final int BLEED_DURATION = 15;
     private static final int COOLDOWN = 120;
     private final CivEvents plugin;
     public SilverSpear(CivEvents plugin) {
