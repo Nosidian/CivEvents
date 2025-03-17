@@ -32,6 +32,7 @@ import nos.civevents.CivWorlds.WorldBackrooms;
 import nos.civevents.CivWorlds.WorldCommands;
 import nos.civevents.CivWorlds.WorldConfig;
 import nos.civevents.CivWorlds.WorldGenerator;
+import nos.civevents.Extra.GodMode;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -107,6 +108,12 @@ public final class CivEvents extends JavaPlugin {
             Objects.requireNonNull(getCommand("team")).setExecutor(new TeamCommands(this, luckPerms, teamConfig));
             Objects.requireNonNull(getCommand("team")).setTabCompleter(new TeamCommands(this, luckPerms, teamConfig));
             getServer().getPluginManager().registerEvents(new TeamCommands(this, luckPerms, teamConfig), this);
+
+            // Extra
+            Objects.requireNonNull(getCommand("godmode")).setExecutor(new GodMode(this, luckPerms));
+            Objects.requireNonNull(getCommand("godmode")).setTabCompleter(new GodMode(this, luckPerms));
+            getServer().getPluginManager().registerEvents(new GodMode(this, luckPerms), this);
+
             getLogger().info("Luckperms is connected");
         } else {
             luckPerms = null;

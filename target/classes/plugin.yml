@@ -79,3 +79,7 @@ commands:
     permission: civevents.world
     permission-message: Permission = civevents.world
     aliases: [cw, civw, civworld]
+  godmode:
+    permission: civevents.godmode
+    permission-message: Permission = civevents.godmode
+    aliases: [gm]

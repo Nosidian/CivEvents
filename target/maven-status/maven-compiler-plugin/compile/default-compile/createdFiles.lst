@@ -6,6 +6,7 @@ nos\civevents\CivWorlds\WorldBackrooms.class
 nos\civevents\CivItems\Items\MagicWand.class
 nos\civevents\CivAdmins\AdminPlayerData.class
 nos\civevents\CivAdmins\AdminCommands$1.class
+nos\civevents\Extra\GodMode.class
 nos\civevents\CivItems\Items\SpellHammer.class
 nos\civevents\CivItems\Medieval\SilverSpear.class
 nos\civevents\CivItems\Events\IceStaff.class
