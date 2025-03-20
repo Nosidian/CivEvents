@@ -79,6 +79,7 @@ nos\civevents\CivPackages\TierFive.class
 nos\civevents\CivRecipes\RecipesGui.class
 nos\civevents\Extra\Temperature.class
 nos\civevents\CivItems\Medieval\PharaohSword$1.class
+nos\civevents\CivLoot\LootCommands$2.class
 nos\civevents\CivLoot\LootConfig.class
 nos\civevents\CivItems\Medieval\SilverSword.class
 nos\civevents\CivPackages\TierOne$1.class

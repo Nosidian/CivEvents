@@ -41,12 +41,16 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
         Player player = (Player) sender;
-        if (args.length < 2) {
-            player.sendMessage("§f§lCivEvents §f| §cUsage: /civloot <add/remove/settings/load> <args>");
+        if (args.length < 1) {
+            player.sendMessage("§f§lCivEvents §f| §cUsage: /civloot <add/remove/settings/load/empty> <args>");
             return true;
         }
         switch (args[0].toLowerCase()) {
             case "add":
+                if (args.length < 2) {
+                    player.sendMessage("§f§lCivEvents §f| §cUsage: /civloot add <item/block-type>");
+                    return true;
+                }
                 Material addItem = Material.matchMaterial(args[1]);
                 if (addItem == null) {
                     player.sendMessage("§f§lCivEvents §f| §cInvalid item");
@@ -63,6 +67,10 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                 }
                 break;
             case "remove":
+                if (args.length < 2) {
+                    player.sendMessage("§f§lCivEvents §f| §cUsage: /civloot remove <item/block-type>");
+                    return true;
+                }
                 Material removeItem = Material.matchMaterial(args[1]);
                 if (removeItem == null || !lootConfig.getConfig().getStringList("loot").contains(removeItem.name())) {
                     player.sendMessage("§f§lCivEvents §f| §cItem not found in the loot table");
@@ -223,9 +231,13 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
             completions.add("remove");
             completions.add("settings");
             completions.add("load");
+            completions.add("empty");
         } else if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
+            if (args[0].equalsIgnoreCase("add")) {
                 completions.addAll(Arrays.stream(Material.values()).map(Material::name).collect(Collectors.toList()));
+            } else if (args[0].equalsIgnoreCase("remove")) {
+                List<String> lootItems = lootConfig.getConfig().getStringList("loot");
+                completions.addAll(lootItems);
             } else if (args[0].equalsIgnoreCase("settings")) {
                 completions.add("itemamount");
                 completions.add("chestamount");
