@@ -243,10 +243,10 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                 completions.add("chestamount");
             }
         } else if (args.length == 3 && args[0].equalsIgnoreCase("settings")) {
-            if (args[0].equalsIgnoreCase("itemamount")) {
+            if (args[1].equalsIgnoreCase("itemamount")) {
                 completions.add("<min-1>");
                 completions.add("<max-64>");
-            } else if (args[0].equalsIgnoreCase("chestamount")) {
+            } else if (args[1].equalsIgnoreCase("chestamount")) {
                 completions.add("<min-1>");
                 completions.add("<max-27>");
             }
