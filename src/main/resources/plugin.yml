@@ -55,6 +55,10 @@ commands:
     permission: civevents.item
     permission-message: Permission = civevents.item
     aliases: [ci, civi, civitem]
+  civloot:
+    permission: civevents.loot
+    permission-message: Permission = civevents.loot
+    aliases: [cl, cloot]
   civportals:
     permission: civevents.portal
     permission-message: Permission = civevents.portal

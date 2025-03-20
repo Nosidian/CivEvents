@@ -22,6 +22,8 @@ import nos.civevents.CivItems.Medieval.*;
 import nos.civevents.CivHungerGames.HungerGameCommands;
 import nos.civevents.CivHungerGames.HungerGameConfig;
 import nos.civevents.CivCivilizations.PortalCommands;
+import nos.civevents.CivLoot.LootCommands;
+import nos.civevents.CivLoot.LootConfig;
 import nos.civevents.CivPackages.*;
 import nos.civevents.CivRecipes.*;
 import nos.civevents.CivCivilizations.CivilizationCommands;
@@ -57,6 +59,7 @@ public final class CivEvents extends JavaPlugin {
     private EntityConfig entityConfig;
     private FlagConfig flagConfig;
     private HungerGameConfig hungerGameConfig;
+    private LootConfig lootConfig;
     private RecipeConfig recipeConfig;
     private TeamConfig teamConfig;
     private WorldConfig worldConfig;
@@ -89,6 +92,8 @@ public final class CivEvents extends JavaPlugin {
         flagConfig.loadConfig();
         hungerGameConfig = new HungerGameConfig(this);
         hungerGameConfig.loadConfig();
+        lootConfig = new LootConfig(this);
+        lootConfig.loadConfig();
         recipeConfig = new RecipeConfig(this);
         recipeConfig.loadConfig();
         teamConfig = new TeamConfig(this);
@@ -203,6 +208,11 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PharaohSword(this), this);
         getServer().getPluginManager().registerEvents(new MagmaPickaxe(this), this);
 
+        // CivLoot
+        Objects.requireNonNull(getCommand("civloot")).setExecutor(new LootCommands(this, lootConfig));
+        Objects.requireNonNull(getCommand("civloot")).setTabCompleter(new LootCommands(this, lootConfig));
+        getServer().getPluginManager().registerEvents(new LootCommands(this, lootConfig), this);
+
         // CivPackages
         Objects.requireNonNull(getCommand("civpackages")).setExecutor(new PackageCommands(this, new TierOne(this), new TierTwo(this), new TierThree(this), new TierFour(this), new TierFive(this), new TierPrize(this)));
         Objects.requireNonNull(getCommand("civpackages")).setTabCompleter(new PackageCommands(this, new TierOne(this) , new TierTwo(this), new TierThree(this), new TierFour(this), new TierFive(this), new TierPrize(this)));
@@ -232,6 +242,7 @@ public final class CivEvents extends JavaPlugin {
             entityConfig.reloadConfig();
             flagConfig.reloadConfig();
             hungerGameConfig.reloadConfig();
+            lootConfig.reloadConfig();
             recipeConfig.reloadConfig();
             teamConfig.reloadConfig();
             worldConfig.reloadConfig();
@@ -249,6 +260,7 @@ public final class CivEvents extends JavaPlugin {
         entityConfig.saveConfig();
         flagConfig.saveConfig();
         hungerGameConfig.saveConfig();
+        lootConfig.reloadConfig();
         recipeConfig.saveConfig();
         teamConfig.saveConfig();
         worldConfig.saveConfig();

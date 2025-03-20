@@ -39,6 +39,7 @@ nos\civevents\CivItems\Medieval\SilverScythe$2.class
 nos\civevents\CivWorlds\WorldCommands.class
 nos\civevents\CivBans\ScytherConfig.class
 nos\civevents\CivItems\ItemCommands.class
+nos\civevents\CivLoot\LootCommands.class
 nos\civevents\CivWorlds\WorldGenerator.class
 nos\civevents\CivCivilizations\CivilizationCommands.class
 nos\civevents\CivItems\Events\Spear.class
@@ -65,6 +66,7 @@ nos\civevents\CivItems\Events\LegueStaff.class
 nos\civevents\CivTeams\Team.class
 nos\civevents\CivTeams\TeamConfig.class
 nos\civevents\Extra\Temperature$1.class
+nos\civevents\CivLoot\LootCommands$1.class
 nos\civevents\CivPackages\TierFive$1.class
 nos\civevents\CivItems\Medieval\SilverScythe$1.class
 nos\civevents\CivTeams\TeamCommands.class
@@ -77,6 +79,7 @@ nos\civevents\CivPackages\TierFive.class
 nos\civevents\CivRecipes\RecipesGui.class
 nos\civevents\Extra\Temperature.class
 nos\civevents\CivItems\Medieval\PharaohSword$1.class
+nos\civevents\CivLoot\LootConfig.class
 nos\civevents\CivItems\Medieval\SilverSword.class
 nos\civevents\CivPackages\TierOne$1.class
 nos\civevents\CivWorlds\WorldVoid.class
