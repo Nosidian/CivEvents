@@ -170,8 +170,8 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                                 barrelsFilled++;
                             }
                             if (++x > radius) { x = -radius; if (++y > radius) { y = -radius; if (++z > radius) {
-                                player.sendMessage("§f§lCivEvents §f| §aScanned area and filled " + chestsFilled + " chests");
-                                Bukkit.getLogger().info("[CivEvents] Completed scan. Chests filled: " + chestsFilled);
+                                player.sendMessage("§f§lCivEvents §f| §aScanned area and filled " + chestsFilled + " chests" + barrelsFilled + "barrels");
+                                Bukkit.getLogger().info("[CivEvents] Completed scan, Chests filled: " + chestsFilled + "Barrels filled: " + barrelsFilled);
                                 cancel();
                                 return;
                             }}}
