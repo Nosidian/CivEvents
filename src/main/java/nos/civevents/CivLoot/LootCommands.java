@@ -119,7 +119,7 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                 World world = player.getWorld();
                 Location center = player.getLocation();
                 Bukkit.getLogger().info("[CivEvents] Scanning 100x100x100 area around " + player.getName());
-                player.sendMessage("§f§lCivEvents §f| §eScanning nearby chests...");
+                player.sendMessage("§f§lCivEvents §f| §eScanning nearby chests/barrels...");
                 new BukkitRunnable() {
                     int x = -radius, y = -radius, z = -radius;
                     int chestsFilled = 0;
@@ -167,6 +167,44 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                                 cancel();
                                 return;
                             }}}
+                        }
+                    }
+                }.runTaskTimer(plugin, 0L, 1L);
+                break;
+            case "empty":
+                int emptyRadius = 50;
+                World emptyWorld = player.getWorld();
+                Location emptyCenter = player.getLocation();
+                player.sendMessage("§f§lCivEvents §f| §eScanning and emptying chests/barrels within 100x100x100...");
+                new BukkitRunnable() {
+                    int x = -emptyRadius, y = -emptyRadius, z = -emptyRadius;
+                    int chestsEmptied = 0;
+                    int barrelsEmptied = 0;
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < 5000; i++) {
+                            Location loc = emptyCenter.clone().add(x, y, z);
+                            Block block = emptyWorld.getBlockAt(loc);
+                            if (block.getState() instanceof Chest chest) {
+                                chest.getInventory().clear();
+                                chestsEmptied++;
+                            }
+                            if (block.getState() instanceof Barrel barrel) {
+                                barrel.getInventory().clear();
+                                barrelsEmptied++;
+                            }
+                            if (++x > emptyRadius) {
+                                x = -emptyRadius;
+                                if (++y > emptyRadius) {
+                                    y = -emptyRadius;
+                                    if (++z > emptyRadius) {
+                                        player.sendMessage("§f§lCivEvents §f| §aEmptied " + chestsEmptied + " chests and " + barrelsEmptied + " barrels");
+                                        Bukkit.getLogger().info("[CivEvents] Completed empty scan Chests emptied: " + chestsEmptied + ", Barrels emptied: " + barrelsEmptied);
+                                        cancel();
+                                        return;
+                                    }
+                                }
+                            }
                         }
                     }
                 }.runTaskTimer(plugin, 0L, 1L);
