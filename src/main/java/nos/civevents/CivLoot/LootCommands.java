@@ -4,8 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -121,6 +123,7 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                 new BukkitRunnable() {
                     int x = -radius, y = -radius, z = -radius;
                     int chestsFilled = 0;
+                    int barrelsFilled = 0;
                     @Override
                     public void run() {
                         for (int i = 0; i < 5000; i++) {
@@ -128,16 +131,35 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                             Block block = world.getBlockAt(loc);
                             if (block.getState() instanceof Chest chest) {
                                 Inventory chestInv = chest.getInventory();
+                                int slots = (chestInv.getHolder() instanceof DoubleChest) ? 54 : 27;
                                 int chestAmount = lootConfig.getConfig().getInt("settings.chestamount", 5);
                                 for (int j = 0; j < chestAmount; j++) {
                                     if (!items.isEmpty()) {
                                         Material lootItem = Material.matchMaterial(items.get(random.nextInt(items.size())));
                                         if (lootItem != null) {
-                                            chestInv.setItem(random.nextInt(27), new ItemStack(lootItem, lootConfig.getConfig().getInt("settings.itemamount", 1)));
+                                            int maxAmount = lootConfig.getConfig().getInt("settings.itemamount", 1);
+                                            int randomAmount = random.nextInt(maxAmount) + 1;
+                                            chestInv.setItem(random.nextInt(slots), new ItemStack(lootItem, randomAmount));
                                         }
                                     }
                                 }
                                 chestsFilled++;
+                            }
+                            if (block.getState() instanceof Barrel barrel) {
+                                Inventory barrelInv = barrel.getInventory();
+                                int slots = barrelInv.getSize();
+                                int barrelAmount = lootConfig.getConfig().getInt("settings.barrelamount", 5);
+                                for (int j = 0; j < barrelAmount; j++) {
+                                    if (!items.isEmpty()) {
+                                        Material lootItem = Material.matchMaterial(items.get(random.nextInt(items.size())));
+                                        if (lootItem != null) {
+                                            int maxAmount = lootConfig.getConfig().getInt("settings.itemamount", 1);
+                                            int randomAmount = random.nextInt(maxAmount) + 1;
+                                            barrelInv.setItem(random.nextInt(slots), new ItemStack(lootItem, randomAmount));
+                                        }
+                                    }
+                                }
+                                barrelsFilled++;
                             }
                             if (++x > radius) { x = -radius; if (++y > radius) { y = -radius; if (++z > radius) {
                                 player.sendMessage("§f§lCivEvents §f| §aScanned area and filled " + chestsFilled + " chests");
