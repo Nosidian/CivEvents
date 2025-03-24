@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
+@SuppressWarnings("all")
 public class RecipeConfig {
     private final CivEvents plugin;
     private FileConfiguration recipeConfig;

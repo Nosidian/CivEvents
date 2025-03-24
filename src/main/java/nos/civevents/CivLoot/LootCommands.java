@@ -1,5 +1,6 @@
 package nos.civevents.CivLoot;
 
+import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("all")
 public class LootCommands implements CommandExecutor, TabCompleter, Listener {
     private final Random random = new Random();
-    private final Plugin plugin;
+    private final CivEvents plugin;
     private final LootConfig lootConfig;
-    public LootCommands(Plugin plugin, LootConfig lootConfig) {
+    public LootCommands(CivEvents plugin, LootConfig lootConfig) {
         this.plugin = plugin;
         this.lootConfig = lootConfig;
     }
