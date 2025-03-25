@@ -102,7 +102,7 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                     lootConfig.getConfig().set("settings.itemamount", amount);
                 } else if (args[1].equalsIgnoreCase("chestamount")) {
                     if (amount < 1 || amount > 27) {
-                        player.sendMessage("§f§lCivEvents §f| §cChest amount must be between 1 and 27.");
+                        player.sendMessage("§f§lCivEvents §f| §cChest amount must be between 1 and 27");
                         return true;
                     }
                     lootConfig.getConfig().set("settings.chestamount", amount);
@@ -126,8 +126,8 @@ public class LootCommands implements CommandExecutor, TabCompleter, Listener {
                 int radius = 50;
                 World world = player.getWorld();
                 Location center = player.getLocation();
-                Bukkit.getLogger().info("[CivEvents] Scanning 100x100x100 area around " + player.getName());
                 player.sendMessage("§f§lCivEvents §f| §eScanning nearby chests/barrels...");
+                Bukkit.getLogger().info("[CivEvents] Scanning 100x100x100 area around " + player.getName());
                 new BukkitRunnable() {
                     int x = -radius, y = -radius, z = -radius;
                     int chestsFilled = 0;
