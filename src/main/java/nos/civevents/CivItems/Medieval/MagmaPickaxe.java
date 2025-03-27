@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,12 @@ public class MagmaPickaxe implements Listener {
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(smeltedMaterial));
             block.getWorld().spawnParticle(Particle.FLAME, block.getLocation().add(0.5, 0.5, 0.5), 10, 0.2, 0.2, 0.2, 0.02);
             block.getWorld().playSound(block.getLocation(), Sound.BLOCK_FURNACE_FIRE_CRACKLE, 1.0f, 1.5f);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    block.setType(Material.AIR);
+                }
+            }.runTaskLater(plugin, 20L);
         }
     }
     private boolean isMagmaPickaxe(ItemStack item) {
