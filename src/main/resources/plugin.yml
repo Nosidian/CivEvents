@@ -26,7 +26,7 @@ commands:
   civban:
     permission: civevents.ban
     permission-message: Permission = civevents.ban
-    aliases: [cb, civb, cban]
+    aliases: [cb, civb, cban, civban]
   antiscythers:
     permission: civevents.scythers
     permission-message: Permission = civevents.scythers
@@ -38,7 +38,7 @@ commands:
   civdeaths:
     permission: civevents.death
     permission-message: Permission = civevents.death
-    aliases: [cd, civd, civdeath]
+    aliases: [cd, civd, civdeath, civdeaths]
   civentities:
     permission: civevents.entity
     permission-message: Permission = civevents.entity
@@ -58,7 +58,7 @@ commands:
   civportals:
     permission: civevents.portal
     permission-message: Permission = civevents.portal
-    aliases: [cportal, civportal, portal]
+    aliases: [cportal, civportal, portal, cp]
   civpackages:
     permission: civevents.package
     permission-message: Permission = civevents.package
