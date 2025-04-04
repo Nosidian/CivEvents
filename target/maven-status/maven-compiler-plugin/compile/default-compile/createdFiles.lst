@@ -24,7 +24,6 @@ nos\civevents\CivPackages\TierThree.class
 nos\civevents\CivAdmins\AdminCommands.class
 nos\civevents\CivItems\Medieval\PharaohSword.class
 nos\civevents\CivRecipes\OperatorCommands.class
-nos\civevents\CivItems\Medieval\ArcticCrusher$3.class
 nos\civevents\CivBans\BanConfig.class
 nos\civevents\CivFlags\FlagCommands.class
 nos\civevents\CivPackages\TierThree$1.class
@@ -67,7 +66,6 @@ nos\civevents\CivAdmins\AdminSurvival.class
 nos\civevents\CivItems\Events\Mace$4.class
 nos\civevents\CivItems\Medieval\DragonScythe.class
 nos\civevents\CivPackages\TierOne.class
-nos\civevents\CivItems\Medieval\ArcticCrusher$LocationWrapper.class
 nos\civevents\CivBans\ScytherCommands.class
 nos\civevents\CivItems\Medieval\WarHammer$1.class
 nos\civevents\CivDeaths\AllDeaths.class

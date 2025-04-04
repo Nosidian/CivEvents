@@ -32,7 +32,7 @@ public class ArcticCrusher implements Listener {
     private final HashMap<UUID, Long> frostedEntities = new HashMap<>();
     private final Set<Player> resistancePlayers = new HashSet<>();
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
-    private static final int FROST_DURATION = 30;
+    private static final int FROST_DURATION = 15;
     private static final int COOLDOWN = 120;
     private final CivEvents plugin;
     public ArcticCrusher(CivEvents plugin) {
