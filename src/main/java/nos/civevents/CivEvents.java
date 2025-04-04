@@ -129,6 +129,7 @@ public final class CivEvents extends JavaPlugin {
             protocolLib = (ProtocolLib) getServer().getPluginManager().getPlugin("ProtocolLib");
             // CivItems
             getServer().getPluginManager().registerEvents(new Hero(this), this);
+            getServer().getPluginManager().registerEvents(new ArcticCrusher(this), this);
             getLogger().info("Protocollib is connected");
         } else {
             protocolLib = null;
@@ -208,7 +209,6 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PharaohSword(this), this);
         getServer().getPluginManager().registerEvents(new MagmaPickaxe(this), this);
         getServer().getPluginManager().registerEvents(new MoltenBlade(this), this);
-        getServer().getPluginManager().registerEvents(new ArcticCrusher(this), this);
         getServer().getPluginManager().registerEvents(new DragonScythe(this), this);
 
         // CivLoot

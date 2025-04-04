@@ -94,7 +94,7 @@ public class MoltenBlade implements Listener {
                     world.spawnParticle(Particle.FLAME, fireLoc, 10, 0.2, 0.2, 0.2, 0.02);
                     for (Entity entity : world.getNearbyEntities(fireLoc, 0.8, 1, 0.8)) {
                         if (entity instanceof LivingEntity && entity != player) {
-                            ((LivingEntity) entity).damage(26, player);
+                            ((LivingEntity) entity).damage(12, player);
                             ((LivingEntity) entity).setFireTicks(200);
                         }
                     }
