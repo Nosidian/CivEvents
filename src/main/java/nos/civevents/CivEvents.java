@@ -207,6 +207,9 @@ public final class CivEvents extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new WarHammer(this), this);
         getServer().getPluginManager().registerEvents(new PharaohSword(this), this);
         getServer().getPluginManager().registerEvents(new MagmaPickaxe(this), this);
+        getServer().getPluginManager().registerEvents(new MoltenBlade(this), this);
+        getServer().getPluginManager().registerEvents(new ArcticCrusher(this), this);
+        getServer().getPluginManager().registerEvents(new DragonScythe(this), this);
 
         // CivLoot
         Objects.requireNonNull(getCommand("civloot")).setExecutor(new LootCommands(this, lootConfig));

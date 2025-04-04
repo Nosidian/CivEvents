@@ -106,6 +106,18 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
                 giveMagmaPickaxe(sender, args);
                 sender.sendMessage("§f§lCivEvents §f| §aUsing model data 19");
                 return true;
+            } else if (args[0].equalsIgnoreCase("moltenblade")) {
+                giveMoltenBlade(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 20");
+                return true;
+            } else if (args[0].equalsIgnoreCase("arcticcrusher")) {
+                giveArcticCrusher(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 21");
+                return true;
+            } else if (args[0].equalsIgnoreCase("dragonscythe")) {
+                giveDragonScythe(sender, args);
+                sender.sendMessage("§f§lCivEvents §f| §aUsing model data 22");
+                return true;
             }
             sender.sendMessage("§f§lCivEvents §f| §cInvalid item name");
         } else {
@@ -137,6 +149,9 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             completions.add("warhammer");
             completions.add("pharaoh");
             completions.add("magmapick");
+            completions.add("moltenblade");
+            completions.add("arcticcrusher");
+            completions.add("dragonscythe");
         } else if (args.length == 2) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
@@ -402,6 +417,45 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             }
         } else {
             sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems magmapick <player>");
+        }
+    }
+    private void giveMoltenBlade(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createMoltenBlade());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Molten Blade to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems moltenblade <player>");
+        }
+    }
+    private void giveArcticCrusher(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createArcticCrusher());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Arctic Crusher to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems arcticcrusher <player>");
+        }
+    }
+    private void giveDragonScythe(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            Player targetPlayer = Bukkit.getPlayer(args[1]);
+            if (targetPlayer != null) {
+                targetPlayer.getInventory().addItem(createDragonScythe());
+                sender.sendMessage("§f§lCivEvents §f| §aYou have given the Dragon Scythe to " + targetPlayer.getName());
+            } else {
+                sender.sendMessage("§f§lCivEvents §f| §cPlayer not found!");
+            }
+        } else {
+            sender.sendMessage("§f§lCivEvents §f| §cUsage: /civitems dragonscythe <player>");
         }
     }
     public static ItemStack createGhostStaff() {
@@ -724,5 +778,60 @@ public class ItemCommands implements CommandExecutor, TabCompleter {
             medievalMagmaPickaxe.setItemMeta(meta);
         }
         return medievalMagmaPickaxe;
+    }
+    public static ItemStack createMoltenBlade() {
+        ItemStack moltenBlade = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = moltenBlade.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§c§lＭＯＬＴＥＮ ＢＬＡＤＥ");
+            meta.setLore(Arrays.asList(
+                    "",
+                    "§8§l> §cOn RightClick §7summons a wave of fire",
+                    "",
+                    "§8§l> §cFire Resistance §7while holding this weapon",
+                    "",
+                    "§8§l> §7Cooldown: 2min"
+            ));
+            meta.setCustomModelData(20);
+            meta.addEnchant(Enchantment.FIRE_ASPECT, 1, true);
+            moltenBlade.setItemMeta(meta);
+        }
+        return moltenBlade;
+    }
+    public static ItemStack createArcticCrusher() {
+        ItemStack arcticCrusher = new ItemStack(Material.NETHERITE_AXE);
+        ItemMeta meta = arcticCrusher.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§b§lＡＲＣＴＩＣ ＣＲＵＳＨＥＲ");
+            meta.setLore(Arrays.asList(
+                    "",
+                    "§8§l> §bOn RightClick §7freeze target player",
+                    "",
+                    "§8§l> §bResistance §7while holding this weapon",
+                    "",
+                    "§8§l> §7Cooldown: 2min"
+            ));
+            meta.setCustomModelData(21);
+            arcticCrusher.setItemMeta(meta);
+        }
+        return arcticCrusher;
+    }
+    public static ItemStack createDragonScythe() {
+        ItemStack dragonScythe = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = dragonScythe.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName("§d§lＤＲＡＧＯＮ ＳＣＹＴＨＥ");
+            meta.setLore(Arrays.asList(
+                    "",
+                    "§8§l> §dOn RightClick §7long dash forward",
+                    "",
+                    "§8§l> §dslow falling §7while holding this weapon",
+                    "",
+                    "§8§l> §7Cooldown: 2min"
+            ));
+            meta.setCustomModelData(22);
+            dragonScythe.setItemMeta(meta);
+        }
+        return dragonScythe;
     }
 }
