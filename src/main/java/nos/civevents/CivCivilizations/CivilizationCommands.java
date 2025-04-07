@@ -1,5 +1,7 @@
 package nos.civevents.CivCivilizations;
 
+import net.luckperms.api.model.user.UserManager;
+import net.luckperms.api.node.Node;
 import nos.civevents.CivEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -73,8 +75,8 @@ public class CivilizationCommands implements CommandExecutor, TabCompleter {
                     }
                     removeEntry(player, args[1], args.length > 2 ? args[2] : null);
                 }
-                default ->
-                        player.sendMessage("§f§lCivEvents §f| §cUnknown command");
+                case "assign" -> assignPlayersToTeams(player);
+                default -> player.sendMessage("§f§lCivEvents §f| §cUnknown command");
             }
             return true;
         }
@@ -82,9 +84,9 @@ public class CivilizationCommands implements CommandExecutor, TabCompleter {
     }
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (command.getName().equalsIgnoreCase("civteams")) {
+        if (command.getName().equalsIgnoreCase("civcivilizations")) {
             if (args.length == 1) {
-                return Arrays.asList("create", "lobby", "portal", "spawn", "clear", "remove").stream()
+                return Arrays.asList("create", "lobby", "portal", "spawn", "clear", "remove", "assign").stream()
                         .filter(subCommand -> subCommand.startsWith(args[0].toLowerCase()))
                         .collect(Collectors.toList());
             } else if (args.length == 2) {
@@ -275,5 +277,50 @@ public class CivilizationCommands implements CommandExecutor, TabCompleter {
     }
     private String serializeLocation(Location location) {
         return Objects.requireNonNull(location.getWorld()).getName() + "," + location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getYaw() + "," + location.getPitch();
+    }
+    private void assignPlayersToTeams(Player sender) {
+        List<Team> teams = new ArrayList<>(scoreboard.getTeams());
+        if (teams.isEmpty()) {
+            sender.sendMessage("§f§lCivEvents §f| §cNo teams have been created");
+            return;
+        }
+        List<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        Collections.shuffle(players);
+        int teamCount = teams.size();
+        Map<Team, List<Player>> teamAssignments = new HashMap<>();
+        for (int i = 0; i < players.size(); i++) {
+            Team team = teams.get(i % teamCount);
+            Player player = players.get(i);
+            team.addEntry(player.getName());
+            teamAssignments.computeIfAbsent(team, k -> new ArrayList<>()).add(player);
+            UserManager userManager = plugin.getLuckPerms().getUserManager();
+            userManager.modifyUser(player.getUniqueId(), user -> {
+                Node node = Node.builder("group." + team.getName()).build();
+                user.data().add(node);
+            });
+            FileConfiguration config = civilizationConfig.getConfig();
+            String spawnKey = "spawns." + team.getName();
+            if (config.contains(spawnKey)) {
+                Location spawn = deserializeLocation(config.getString(spawnKey));
+                if (spawn != null) {
+                    player.teleport(spawn);
+                }
+            }
+            player.sendMessage("§f§lCivEvents §f| §aYou have been assigned to team " + team.getColor() + team.getName());
+        }
+        sender.sendMessage("§f§lCivEvents §f| §aAll players have been assigned to teams and teleported");
+    }
+    private Location deserializeLocation(String str) {
+        if (str == null) return null;
+        String[] parts = str.split(",");
+        if (parts.length < 6) return null;
+        return new Location(
+                Bukkit.getWorld(parts[0]),
+                Double.parseDouble(parts[1]),
+                Double.parseDouble(parts[2]),
+                Double.parseDouble(parts[3]),
+                Float.parseFloat(parts[4]),
+                Float.parseFloat(parts[5])
+        );
     }
 }
