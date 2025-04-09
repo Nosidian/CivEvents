@@ -61,7 +61,7 @@ public class ArcticCrusher implements Listener {
                 Vector direction = livingEntity.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
                 livingEntity.setVelocity(direction.multiply(0.6D));
                 spawnParticleCloud(livingEntity);
-                this.frostedEntities.put(livingEntity.getUniqueId(), Long.valueOf(System.currentTimeMillis() + 30000L));
+                this.frostedEntities.put(livingEntity.getUniqueId(), System.currentTimeMillis() + FROST_DURATION * 1000L);
             }
         }
     }
